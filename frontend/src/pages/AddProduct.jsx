@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import toast from "react-hot-toast";
 
 function AddProduct() {
   const navigate = useNavigate();
@@ -68,12 +69,12 @@ function AddProduct() {
         },
       );
 
-      alert("Product Added");
+      toast.success("Product Added");
 
       navigate("/admin/products");
     } catch (error) {
       console.log(error);
-      alert("Failed");
+      toast.error("Failed to add product");
     }
   };
 
@@ -143,7 +144,7 @@ function AddProduct() {
             />
           ))}
         </div>
-        
+
         <button
           type="submit"
           className="

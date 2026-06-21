@@ -34,6 +34,14 @@ const orderSchema = new mongoose.Schema(
       enum: ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"],
       default: "Pending",
     },
+    isPaid: {
+      type: Boolean,
+      default: false,
+    },
+
+    paidAt: Date,
+
+    paymentId: String,
   },
   {
     timestamps: true,

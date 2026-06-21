@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
+import toast from "react-hot-toast";
 
 function AdminProducts() {
   const [products, setProducts] = useState([]);
@@ -16,7 +17,7 @@ function AdminProducts() {
       setProducts(res.data);
     } catch (error) {
       console.log(error);
-      alert("Failed to fetch products");
+      toast.error("Failed to fetch products");
     } finally {
       setLoading(false);
     }
@@ -41,7 +42,7 @@ function AdminProducts() {
       fetchProducts();
     } catch (error) {
       console.log(error);
-      alert("Failed to delete product");
+      toast.error("Failed to delete product");
     }
   };
 
@@ -54,19 +55,30 @@ function AdminProducts() {
   }
 
   return (
-    <div className="p-10">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-4 md:p-10">
+      <div
+        className="
+      flex
+      flex-col
+      md:flex-row
+      justify-between
+      items-start
+      md:items-center
+      gap-4
+      mb-6
+      "
+      >
         <h1 className="text-4xl font-bold">Products</h1>
 
         <Link
           to="/admin/products/add"
           className="
-          bg-green-500
-          text-white
-          px-4
-          py-2
-          rounded
-          "
+        bg-green-500
+        text-white
+        px-4
+        py-2
+        rounded
+        "
         >
           Add Product
         </Link>
@@ -79,45 +91,81 @@ function AdminProducts() {
           <div
             key={product._id}
             className="
-            border
-            rounded
-            p-4
-            mb-4
-            flex
-            justify-between
-            items-center
-            "
+          border
+          rounded
+          p-4
+          mb-4
+          flex
+          flex-col
+          lg:flex-row
+          justify-between
+          gap-4
+          "
           >
-            <div className="flex gap-4 items-center">
+            <div
+              className="
+            flex
+            flex-col
+            sm:flex-row
+            gap-4
+            "
+            >
               <img
                 src={product.images?.[0] || "https://via.placeholder.com/100"}
                 alt={product.title}
                 className="
-                w-24
-                h-24
-                object-cover
-                rounded
-                "
+              w-full
+              sm:w-24
+              h-48
+              sm:h-24
+              object-cover
+              rounded
+              "
               />
-              <div>
+
+              <div
+                className="
+              flex
+              flex-col
+              gap-1
+              "
+              >
                 <h2 className="font-semibold text-lg">{product.title}</h2>
+
                 <p>Price: ₹{product.price}</p>
+
                 <p>Category: {product.category}</p>
-                <p>Stock: {product.stock}</p>
+
+                <p
+                  className={
+                    product.stock === 0 ? "text-red-500" : "text-green-500"
+                  }
+                >
+                  Stock: {product.stock}
+                </p>
+
                 <p>Images: {product.images?.length || 0}</p>
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div
+              className="
+            flex
+            flex-col
+            sm:flex-row
+            gap-3
+            "
+            >
               <Link
                 to={`/admin/products/edit/${product._id}`}
                 className="
-                bg-blue-500
-                text-white
-                px-4
-                py-2
-                rounded
-                "
+              bg-blue-500
+              text-white
+              px-4
+              py-2
+              rounded
+              text-center
+              "
               >
                 Edit
               </Link>
@@ -125,12 +173,12 @@ function AdminProducts() {
               <button
                 onClick={() => deleteProduct(product._id)}
                 className="
-                bg-red-500
-                text-white
-                px-4
-                py-2
-                rounded
-                "
+              bg-red-500
+              text-white
+              px-4
+              py-2
+              rounded
+              "
               >
                 Delete
               </button>

@@ -12,37 +12,62 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
 import AddProduct from "./pages/AddProduct";
 import EditProduct from "./pages/EditProduct";
+import OrderDetails from "./pages/OrderDetails";
+import Profile from "./pages/Profile";
+import Addresses from "./pages/Addresses";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
+      <div
+        className="
+        min-h-screen
+        flex
+        flex-col
+        "
+      >
+        <Navbar />
 
-        <Route path="/login" element={<Login />} />
+        <div className="flex-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
 
-        <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
 
-        <Route path="/products" element={<Products />} />
+            <Route path="/register" element={<Register />} />
 
-        <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/products" element={<Products />} />
 
-        <Route path="/cart" element={<Cart />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
 
-        <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/cart" element={<Cart />} />
 
-        <Route path="/checkout" element={<Checkout />} />
+            <Route path="/wishlist" element={<Wishlist />} />
 
-        <Route path="/orders" element={<MyOrders />} />
+            <Route path="/checkout" element={<Checkout />} />
 
-        <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/orders" element={<MyOrders />} />
 
-        <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/orders/:id" element={<OrderDetails />} />
 
-        <Route path="/admin/products/add" element={<AddProduct />} />
-        
-        <Route path="/admin/products/edit/:id" element={<EditProduct />} />
-      </Routes>
+            <Route path="/profile" element={<Profile />} />
+
+            <Route path="/addresses" element={<Addresses />} />
+
+            <Route path="/admin" element={<AdminDashboard />} />
+
+            <Route path="/admin/products" element={<AdminProducts />} />
+
+            <Route path="/admin/products/add" element={<AddProduct />} />
+
+            <Route path="/admin/products/edit/:id" element={<EditProduct />} />
+          </Routes>
+        </div>
+
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }

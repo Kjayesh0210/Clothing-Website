@@ -1,35 +1,29 @@
-import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import Categories from "../components/Categories";
+import FeaturedProducts from "../components/FeaturedProducts";
+import WhyChooseUs from "../components/WhyChooseUs";
+import Newsletter from "../components/Newsletter";
 
 function Home() {
   return (
     <>
-      <Navbar />
+      <Hero />
 
-      <div className="h-[80vh] flex items-center justify-center">
+      <div
+        className="
+        max-w-7xl
+        mx-auto
+        px-4
+        "
+      >
+        <Categories />
 
-        <div className="text-center">
+        <FeaturedProducts />
 
-          <h1 className="text-6xl font-bold">
-
-            Wear Your Style
-
-          </h1>
-
-          <p className="mt-4 text-gray-600">
-
-            Discover the latest fashion trends.
-
-          </p>
-
-          <button className="mt-6 bg-black text-white px-6 py-3 rounded">
-
-            Shop Now
-
-          </button>
-
-        </div>
-
+        <WhyChooseUs />
       </div>
+
+      <Newsletter />
     </>
   );
 }

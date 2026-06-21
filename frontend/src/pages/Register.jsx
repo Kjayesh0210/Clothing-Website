@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../services/api";
+import toast from "react-hot-toast";
 
 function Register() {
 
@@ -20,12 +21,13 @@ function Register() {
         form
       );
 
-      alert("Registered Successfully");
+      toast.success("Registered Successfully");
 
       console.log(res.data);
 
     }catch(err){
       console.log(err);
+      toast.error("Failed to register");      
     }
   };
 

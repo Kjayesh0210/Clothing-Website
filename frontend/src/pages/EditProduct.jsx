@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
+import toast from "react-hot-toast";
 
 function EditProduct() {
   const { id } = useParams();
@@ -91,7 +92,7 @@ function EditProduct() {
         },
       );
 
-      alert("Product Updated");
+      toast.success("Product Updated");
 
       navigate("/admin/products");
     } catch (error) {
@@ -99,7 +100,7 @@ function EditProduct() {
 
       console.log(error.response?.data);
 
-      alert(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 

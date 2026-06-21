@@ -1,9 +1,11 @@
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
+const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
 
 const placeOrder = async (req, res) => {
   try {
-    const { address } = req.body;
+    const { address, paymentId } = req.body;
 
     const cart = await Cart.findOne({
       user: req.user.id,
@@ -15,6 +17,14 @@ const placeOrder = async (req, res) => {
       });
     }
 
+    for (const item of cart.products) {
+      if (item.quantity > item.product.stock) {
+        return res.status(400).json({
+          message: `${item.product.title} has only ${item.product.stock} items left`,
+        });
+      }
+    }
+
     const totalAmount = cart.products.reduce(
       (sum, item) => sum + item.product.price * item.quantity,
       0,
@@ -22,13 +32,49 @@ const placeOrder = async (req, res) => {
 
     const order = await Order.create({
       user: req.user.id,
-
       products: cart.products,
-
       totalAmount,
-
       address,
+      paymentId,
+      isPaid: true,
+      paidAt: Date.now(),
     });
+
+    const user = await User.findById(req.user.id);
+
+    try {
+      await sendEmail(
+        user.email,
+        "Order Placed",
+        `
+        <h2>
+          Your order has been placed successfully.
+        </h2>
+
+        <p>
+          Order ID:
+          ${order._id}
+        </p>
+
+        <p>
+          Amount:
+          ₹${totalAmount}
+        </p>
+
+        <p>
+          Thank you for shopping with us.
+        </p>
+        `,
+      );
+    } catch (error) {
+      console.log("Order Email Error:", error.message);
+    }
+
+    for (const item of cart.products) {
+      item.product.stock -= item.quantity;
+
+      await item.product.save();
+    }
 
     cart.products = [];
 
@@ -43,15 +89,21 @@ const placeOrder = async (req, res) => {
 };
 
 const getMyOrders = async (req, res) => {
-  const orders = await Order.find({
-    user: req.user.id,
-  })
-    .populate("products.product")
-    .sort({
-      createdAt: -1,
-    });
+  try {
+    const orders = await Order.find({
+      user: req.user.id,
+    })
+      .populate("products.product")
+      .sort({
+        createdAt: -1,
+      });
 
-  res.json(orders);
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 const getAllOrders = async (req, res) => {
@@ -59,7 +111,9 @@ const getAllOrders = async (req, res) => {
     const orders = await Order.find()
       .populate("user")
       .populate("products.product")
-      .sort({ createdAt: -1 });
+      .sort({
+        createdAt: -1,
+      });
 
     res.json(orders);
   } catch (error) {
@@ -85,6 +139,72 @@ const updateOrderStatus = async (req, res) => {
 
     await order.save();
 
+    const user = await User.findById(order.user);
+
+    if (status === "Shipped") {
+      try {
+        await sendEmail(
+          user.email,
+          "Order Shipped",
+          `
+      <h2>
+        Your order is on the way.
+      </h2>
+
+      <p>
+        Order ID: ${order._id}
+      </p>
+      `,
+        );
+      } catch (error) {
+        console.log("Shipment Email Error:", error.message);
+      }
+    }
+
+    if (status === "Delivered") {
+      try {
+        await sendEmail(
+          user.email,
+          "Order Delivered",
+          `
+      <h2>
+        Your order has been delivered.
+      </h2>
+
+      <p>
+        Order ID: ${order._id}
+      </p>
+
+      <p>
+        Thank you for shopping with us.
+      </p>
+      `,
+        );
+      } catch (error) {
+        console.log("Delivery Email Error:", error.message);
+      }
+    }
+
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const getOrderById = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate("products.product")
+      .populate("user");
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
     res.json(order);
   } catch (error) {
     res.status(500).json({
@@ -94,8 +214,9 @@ const updateOrderStatus = async (req, res) => {
 };
 
 module.exports = {
-    placeOrder,
-    getMyOrders,
-    getAllOrders,
-    updateOrderStatus,
+  placeOrder,
+  getMyOrders,
+  getAllOrders,
+  updateOrderStatus,
+  getOrderById,
 };

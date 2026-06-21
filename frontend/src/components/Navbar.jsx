@@ -1,20 +1,163 @@
-import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 
 function Navbar() {
   const { cartCount } = useContext(CartContext);
 
+  const navigate = useNavigate();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const token = localStorage.getItem("token");
+
+  const logout = () => {
+    localStorage.removeItem("token");
+
+    navigate("/login");
+  };
+
   return (
-    <nav className="bg-black text-white p-4">
-      <div className="flex gap-5">
-        <Link to="/">Home</Link>
+    <nav
+      className="
+      bg-white
+      border-b
+      sticky
+      top-0
+      z-50
+      "
+    >
+      <div
+        className="
+        max-w-7xl
+        mx-auto
+        px-4
+        py-4
+        "
+      >
+        <div
+          className="
+          flex
+          justify-between
+          items-center
+          "
+        >
+          <Link
+            to="/"
+            className="
+            text-2xl
+            font-bold
+            "
+          >
+            CLOTHIFY
+          </Link>
 
-        <Link to="/products">Products</Link>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="
+            md:hidden
+            text-2xl
+            "
+          >
+            ☰
+          </button>
 
-        <Link to="/cart">Cart ({cartCount})</Link>
+          <div
+            className="
+            hidden
+            md:flex
+            items-center
+            gap-6
+            "
+          >
+            <Link to="/">Home</Link>
 
-        <Link to="/wishlist">Wishlist</Link>
+            <Link to="/products">Products</Link>
+
+            <Link to="/wishlist">Wishlist</Link>
+
+            <Link to="/cart">Cart ({cartCount})</Link>
+
+            <Link to="/orders">Orders</Link>
+
+            <Link to="/profile">Profile</Link>
+
+            <Link to="/addresses">Addresses</Link>
+
+            {token ? (
+              <button
+                onClick={logout}
+                className="
+                bg-black
+                text-white
+                px-4
+                py-2
+                rounded
+                "
+              >
+                Logout
+              </button>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
+          </div>
+        </div>
+
+        {menuOpen && (
+          <div
+            className="
+            md:hidden
+            flex
+            flex-col
+            gap-4
+            mt-4
+            "
+          >
+            <Link to="/" onClick={() => setMenuOpen(false)}>
+              Home
+            </Link>
+
+            <Link to="/products" onClick={() => setMenuOpen(false)}>
+              Products
+            </Link>
+
+            <Link to="/wishlist" onClick={() => setMenuOpen(false)}>
+              Wishlist
+            </Link>
+
+            <Link to="/cart" onClick={() => setMenuOpen(false)}>
+              Cart ({cartCount})
+            </Link>
+
+            <Link to="/orders" onClick={() => setMenuOpen(false)}>
+              Orders
+            </Link>
+
+            <Link to="/profile" onClick={() => setMenuOpen(false)}>
+              Profile
+            </Link>
+
+            <Link to="/addresses" onClick={() => setMenuOpen(false)}>
+              Addresses
+            </Link>
+
+            {token ? (
+              <button
+                onClick={logout}
+                className="
+                bg-black
+                text-white
+                py-2
+                rounded
+                "
+              >
+                Logout
+              </button>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   );

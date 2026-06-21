@@ -14,7 +14,25 @@ const createProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   const filter = {};
+  if (req.query.minPrice) {
+    filter.price = {
+      ...filter.price,
+      $gte: Number(req.query.minPrice),
+    };
+  }
 
+  if (req.query.maxPrice) {
+    filter.price = {
+      ...filter.price,
+      $lte: Number(req.query.maxPrice),
+    };
+  }
+
+  if (req.query.inStock === "true") {
+    filter.stock = {
+      $gt: 0,
+    };
+  }
   if (req.query.keyword) {
     filter.title = {
       $regex: req.query.keyword,
@@ -26,7 +44,25 @@ const getProducts = async (req, res) => {
     filter.category = req.query.category;
   }
 
-  const products = await Product.find(filter);
+  let sort = {};
+
+  if (req.query.sort === "price-low") {
+    sort.price = 1;
+  }
+
+  if (req.query.sort === "price-high") {
+    sort.price = -1;
+  }
+
+  if (req.query.sort === "newest") {
+    sort.createdAt = -1;
+  }
+
+  if (req.query.sort === "rating") {
+    sort.rating = -1;
+  }
+
+  const products = await Product.find(filter).sort(sort);
 
   res.json(products);
 };
@@ -130,6 +166,48 @@ const addReview = async (req, res) => {
   }
 };
 
+const getFeaturedProducts = async (req, res) => {
+  try {
+    const products = await Product.find()
+      .sort({
+        createdAt: -1,
+      })
+      .limit(4);
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const getRelatedProducts = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    const relatedProducts = await Product.find({
+      category: product.category,
+
+      _id: {
+        $ne: product._id,
+      },
+    }).limit(4);
+
+    res.json(relatedProducts);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   getProducts,
@@ -137,4 +215,6 @@ module.exports = {
   updateProduct,
   deleteProduct,
   addReview,
+  getFeaturedProducts,
+  getRelatedProducts,
 };

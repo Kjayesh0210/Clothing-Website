@@ -1,9 +1,16 @@
 const Cart = require("../models/Cart");
+const Product = require("../models/Product");
 
 const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
+    const product = await Product.findById(productId);
 
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
     let cart = await Cart.findOne({
       user: req.user.id,
     });
@@ -20,8 +27,22 @@ const addToCart = async (req, res) => {
     );
 
     if (itemIndex > -1) {
-      cart.products[itemIndex].quantity += quantity;
+      const newQuantity = cart.products[itemIndex].quantity + quantity;
+
+      if (newQuantity > product.stock) {
+        return res.status(400).json({
+          message: "Not enough stock",
+        });
+      }
+
+      cart.products[itemIndex].quantity = newQuantity;
     } else {
+      if (quantity > product.stock) {
+        return res.status(400).json({
+          message: "Not enough stock",
+        });
+      }
+
       cart.products.push({
         product: productId,
         quantity,
@@ -71,6 +92,20 @@ const updateCartItem = async (req, res) => {
     if (!item) {
       return res.status(404).json({
         message: "Product not found",
+      });
+    }
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    if (quantity > product.stock) {
+      return res.status(400).json({
+        message: "Not enough stock",
       });
     }
 
