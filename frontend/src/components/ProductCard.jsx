@@ -65,24 +65,65 @@ function ProductCard({ product }) {
             font-bold
             "
           >
-            ₹{product.price}
+            <div>
+              <span
+                className="
+    text-xl
+    font-bold
+    "
+              >
+                ₹{product.price}
+              </span>
+
+              {product.originalPrice > product.price && (
+                <>
+                  <span
+                    className="
+        line-through
+        text-gray-500
+        ml-2
+        "
+                  >
+                    ₹{product.originalPrice}
+                  </span>
+
+                  <span
+                    className="
+        text-green-600
+        ml-2
+        "
+                  >
+                    {product.discountPercentage}% OFF
+                  </span>
+                </>
+              )}
+            </div>
           </span>
 
-          {product.stock > 0 ? (
+          {product.stock > 5 ? (
             <span
               className="
-              text-green-600
-              text-sm
-              "
+    text-green-600
+    text-sm
+    "
             >
               In Stock
+            </span>
+          ) : product.stock > 0 ? (
+            <span
+              className="
+    text-orange-500
+    text-sm
+    "
+            >
+              Only {product.stock} left
             </span>
           ) : (
             <span
               className="
-              text-red-500
-              text-sm
-              "
+    text-red-500
+    text-sm
+    "
             >
               Out of Stock
             </span>

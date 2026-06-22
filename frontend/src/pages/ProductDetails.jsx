@@ -112,17 +112,36 @@ function ProductDetails() {
     <div className="max-w-7xl mx-auto p-4 md:p-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <div>
-          <img
-            src={selectedImage || "https://via.placeholder.com/500"}
-            alt={product.title}
-            className="
-            w-full
-            h-[500px]
-            object-cover
-            rounded-lg
-            border
-            "
-          />
+          <div className="relative">
+            <img
+              src={selectedImage || "https://via.placeholder.com/500"}
+              alt={product.title}
+              className="
+      w-full
+      h-[500px]
+      object-cover
+      rounded-lg
+      border
+      "
+            />
+
+            {product.discountPercentage > 0 && (
+              <div
+                className="
+        absolute
+        top-3
+        left-3
+        bg-red-500
+        text-white
+        px-3
+        py-1
+        rounded
+        "
+              >
+                {product.discountPercentage}% OFF
+              </div>
+            )}
+          </div>
 
           <div className="flex gap-3 mt-4 flex-wrap">
             {product.images?.map((image, index) => (
@@ -132,14 +151,14 @@ function ProductDetails() {
                 alt=""
                 onClick={() => setSelectedImage(image)}
                 className={`
-                  w-24
-                  h-24
-                  object-cover
-                  rounded
-                  border
-                  cursor-pointer
-                  ${selectedImage === image ? "border-black" : ""}
-                  `}
+          w-24
+          h-24
+          object-cover
+          rounded
+          border
+          cursor-pointer
+          ${selectedImage === image ? "border-black" : ""}
+        `}
               />
             ))}
           </div>
@@ -173,7 +192,39 @@ function ProductDetails() {
             mb-4
             "
           >
-            ₹{product.price}
+            <div className="mb-4">
+              <span
+                className="
+    text-3xl
+    font-bold
+    "
+              >
+                ₹{product.price}
+              </span>
+
+              {product.originalPrice > product.price && (
+                <>
+                  <span
+                    className="
+        line-through
+        text-gray-500
+        ml-3
+        "
+                  >
+                    ₹{product.originalPrice}
+                  </span>
+
+                  <span
+                    className="
+        text-green-600
+        ml-3
+        "
+                  >
+                    {product.discountPercentage}% OFF
+                  </span>
+                </>
+              )}
+            </div>
           </p>
 
           <p

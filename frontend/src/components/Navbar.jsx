@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
-
+import api from "../services/api";
 function Navbar() {
   const { cartCount } = useContext(CartContext);
 
@@ -11,10 +11,31 @@ function Navbar() {
 
   const token = localStorage.getItem("token");
 
+  const [keyword, setKeyword] = useState("");
+
+  const [suggestions, setSuggestions] = useState([]);
+
   const logout = () => {
     localStorage.removeItem("token");
 
     navigate("/login");
+  };
+
+  const searchProducts = async (value) => {
+    setKeyword(value);
+
+    if (!value.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    try {
+      const res = await api.get(`/products/search?keyword=${value}`);
+
+      setSuggestions(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -83,7 +104,48 @@ function Navbar() {
             <Link to="/profile">Profile</Link>
 
             <Link to="/addresses">Addresses</Link>
+            <div className="relative">
+              <input
+                value={keyword}
+                onChange={(e) => searchProducts(e.target.value)}
+                placeholder="Search..."
+                className="
+    border
+    px-3
+    py-2
+    rounded
+    "
+              />
 
+              {suggestions.length > 0 && (
+                <div
+                  className="
+      absolute
+      top-full
+      left-0
+      bg-white
+      border
+      w-full
+      shadow
+      z-50
+      "
+                >
+                  {suggestions.map((product) => (
+                    <Link
+                      key={product._id}
+                      to={`/product/${product._id}`}
+                      className="
+            block
+            p-2
+            hover:bg-gray-100
+            "
+                    >
+                      {product.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
             {token ? (
               <button
                 onClick={logout}

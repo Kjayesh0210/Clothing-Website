@@ -14,6 +14,8 @@ function EditProduct() {
     title: "",
     description: "",
     price: "",
+    originalPrice: "",
+    discountPercentage: "",
     category: "",
     stock: "",
     images: [],
@@ -33,6 +35,8 @@ function EditProduct() {
         title: res.data.title || "",
         description: res.data.description || "",
         price: res.data.price || "",
+        originalPrice: res.data.originalPrice || "",
+        discountPercentage: res.data.discountPercentage || "",
         category: res.data.category || "",
         stock: res.data.stock || "",
         images: res.data.images || [],
@@ -81,6 +85,8 @@ function EditProduct() {
           title: form.title,
           description: form.description,
           price: Number(form.price),
+          originalPrice: Number(form.originalPrice),
+          discountPercentage: Number(form.discountPercentage),
           category: form.category,
           stock: Number(form.stock),
           images: uploadedImages,
@@ -133,7 +139,23 @@ function EditProduct() {
           className="border p-3"
           placeholder="Price"
         />
+        <input
+          type="number"
+          name="originalPrice"
+          value={form.originalPrice}
+          onChange={handleChange}
+          className="border p-3"
+          placeholder="Original Price"
+        />
 
+        <input
+          type="number"
+          name="discountPercentage"
+          value={form.discountPercentage}
+          onChange={handleChange}
+          className="border p-3"
+          placeholder="Discount %"
+        />
         <input
           name="category"
           value={form.category}

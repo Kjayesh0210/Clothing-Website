@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import toast from "react-hot-toast";
 
 function Checkout() {
+  const navigate = useNavigate();
+
   const [address, setAddress] = useState("");
   const [cart, setCart] = useState(null);
 
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [useSavedAddress, setUseSavedAddress] = useState(true);
+
+  const [coupon, setCoupon] = useState("");
+  const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
     fetchCart();
@@ -47,18 +53,36 @@ function Checkout() {
     }
   };
 
-  const total =
+  const subtotal =
     cart?.products?.reduce(
       (sum, item) => sum + item.product.price * item.quantity,
       0,
     ) || 0;
+
+  const discountAmount = (subtotal * discount) / 100;
+
+  const total = subtotal - discountAmount;
+
+  const applyCoupon = async () => {
+    try {
+      const res = await api.post("/coupons/validate", {
+        code: coupon,
+      });
+
+      setDiscount(res.data.discount);
+
+      toast.success("Coupon Applied");
+    } catch (error) {
+      toast.error("Invalid Coupon");
+    }
+  };
 
   const handlePayment = async () => {
     try {
       const finalAddress = useSavedAddress ? selectedAddress : address;
 
       if (!finalAddress.trim()) {
-        toast("Please select or enter an address");
+        toast.error("Please select or enter an address");
         return;
       }
 
@@ -102,7 +126,7 @@ function Checkout() {
 
               toast.success("Payment Successful");
 
-              window.location.href = "/orders";
+              navigate("/orders");
             }
           } catch (error) {
             console.log(error);
@@ -136,8 +160,27 @@ function Checkout() {
     <div className="p-4 md:p-10">
       <h1 className="text-3xl mb-5">Checkout</h1>
 
-      <div className="mb-5">
-        <h2 className="text-2xl">Total: ₹{total}</h2>
+      <div
+        className="
+        border
+        p-4
+        rounded
+        mb-5
+        "
+      >
+        <p>Subtotal: ₹{subtotal}</p>
+
+        <p className="text-green-600">Discount: ₹{discountAmount}</p>
+
+        <h2
+          className="
+          text-2xl
+          font-bold
+          mt-2
+          "
+        >
+          Total: ₹{total}
+        </h2>
       </div>
 
       <div className="mb-5">
@@ -194,17 +237,43 @@ function Checkout() {
         />
       )}
 
+      <div className="mt-5">
+        <input
+          value={coupon}
+          onChange={(e) => setCoupon(e.target.value)}
+          placeholder="Coupon Code"
+          className="
+          border
+          p-3
+          w-full
+          "
+        />
+
+        <button
+          onClick={applyCoupon}
+          className="
+          bg-gray-800
+          text-white
+          px-5
+          py-3
+          mt-2
+          "
+        >
+          Apply Coupon
+        </button>
+      </div>
+
       <button
         onClick={handlePayment}
         className="
-  bg-black
-  text-white
-  px-6
-  py-3
-  mt-5
-  w-full
-  md:w-auto
-  "
+        bg-black
+        text-white
+        px-6
+        py-3
+        mt-5
+        w-full
+        md:w-auto
+        "
       >
         Pay ₹{total}
       </button>

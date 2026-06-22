@@ -32,7 +32,7 @@ function AdminProducts() {
 
     try {
       const token = localStorage.getItem("token");
-
+      // console.log("Deleting:", id);
       await api.delete(`/products/${id}`, {
         headers: {
           Authorization: token,

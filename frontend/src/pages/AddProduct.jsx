@@ -22,6 +22,8 @@ function AddProduct() {
     title: "",
     description: "",
     price: "",
+    originalPrice: "",
+    discountPercentage: "",
     category: "",
     stock: "",
     image: "",
@@ -58,6 +60,8 @@ function AddProduct() {
           title: form.title,
           description: form.description,
           price: Number(form.price),
+          originalPrice: Number(form.originalPrice),
+          discountPercentage: Number(form.discountPercentage),
           category: form.category,
           stock: Number(form.stock),
           images: uploadedImages,
@@ -68,7 +72,6 @@ function AddProduct() {
           },
         },
       );
-
       toast.success("Product Added");
 
       navigate("/admin/products");
@@ -105,7 +108,23 @@ function AddProduct() {
           onChange={handleChange}
           className="border p-3"
         />
+        <input
+          type="number"
+          name="originalPrice"
+          placeholder="Original Price"
+          value={form.originalPrice}
+          onChange={handleChange}
+          className="border p-3"
+        />
 
+        <input
+          type="number"
+          name="discountPercentage"
+          placeholder="Discount %"
+          value={form.discountPercentage}
+          onChange={handleChange}
+          className="border p-3"
+        />
         <input
           type="text"
           name="category"
