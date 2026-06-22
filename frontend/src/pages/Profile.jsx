@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import toast from "react-hot-toast";
-
+import { Link } from "react-router-dom";
 function Profile() {
   const [form, setForm] = useState({
     name: "",
@@ -103,7 +103,37 @@ w-full mx-auto p-10"
           p-3
           "
         />
+        <div className="grid md:grid-cols-2 gap-4 mt-6">
+          <Link
+            to="/orders"
+            className="
+    border
+    rounded-lg
+    p-5
+    hover:shadow-lg
+    transition
+    "
+          >
+            <h3 className="text-lg font-semibold">My Orders</h3>
 
+            <p className="text-gray-500 mt-1">View and track your orders</p>
+          </Link>
+
+          <Link
+            to="/addresses"
+            className="
+    border
+    rounded-lg
+    p-5
+    hover:shadow-lg
+    transition
+    "
+          >
+            <h3 className="text-lg font-semibold">Saved Addresses</h3>
+
+            <p className="text-gray-500 mt-1">Manage delivery addresses</p>
+          </Link>
+        </div>
         <button
           onClick={saveProfile}
           className="

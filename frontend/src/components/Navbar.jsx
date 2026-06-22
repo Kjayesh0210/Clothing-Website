@@ -103,7 +103,7 @@ function Navbar() {
 
             <Link to="/profile">Profile</Link>
 
-            <Link to="/addresses">Addresses</Link>
+            {/* <Link to="/addresses">Addresses</Link> */}
             <div className="relative">
               <input
                 value={keyword}

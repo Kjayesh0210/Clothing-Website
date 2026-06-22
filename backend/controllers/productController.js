@@ -13,58 +13,96 @@ const createProduct = async (req, res) => {
 };
 
 const getProducts = async (req, res) => {
-  const filter = {};
-  if (req.query.minPrice) {
-    filter.price = {
-      ...filter.price,
-      $gte: Number(req.query.minPrice),
-    };
+  try {
+    const {
+      category,
+      keyword,
+      minPrice,
+      maxPrice,
+      inStock,
+      sort,
+      page = 1,
+      limit = 12,
+    } = req.query;
+
+    const filter = {};
+
+    if (category) {
+      filter.category = category;
+    }
+
+    if (keyword?.trim()) {
+      filter.title = {
+        $regex: keyword.trim(),
+        $options: "i",
+      };
+    }
+
+    if (minPrice || maxPrice) {
+      filter.price = {};
+
+      if (minPrice) {
+        filter.price.$gte = Number(minPrice);
+      }
+
+      if (maxPrice) {
+        filter.price.$lte = Number(maxPrice);
+      }
+    }
+
+    if (inStock === "true") {
+      filter.stock = {
+        $gt: 0,
+      };
+    }
+
+    let sortOption = {};
+
+    switch (sort) {
+      case "price-low":
+        sortOption.price = 1;
+        break;
+
+      case "price-high":
+        sortOption.price = -1;
+        break;
+
+      case "newest":
+        sortOption.createdAt = -1;
+        break;
+
+      case "rating":
+        sortOption.rating = -1;
+        break;
+
+      default:
+        sortOption.createdAt = -1;
+    }
+
+    const currentPage = Math.max(1, Number(page) || 1);
+
+    const pageLimit = Math.max(1, Number(limit) || 12);
+
+    const skip = (currentPage - 1) * pageLimit;
+
+    const products = await Product.find(filter)
+      .sort(sortOption)
+      .skip(skip)
+      .limit(pageLimit);
+
+    const totalProducts = await Product.countDocuments(filter);
+
+    res.status(200).json({
+      products,
+      currentPage,
+      totalPages: Math.ceil(totalProducts / pageLimit),
+      totalProducts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
   }
-
-  if (req.query.maxPrice) {
-    filter.price = {
-      ...filter.price,
-      $lte: Number(req.query.maxPrice),
-    };
-  }
-
-  if (req.query.inStock === "true") {
-    filter.stock = {
-      $gt: 0,
-    };
-  }
-  if (req.query.keyword) {
-    filter.title = {
-      $regex: req.query.keyword,
-      $options: "i",
-    };
-  }
-
-  if (req.query.category) {
-    filter.category = req.query.category;
-  }
-
-  let sort = {};
-
-  if (req.query.sort === "price-low") {
-    sort.price = 1;
-  }
-
-  if (req.query.sort === "price-high") {
-    sort.price = -1;
-  }
-
-  if (req.query.sort === "newest") {
-    sort.createdAt = -1;
-  }
-
-  if (req.query.sort === "rating") {
-    sort.rating = -1;
-  }
-
-  const products = await Product.find(filter).sort(sort);
-
-  res.json(products);
 };
 
 const getProduct = async (req, res) => {
