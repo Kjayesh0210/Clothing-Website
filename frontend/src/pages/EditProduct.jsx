@@ -19,6 +19,7 @@ function EditProduct() {
     category: "",
     stock: "",
     images: [],
+    sizes: [],
   });
 
   useEffect(() => {
@@ -40,6 +41,7 @@ function EditProduct() {
         category: res.data.category || "",
         stock: res.data.stock || "",
         images: res.data.images || [],
+        sizes: res.data.sizes || [],
       });
     } catch (error) {
       console.log(error);
@@ -55,6 +57,15 @@ function EditProduct() {
 
   const handleFiles = (e) => {
     setNewImages(Array.from(e.target.files));
+  };
+
+  const handleSizeChange = (size) => {
+    setForm((prev) => ({
+      ...prev,
+      sizes: prev.sizes.includes(size)
+        ? prev.sizes.filter((s) => s !== size)
+        : [...prev.sizes, size],
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -90,6 +101,7 @@ function EditProduct() {
           category: form.category,
           stock: Number(form.stock),
           images: uploadedImages,
+          sizes: form.sizes,
         },
         {
           headers: {
@@ -172,6 +184,31 @@ function EditProduct() {
           className="border p-3"
           placeholder="Stock"
         />
+        
+        <div>
+          <p className="mb-2 font-semibold">Available Sizes</p>
+
+          <div className="flex gap-3 flex-wrap">
+            {["S", "M", "L", "XL", "XXL"].map((size) => (
+              <label
+                key={size}
+                className="
+          flex
+          items-center
+          gap-1
+          "
+              >
+                <input
+                  type="checkbox"
+                  checked={form.sizes.includes(size)}
+                  onChange={() => handleSizeChange(size)}
+                />
+
+                {size}
+              </label>
+            ))}
+          </div>
+        </div>
 
         <div className="flex gap-3 flex-wrap">
           {form.images?.map((img, index) => (

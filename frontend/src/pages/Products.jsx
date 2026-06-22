@@ -14,15 +14,16 @@ function Products() {
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [gender, setGender] = useState("");
 
   useEffect(() => {
     fetchProducts();
-  }, [category, keyword, minPrice, maxPrice, sort, inStock, page]);
+  }, [category, keyword, minPrice, maxPrice, sort, inStock, gender, page]);
 
   const fetchProducts = async () => {
     try {
       const res = await api.get(
-        `/products?category=${category}&keyword=${keyword}&minPrice=${minPrice}&maxPrice=${maxPrice}&inStock=${inStock}&sort=${sort}&page=${page}`,
+        `/products?category=${category}&keyword=${keyword}&minPrice=${minPrice}&maxPrice=${maxPrice}&inStock=${inStock}&sort=${sort}&gender=${gender}&page=${page}`,
       );
 
       setProducts(res.data.products);
@@ -110,6 +111,20 @@ function Products() {
           <option value="rating">Best Rated</option>
         </select>
 
+        <select
+          value={gender}
+          onChange={(e) => {
+            setGender(e.target.value);
+            setPage(1);
+          }}
+          className="border p-2"
+        >
+          <option value="">All</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Unisex">Unisex</option>
+        </select>
+
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -129,6 +144,7 @@ function Products() {
             setMinPrice("");
             setMaxPrice("");
             setSort("");
+            setGender("");
             setInStock(false);
             setPage(1);
           }}

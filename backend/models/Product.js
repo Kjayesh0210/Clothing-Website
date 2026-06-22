@@ -38,11 +38,10 @@ const productSchema = new mongoose.Schema(
       },
     ],
 
-    sizes: [
-      {
-        type: String,
-      },
-    ],
+    sizes: {
+      type: [String],
+      default: [],
+    },
 
     ratings: {
       type: Number,
@@ -80,6 +79,12 @@ const productSchema = new mongoose.Schema(
     discountPercentage: {
       type: Number,
       default: 0,
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Unisex"],
+      default: "Unisex",
+      required: true,
     },
   },
   {

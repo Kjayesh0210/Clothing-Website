@@ -21,6 +21,7 @@ const getProducts = async (req, res) => {
       maxPrice,
       inStock,
       sort,
+      gender,
       page = 1,
       limit = 12,
     } = req.query;
@@ -30,7 +31,9 @@ const getProducts = async (req, res) => {
     if (category) {
       filter.category = category;
     }
-
+    if (gender) {
+      filter.gender = gender;
+    }
     if (keyword?.trim()) {
       filter.title = {
         $regex: keyword.trim(),

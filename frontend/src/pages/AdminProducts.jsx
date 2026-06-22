@@ -14,7 +14,8 @@ function AdminProducts() {
   const fetchProducts = async () => {
     try {
       const res = await api.get("/products");
-      setProducts(res.data);
+
+      setProducts(res.data.products);
     } catch (error) {
       console.log(error);
       toast.error("Failed to fetch products");

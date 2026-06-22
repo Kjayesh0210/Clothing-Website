@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { Link }
-from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Cart() {
   const [cart, setCart] = useState(null);
@@ -85,7 +84,7 @@ function Cart() {
         >
           <div>
             <h2>{item.product.title}</h2>
-
+            <p>Size: {item.size}</p>
             <p>₹{item.product.price}</p>
           </div>
 

@@ -27,6 +27,8 @@ function AddProduct() {
     category: "",
     stock: "",
     image: "",
+    gender: "Unisex",
+    sizes: [],
   });
 
   const handleChange = (e) => {
@@ -63,8 +65,10 @@ function AddProduct() {
           originalPrice: Number(form.originalPrice),
           discountPercentage: Number(form.discountPercentage),
           category: form.category,
+          gender: form.gender,
           stock: Number(form.stock),
           images: uploadedImages,
+          sizes: form.sizes,
         },
         {
           headers: {
@@ -78,6 +82,20 @@ function AddProduct() {
     } catch (error) {
       console.log(error);
       toast.error("Failed to add product");
+    }
+  };
+
+  const handleSizeChange = (size) => {
+    if (form.sizes.includes(size)) {
+      setForm({
+        ...form,
+        sizes: form.sizes.filter((item) => item !== size),
+      });
+    } else {
+      setForm({
+        ...form,
+        sizes: [...form.sizes, size],
+      });
     }
   };
 
@@ -140,6 +158,46 @@ function AddProduct() {
           onChange={handleChange}
           className="border p-3"
         />
+        <select
+          name="gender"
+          value={form.gender}
+          onChange={handleChange}
+          className="
+          border
+          p-3
+          "
+        >
+          <option value="Male">Male</option>
+
+          <option value="Female">Female</option>
+
+          <option value="Unisex">Unisex</option>
+        </select>
+
+        <div>
+          <p className="mb-2 font-semibold">Available Sizes</p>
+
+          <div className="flex gap-3 flex-wrap">
+            {["S", "M", "L", "XL", "XXL"].map((size) => (
+              <label
+                key={size}
+                className="
+          flex
+          items-center
+          gap-1
+          "
+              >
+                <input
+                  type="checkbox"
+                  checked={form.sizes.includes(size)}
+                  onChange={() => handleSizeChange(size)}
+                />
+
+                {size}
+              </label>
+            ))}
+          </div>
+        </div>
 
         <input
           type="file"

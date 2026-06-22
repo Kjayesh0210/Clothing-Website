@@ -3,7 +3,7 @@ const Product = require("../models/Product");
 
 const addToCart = async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
+    const { productId, quantity, size } = req.body;
     const product = await Product.findById(productId);
 
     if (!product) {
@@ -23,7 +23,7 @@ const addToCart = async (req, res) => {
     }
 
     const itemIndex = cart.products.findIndex(
-      (item) => item.product.toString() === productId,
+      (item) => item.product.toString() === productId && item.size === size,
     );
 
     if (itemIndex > -1) {
@@ -46,6 +46,7 @@ const addToCart = async (req, res) => {
       cart.products.push({
         product: productId,
         quantity,
+        size,
       });
     }
 
@@ -75,7 +76,7 @@ const getCart = async (req, res) => {
 
 const updateCartItem = async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
+    const { productId, quantity, size } = req.body;
 
     const cart = await Cart.findOne({
       user: req.user.id,
@@ -87,7 +88,9 @@ const updateCartItem = async (req, res) => {
       });
     }
 
-    const item = cart.products.find((p) => p.product.toString() === productId);
+    const item = cart.products.find(
+      (p) => p.product.toString() === productId && p.size === size,
+    );
 
     if (!item) {
       return res.status(404).json({
@@ -123,14 +126,14 @@ const updateCartItem = async (req, res) => {
 
 const removeFromCart = async (req, res) => {
   try {
-    const { productId } = req.body;
+    const { productId, size } = req.body;
 
     const cart = await Cart.findOne({
       user: req.user.id,
     });
 
     cart.products = cart.products.filter(
-      (item) => item.product.toString() !== productId,
+      (item) => !(item.product.toString() === productId && item.size === size),
     );
 
     await cart.save();

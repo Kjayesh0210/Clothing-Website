@@ -12,6 +12,7 @@ function ProductDetails() {
   const [selectedImage, setSelectedImage] = useState("");
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
 
   useEffect(() => {
     fetchProduct();
@@ -30,6 +31,11 @@ function ProductDetails() {
 
   const addToCart = async () => {
     try {
+      if (product.sizes?.length > 0 && !selectedSize) {
+        toast.error("Please select a size");
+
+        return;
+      }
       const token = localStorage.getItem("token");
 
       await api.post(
@@ -37,6 +43,7 @@ function ProductDetails() {
         {
           productId: product._id,
           quantity: 1,
+          size: selectedSize,
         },
         {
           headers: {
@@ -195,9 +202,9 @@ function ProductDetails() {
             <div className="mb-4">
               <span
                 className="
-    text-3xl
-    font-bold
-    "
+                text-3xl
+                font-bold
+                "
               >
                 ₹{product.price}
               </span>
@@ -206,19 +213,19 @@ function ProductDetails() {
                 <>
                   <span
                     className="
-        line-through
-        text-gray-500
-        ml-3
-        "
+                    line-through
+                    text-gray-500
+                    ml-3
+                    "
                   >
                     ₹{product.originalPrice}
                   </span>
 
                   <span
                     className="
-        text-green-600
-        ml-3
-        "
+                    text-green-600
+                    ml-3
+                    "
                   >
                     {product.discountPercentage}% OFF
                   </span>
@@ -235,7 +242,7 @@ function ProductDetails() {
           >
             Category: {product.category}
           </p>
-
+          <p className="text-gray-500">Gender: {product.gender}</p>
           <p
             className={`
             font-semibold
@@ -255,7 +262,27 @@ function ProductDetails() {
           >
             {product.description}
           </p>
+          <div className="mt-5">
+            <p className="font-semibold mb-2">Select Size</p>
 
+            <div className="flex gap-3">
+              {product.sizes?.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  className={`
+          px-4
+          py-2
+          border
+          rounded
+          ${selectedSize === size ? "bg-black text-white" : ""}
+        `}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="flex flex-col gap-3">
             {product.stock > 0 ? (
               <>

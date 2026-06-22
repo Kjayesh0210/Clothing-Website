@@ -57,19 +57,38 @@ function OrderDetails() {
 
       {order.products.map((item) => (
         <div
-          key={item.product._id}
+          key={`${item.product._id}-${item.size}`}
           className="
-            border
-            p-3
-            mb-2
-            "
+    border
+    p-4
+    mb-3
+    rounded
+    flex
+    gap-4
+    items-center
+    "
         >
-          <p>{item.product.title}</p>
+          <img
+            src={item.product.images?.[0]}
+            alt={item.product.title}
+            className="
+      w-20
+      h-20
+      object-cover
+      rounded
+      "
+          />
+          <div>
+            <h3 className="font-semibold">{item.product.title}</h3>
 
-          <p>
-            Qty:
-            {item.quantity}
-          </p>
+            <p className="text-gray-600">Category: {item.product.category}</p>
+
+            <p className="text-gray-600">Price: ₹{item.product.price}</p>
+
+            <p className="text-gray-600">Size: {item.size || "N/A"}</p>
+
+            <p className="text-gray-600">Quantity: {item.quantity}</p>
+          </div>
         </div>
       ))}
     </div>
