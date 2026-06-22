@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
+const Product = require("../models/Product");
 
 const placeOrder = async (req, res) => {
   try {
@@ -213,10 +214,39 @@ const getOrderById = async (req, res) => {
   }
 };
 
+const getDashboardStats = async (req, res) => {
+  try {
+    const totalOrders = await Order.countDocuments();
+
+    const totalProducts = await Product.countDocuments();
+
+    const totalUsers = await User.countDocuments();
+
+    const orders = await Order.find();
+
+    const totalRevenue = orders.reduce(
+      (sum, order) => sum + order.totalAmount,
+      0,
+    );
+
+    res.json({
+      totalRevenue,
+      totalOrders,
+      totalProducts,
+      totalUsers,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   placeOrder,
   getMyOrders,
   getAllOrders,
   updateOrderStatus,
   getOrderById,
+  getDashboardStats,
 };

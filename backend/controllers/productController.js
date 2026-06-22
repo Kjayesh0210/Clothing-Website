@@ -208,6 +208,41 @@ const getRelatedProducts = async (req, res) => {
   }
 };
 
+const searchProducts = async (req, res) => {
+  try {
+    const keyword = req.query.keyword;
+
+    const products = await Product.find({
+      title: {
+        $regex: keyword,
+        $options: "i",
+      },
+    }).limit(5);
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const getLowStockProducts = async (req, res) => {
+  try {
+    const products = await Product.find({
+      stock: {
+        $lte: 5,
+      },
+    });
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   getProducts,
@@ -217,4 +252,6 @@ module.exports = {
   addReview,
   getFeaturedProducts,
   getRelatedProducts,
+  searchProducts,
+  getLowStockProducts,
 };

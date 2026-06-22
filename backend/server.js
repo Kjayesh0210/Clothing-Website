@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const couponRoutes = require("./routes/couponRoutes");
 
 const connectDB = require("./config/db");
 
@@ -41,6 +42,7 @@ app.use("/api/wishlist", require("./routes/wishlistRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/upload", require("./routes/uploadRoutes"));
 app.use("/api/payment", require("./routes/paymentRoutes"));
+app.use("/api/coupons", couponRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running");

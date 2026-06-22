@@ -10,6 +10,8 @@ const {
   addReview,
   getFeaturedProducts,
   getRelatedProducts,
+  searchProducts,
+  getLowStockProducts,
 } = require("../controllers/productController");
 
 const protect = require("../middleware/authMiddleware");
@@ -19,9 +21,13 @@ router.get("/", getProducts);
 
 router.get("/featured", getFeaturedProducts);
 
-router.get("/:id", getProduct);
-
 router.post("/", protect, isAdmin, createProduct);
+
+router.get("/search", searchProducts);
+
+router.get("/low-stock", getLowStockProducts);
+
+router.get("/:id", getProduct);
 
 router.put("/:id", protect, isAdmin, updateProduct);
 
