@@ -1,41 +1,51 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+import { useContext, useState, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
 import api from "../services/api";
+
 function Navbar() {
   const { cartCount } = useContext(CartContext);
-
-  const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
   const token = localStorage.getItem("token");
 
   const [keyword, setKeyword] = useState("");
+  const [debouncedKeyword, setDebouncedKeyword] = useState("");
 
   const [suggestions, setSuggestions] = useState([]);
 
-  const logout = () => {
-    localStorage.removeItem("token");
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(keyword);
+    }, 500);
 
-    navigate("/login");
-  };
+    return () => clearTimeout(timer);
+  }, [keyword]);
 
-  const searchProducts = async (value) => {
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (debouncedKeyword.trim().length < 2) {
+        setSuggestions([]);
+        return;
+      }
+
+      try {
+        const res = await api.get(
+          `/products/search?keyword=${debouncedKeyword}`,
+        );
+
+        setSuggestions(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchSuggestions();
+  }, [debouncedKeyword]);
+
+  const searchProducts = (value) => {
     setKeyword(value);
-
-    if (!value.trim()) {
-      setSuggestions([]);
-      return;
-    }
-
-    try {
-      const res = await api.get(`/products/search?keyword=${value}`);
-
-      setSuggestions(res.data);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (
@@ -91,54 +101,45 @@ function Navbar() {
             gap-6
             "
           >
-            <Link to="/">Home</Link>
-
-            <Link to="/products">Products</Link>
-
-            <Link to="/wishlist">Wishlist</Link>
-
-            <Link to="/cart">Cart ({cartCount})</Link>
-
-            <Link to="/orders">Orders</Link>
-
-            <Link to="/profile">Profile</Link>
-
-            {/* <Link to="/addresses">Addresses</Link> */}
             <div className="relative">
               <input
                 value={keyword}
                 onChange={(e) => searchProducts(e.target.value)}
                 placeholder="Search..."
                 className="
-    border
-    px-3
-    py-2
-    rounded
-    "
+                border
+                px-3
+                py-2
+                rounded
+                "
               />
 
               {suggestions.length > 0 && (
                 <div
                   className="
-      absolute
-      top-full
-      left-0
-      bg-white
-      border
-      w-full
-      shadow
-      z-50
-      "
+                  absolute
+                  top-full
+                  left-0
+                  bg-white
+                  border
+                  w-full
+                  shadow
+                  z-50
+                  "
                 >
                   {suggestions.map((product) => (
                     <Link
                       key={product._id}
-                      to={`/product/${product._id}`}
+                      to={`/products/${product._id}`}
+                      onClick={() => {
+                        setSuggestions([]);
+                        setKeyword("");
+                      }}
                       className="
-            block
-            p-2
-            hover:bg-gray-100
-            "
+                      block
+                      p-2
+                      hover:bg-gray-100
+                      "
                     >
                       {product.title}
                     </Link>
@@ -146,21 +147,27 @@ function Navbar() {
                 </div>
               )}
             </div>
+
+            <Link to="/">Home</Link>
+
+            <Link to="/products">Products</Link>
+
             {token ? (
-              <button
-                onClick={logout}
-                className="
-                bg-black
-                text-white
-                px-4
-                py-2
-                rounded
-                "
-              >
-                Logout
-              </button>
+              <>
+                <Link to="/cart">Cart ({cartCount})</Link>
+
+                <Link to="/wishlist">Wishlist</Link>
+
+                <Link to="/orders">Orders</Link>
+
+                <Link to="/profile">Profile</Link>
+              </>
             ) : (
-              <Link to="/login">Login</Link>
+              <>
+                <Link to="/login">Login</Link>
+
+                <Link to="/register">Register</Link>
+              </>
             )}
           </div>
         </div>
@@ -183,40 +190,34 @@ function Navbar() {
               Products
             </Link>
 
-            <Link to="/wishlist" onClick={() => setMenuOpen(false)}>
-              Wishlist
-            </Link>
-
-            <Link to="/cart" onClick={() => setMenuOpen(false)}>
-              Cart ({cartCount})
-            </Link>
-
-            <Link to="/orders" onClick={() => setMenuOpen(false)}>
-              Orders
-            </Link>
-
-            <Link to="/profile" onClick={() => setMenuOpen(false)}>
-              Profile
-            </Link>
-
-            <Link to="/addresses" onClick={() => setMenuOpen(false)}>
-              Addresses
-            </Link>
-
             {token ? (
-              <button
-                onClick={logout}
-                className="
-                bg-black
-                text-white
-                py-2
-                rounded
-                "
-              >
-                Logout
-              </button>
+              <>
+                <Link to="/cart" onClick={() => setMenuOpen(false)}>
+                  Cart ({cartCount})
+                </Link>
+
+                <Link to="/wishlist" onClick={() => setMenuOpen(false)}>
+                  Wishlist
+                </Link>
+
+                <Link to="/orders" onClick={() => setMenuOpen(false)}>
+                  Orders
+                </Link>
+
+                <Link to="/profile" onClick={() => setMenuOpen(false)}>
+                  Profile
+                </Link>
+              </>
             ) : (
-              <Link to="/login">Login</Link>
+              <>
+                <Link to="/login" onClick={() => setMenuOpen(false)}>
+                  Login
+                </Link>
+
+                <Link to="/register" onClick={() => setMenuOpen(false)}>
+                  Register
+                </Link>
+              </>
             )}
           </div>
         )}

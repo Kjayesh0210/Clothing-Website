@@ -38,6 +38,16 @@ function ProductDetails() {
       }
       const token = localStorage.getItem("token");
 
+      if (!token) {
+        navigate("/login", {
+          state: {
+            redirectTo: `/products/${id}`,
+          },
+        });
+
+        return;
+      }
+
       await api.post(
         "/cart/add",
         {
@@ -63,6 +73,16 @@ function ProductDetails() {
     try {
       const token = localStorage.getItem("token");
 
+      if (!token) {
+        navigate("/login", {
+          state: {
+            redirectTo: `/products/${id}`,
+          },
+        });
+
+        return;
+      }
+
       await api.post(
         "/wishlist/add",
         {
@@ -85,6 +105,16 @@ function ProductDetails() {
   const submitReview = async () => {
     try {
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login", {
+          state: {
+            redirectTo: `/products/${id}`,
+          },
+        });
+
+        return;
+      }
 
       await api.post(
         `/products/${id}/review`,
@@ -247,10 +277,12 @@ function ProductDetails() {
             className={`
             font-semibold
             mb-4
-            ${product.stock > 0 ? "text-green-600" : "text-red-500"}
+            ${product.sizes?.some((s) => s.stock > 0) ? "text-green-600" : "text-red-500"}
             `}
           >
-            {product.stock > 0 ? `In Stock (${product.stock})` : "Out Of Stock"}
+            {product.sizes?.some((s) => s.stock > 0)
+              ? "In Stock"
+              : "Out Of Stock"}
           </p>
 
           <p
@@ -266,25 +298,31 @@ function ProductDetails() {
             <p className="font-semibold mb-2">Select Size</p>
 
             <div className="flex gap-3">
-              {product.sizes?.map((size) => (
+              {product.sizes?.map((item) => (
                 <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
+                  key={item.size}
+                  disabled={item.stock === 0}
+                  onClick={() => setSelectedSize(item.size)}
                   className={`
-          px-4
-          py-2
-          border
-          rounded
-          ${selectedSize === size ? "bg-black text-white" : ""}
-        `}
+      px-4
+      py-2
+      border
+      rounded
+
+      ${selectedSize === item.size ? "bg-black text-white" : ""}
+
+      ${item.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}
+    `}
                 >
-                  {size}
+                  {item.size}
+
+                  {item.stock === 0 ? " (Out)" : ` (${item.stock})`}
                 </button>
               ))}
             </div>
           </div>
           <div className="flex flex-col gap-3">
-            {product.stock > 0 ? (
+            {product.sizes?.some((s) => s.stock > 0) ? (
               <>
                 <button
                   onClick={addToCart}
@@ -298,8 +336,22 @@ function ProductDetails() {
                   Add To Cart
                 </button>
 
-                <button
-                  onClick={() => navigate("/checkout")}
+                {/* <button
+                  onClick={() => {
+                    if (product.sizes?.length > 0 && !selectedSize) {
+                      toast.error("Please select a size");
+                      return;
+                    }
+
+                    navigate("/checkout", {
+                      state: {
+                        buyNow: true,
+                        product,
+                        quantity: 1,
+                        size: selectedSize,
+                      },
+                    });
+                  }}
                   className="
                   bg-green-600
                   text-white
@@ -308,7 +360,7 @@ function ProductDetails() {
                   "
                 >
                   Buy Now
-                </button>
+                </button> */}
               </>
             ) : (
               <button

@@ -5,8 +5,26 @@ import toast from "react-hot-toast";
 
 function AddProduct() {
   const navigate = useNavigate();
+
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
+
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    price: "",
+    originalPrice: "",
+    discountPercentage: "",
+    category: "",
+    gender: "Unisex",
+    sizes: [
+      { size: "S", stock: 0 },
+      { size: "M", stock: 0 },
+      { size: "L", stock: 0 },
+      { size: "XL", stock: 0 },
+      { size: "XXL", stock: 0 },
+    ],
+  });
 
   const handleFiles = (e) => {
     const files = Array.from(e.target.files);
@@ -18,23 +36,21 @@ function AddProduct() {
     setPreviewImages(previews);
   };
 
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    price: "",
-    originalPrice: "",
-    discountPercentage: "",
-    category: "",
-    stock: "",
-    image: "",
-    gender: "Unisex",
-    sizes: [],
-  });
-
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSizeStockChange = (index, value) => {
+    const updatedSizes = [...form.sizes];
+
+    updatedSizes[index].stock = Number(value);
+
+    setForm({
+      ...form,
+      sizes: updatedSizes,
     });
   };
 
@@ -66,9 +82,8 @@ function AddProduct() {
           discountPercentage: Number(form.discountPercentage),
           category: form.category,
           gender: form.gender,
-          stock: Number(form.stock),
           images: uploadedImages,
-          sizes: form.sizes,
+          sizes: form.sizes.filter((item) => item.stock > 0),
         },
         {
           headers: {
@@ -76,26 +91,13 @@ function AddProduct() {
           },
         },
       );
+
       toast.success("Product Added");
 
       navigate("/admin/products");
     } catch (error) {
       console.log(error);
       toast.error("Failed to add product");
-    }
-  };
-
-  const handleSizeChange = (size) => {
-    if (form.sizes.includes(size)) {
-      setForm({
-        ...form,
-        sizes: form.sizes.filter((item) => item !== size),
-      });
-    } else {
-      setForm({
-        ...form,
-        sizes: [...form.sizes, size],
-      });
     }
   };
 
@@ -126,6 +128,7 @@ function AddProduct() {
           onChange={handleChange}
           className="border p-3"
         />
+
         <input
           type="number"
           name="originalPrice"
@@ -143,6 +146,7 @@ function AddProduct() {
           onChange={handleChange}
           className="border p-3"
         />
+
         <input
           type="text"
           name="category"
@@ -151,21 +155,11 @@ function AddProduct() {
           className="border p-3"
         />
 
-        <input
-          type="number"
-          name="stock"
-          placeholder="Stock"
-          onChange={handleChange}
-          className="border p-3"
-        />
         <select
           name="gender"
           value={form.gender}
           onChange={handleChange}
-          className="
-          border
-          p-3
-          "
+          className="border p-3"
         >
           <option value="Male">Male</option>
 
@@ -175,28 +169,21 @@ function AddProduct() {
         </select>
 
         <div>
-          <p className="mb-2 font-semibold">Available Sizes</p>
+          <p className="mb-2 font-semibold">Size Inventory</p>
 
-          <div className="flex gap-3 flex-wrap">
-            {["S", "M", "L", "XL", "XXL"].map((size) => (
-              <label
-                key={size}
-                className="
-          flex
-          items-center
-          gap-1
-          "
-              >
-                <input
-                  type="checkbox"
-                  checked={form.sizes.includes(size)}
-                  onChange={() => handleSizeChange(size)}
-                />
+          {form.sizes.map((item, index) => (
+            <div key={item.size} className="flex items-center gap-4 mb-2">
+              <span className="w-12">{item.size}</span>
 
-                {size}
-              </label>
-            ))}
-          </div>
+              <input
+                type="number"
+                min="0"
+                value={item.stock}
+                onChange={(e) => handleSizeStockChange(index, e.target.value)}
+                className="border p-2 w-24"
+              />
+            </div>
+          ))}
         </div>
 
         <input
@@ -205,6 +192,7 @@ function AddProduct() {
           onChange={handleFiles}
           className="border p-3"
         />
+
         <div className="flex gap-3 flex-wrap">
           {previewImages.map((img, index) => (
             <img
@@ -212,12 +200,12 @@ function AddProduct() {
               src={img}
               alt=""
               className="
-        w-24
-        h-24
-        object-cover
-        border
-        rounded
-        "
+                w-24
+                h-24
+                object-cover
+                border
+                rounded
+                "
             />
           ))}
         </div>

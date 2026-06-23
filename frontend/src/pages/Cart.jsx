@@ -17,12 +17,13 @@ function Cart() {
         Authorization: token,
       },
     });
+
     console.log(res.data);
 
     setCart(res.data);
   };
 
-  const updateQuantity = async (productId, quantity) => {
+  const updateQuantity = async (productId, quantity, size) => {
     if (quantity < 1) return;
 
     const token = localStorage.getItem("token");
@@ -32,6 +33,7 @@ function Cart() {
       {
         productId,
         quantity,
+        size,
       },
       {
         headers: {
@@ -43,7 +45,7 @@ function Cart() {
     fetchCart();
   };
 
-  const removeItem = async (productId) => {
+  const removeItem = async (productId, size) => {
     const token = localStorage.getItem("token");
 
     await api.delete("/cart/remove", {
@@ -53,6 +55,7 @@ function Cart() {
 
       data: {
         productId,
+        size,
       },
     });
 
@@ -62,6 +65,7 @@ function Cart() {
   if (!cart) {
     return <h1>Empty Cart</h1>;
   }
+
   const total =
     cart?.products?.reduce(
       (sum, item) => sum + item.product.price * item.quantity,
@@ -74,24 +78,27 @@ function Cart() {
 
       {cart.products.map((item) => (
         <div
-          key={item.product._id}
+          key={`${item.product._id}-${item.size}`}
           className="
           flex
           justify-between
           items-center
           border-b
-          py-4"
+          py-4
+          "
         >
           <div>
             <h2>{item.product.title}</h2>
+
             <p>Size: {item.size}</p>
+
             <p>₹{item.product.price}</p>
           </div>
 
           <div className="flex gap-3">
             <button
               onClick={() =>
-                updateQuantity(item.product._id, item.quantity - 1)
+                updateQuantity(item.product._id, item.quantity - 1, item.size)
               }
             >
               -
@@ -101,7 +108,7 @@ function Cart() {
 
             <button
               onClick={() =>
-                updateQuantity(item.product._id, item.quantity + 1)
+                updateQuantity(item.product._id, item.quantity + 1, item.size)
               }
             >
               +
@@ -109,25 +116,28 @@ function Cart() {
           </div>
 
           <button
-            onClick={() => removeItem(item.product._id)}
+            onClick={() => removeItem(item.product._id, item.size)}
             className="text-red-500"
           >
             Remove
           </button>
         </div>
       ))}
+
       <div className="mt-10">
         <h2 className="text-3xl">Total: ₹{total}</h2>
       </div>
+
       <Link
         to="/checkout"
         className="
-            bg-black
-            text-white
-            px-6
-            py-3
-            mt-5
-            inline-block"
+        bg-black
+        text-white
+        px-6
+        py-3
+        mt-5
+        inline-block
+        "
       >
         Checkout
       </Link>

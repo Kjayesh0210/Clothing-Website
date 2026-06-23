@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import toast from "react-hot-toast";
 
 function Login() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -17,6 +21,10 @@ function Login() {
       localStorage.setItem("token", res.data.token);
 
       toast.success("Login Success");
+
+      const redirectTo = location.state?.redirectTo || "/";
+
+      window.location.href = redirectTo;
     } catch (err) {
       console.log(err);
       toast.error("Login Failed");
@@ -52,7 +60,16 @@ function Login() {
           }
         />
 
-        <button className="bg-black text-white p-2 w-full">Login</button>
+        <button
+          className="
+          bg-black
+          text-white
+          p-2
+          w-full
+          "
+        >
+          Login
+        </button>
       </form>
     </div>
   );

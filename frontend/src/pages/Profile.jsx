@@ -64,6 +64,16 @@ function Profile() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+
+    toast.success("Logged Out");
+
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 100);
+  };
+
   return (
     <div
       className="max-w-xl
@@ -143,6 +153,20 @@ w-full mx-auto p-10"
           "
         >
           Save Changes
+        </button>
+        <button
+          onClick={handleLogout}
+          className="
+  bg-red-500
+  hover:bg-red-600
+  text-white
+  py-3
+  mt-3
+  rounded
+  transition
+  "
+        >
+          Logout
         </button>
       </div>
     </div>

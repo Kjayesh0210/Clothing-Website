@@ -33,7 +33,7 @@ function AdminProducts() {
 
     try {
       const token = localStorage.getItem("token");
-      // console.log("Deleting:", id);
+
       await api.delete(`/products/${id}`, {
         headers: {
           Authorization: token,
@@ -59,27 +59,27 @@ function AdminProducts() {
     <div className="p-4 md:p-10">
       <div
         className="
-      flex
-      flex-col
-      md:flex-row
-      justify-between
-      items-start
-      md:items-center
-      gap-4
-      mb-6
-      "
+        flex
+        flex-col
+        md:flex-row
+        justify-between
+        items-start
+        md:items-center
+        gap-4
+        mb-6
+        "
       >
         <h1 className="text-4xl font-bold">Products</h1>
 
         <Link
           to="/admin/products/add"
           className="
-        bg-green-500
-        text-white
-        px-4
-        py-2
-        rounded
-        "
+          bg-green-500
+          text-white
+          px-4
+          py-2
+          rounded
+          "
         >
           Add Product
         </Link>
@@ -88,104 +88,117 @@ function AdminProducts() {
       {products.length === 0 ? (
         <h2>No Products Found</h2>
       ) : (
-        products.map((product) => (
-          <div
-            key={product._id}
-            className="
-          border
-          rounded
-          p-4
-          mb-4
-          flex
-          flex-col
-          lg:flex-row
-          justify-between
-          gap-4
-          "
-          >
+        products.map((product) => {
+          const totalStock =
+            product.sizes?.reduce((sum, item) => sum + item.stock, 0) || 0;
+
+          const inStock =
+            product.sizes?.some((item) => item.stock > 0) || false;
+
+          return (
             <div
+              key={product._id}
               className="
-            flex
-            flex-col
-            sm:flex-row
-            gap-4
-            "
-            >
-              <img
-                src={product.images?.[0] || "https://via.placeholder.com/100"}
-                alt={product.title}
-                className="
-              w-full
-              sm:w-24
-              h-48
-              sm:h-24
-              object-cover
+              border
               rounded
+              p-4
+              mb-4
+              flex
+              flex-col
+              lg:flex-row
+              justify-between
+              gap-4
               "
-              />
+            >
+              <div
+                className="
+                flex
+                flex-col
+                sm:flex-row
+                gap-4
+                "
+              >
+                <img
+                  src={product.images?.[0] || "https://via.placeholder.com/100"}
+                  alt={product.title}
+                  className="
+                  w-full
+                  sm:w-24
+                  h-48
+                  sm:h-24
+                  object-cover
+                  rounded
+                  "
+                />
+
+                <div
+                  className="
+                  flex
+                  flex-col
+                  gap-1
+                  "
+                >
+                  <h2 className="font-semibold text-lg">{product.title}</h2>
+
+                  <p>Price: ₹{product.price}</p>
+
+                  <p>Category: {product.category}</p>
+
+                  <p>Gender: {product.gender}</p>
+
+                  <p>
+                    Sizes:{" "}
+                    {product.sizes
+                      ?.map((s) => `${s.size} (${s.stock})`)
+                      .join(", ")}
+                  </p>
+
+                  <p className={inStock ? "text-green-500" : "text-red-500"}>
+                    {inStock ? `In Stock (${totalStock})` : "Out Of Stock"}
+                  </p>
+
+                  <p>Images: {product.images?.length || 0}</p>
+                </div>
+              </div>
 
               <div
                 className="
-              flex
-              flex-col
-              gap-1
-              "
+                flex
+                flex-col
+                sm:flex-row
+                gap-3
+                "
               >
-                <h2 className="font-semibold text-lg">{product.title}</h2>
-
-                <p>Price: ₹{product.price}</p>
-
-                <p>Category: {product.category}</p>
-
-                <p
-                  className={
-                    product.stock === 0 ? "text-red-500" : "text-green-500"
-                  }
+                <Link
+                  to={`/admin/products/edit/${product._id}`}
+                  className="
+                  bg-blue-500
+                  text-white
+                  px-4
+                  py-2
+                  rounded
+                  text-center
+                  "
                 >
-                  Stock: {product.stock}
-                </p>
+                  Edit
+                </Link>
 
-                <p>Images: {product.images?.length || 0}</p>
+                <button
+                  onClick={() => deleteProduct(product._id)}
+                  className="
+                  bg-red-500
+                  text-white
+                  px-4
+                  py-2
+                  rounded
+                  "
+                >
+                  Delete
+                </button>
               </div>
             </div>
-
-            <div
-              className="
-            flex
-            flex-col
-            sm:flex-row
-            gap-3
-            "
-            >
-              <Link
-                to={`/admin/products/edit/${product._id}`}
-                className="
-              bg-blue-500
-              text-white
-              px-4
-              py-2
-              rounded
-              text-center
-              "
-              >
-                Edit
-              </Link>
-
-              <button
-                onClick={() => deleteProduct(product._id)}
-                className="
-              bg-red-500
-              text-white
-              px-4
-              py-2
-              rounded
-              "
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))
+          );
+        })
       )}
     </div>
   );

@@ -27,22 +27,24 @@ const productSchema = new mongoose.Schema(
       default: "DRIPSTORE",
     },
 
-    stock: {
-      type: Number,
-      default: 0,
-    },
-
     images: [
       {
         type: String,
       },
     ],
 
-    sizes: {
-      type: [String],
-      default: [],
-    },
-
+    sizes: [
+      {
+        size: {
+          type: String,
+        },
+        stock: {
+          type: Number,
+          default: 0,
+        },
+      },
+    ],
+    
     ratings: {
       type: Number,
       default: 0,

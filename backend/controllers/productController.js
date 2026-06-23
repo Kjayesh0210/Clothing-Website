@@ -54,7 +54,7 @@ const getProducts = async (req, res) => {
     }
 
     if (inStock === "true") {
-      filter.stock = {
+      filter["sizes.stock"] = {
         $gt: 0,
       };
     }
@@ -271,8 +271,13 @@ const searchProducts = async (req, res) => {
 const getLowStockProducts = async (req, res) => {
   try {
     const products = await Product.find({
-      stock: {
-        $lte: 5,
+      sizes: {
+        $elemMatch: {
+          stock: {
+            $lte: 5,
+            $gt: 0,
+          },
+        },
       },
     });
 

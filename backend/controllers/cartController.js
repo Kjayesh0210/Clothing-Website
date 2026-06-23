@@ -4,6 +4,7 @@ const Product = require("../models/Product");
 const addToCart = async (req, res) => {
   try {
     const { productId, quantity, size } = req.body;
+
     const product = await Product.findById(productId);
 
     if (!product) {
@@ -11,6 +12,15 @@ const addToCart = async (req, res) => {
         message: "Product not found",
       });
     }
+
+    const selectedSize = product.sizes.find((s) => s.size === size);
+
+    if (!selectedSize) {
+      return res.status(400).json({
+        message: "Invalid size selected",
+      });
+    }
+
     let cart = await Cart.findOne({
       user: req.user.id,
     });
@@ -29,7 +39,7 @@ const addToCart = async (req, res) => {
     if (itemIndex > -1) {
       const newQuantity = cart.products[itemIndex].quantity + quantity;
 
-      if (newQuantity > product.stock) {
+      if (newQuantity > selectedSize.stock) {
         return res.status(400).json({
           message: "Not enough stock",
         });
@@ -37,7 +47,7 @@ const addToCart = async (req, res) => {
 
       cart.products[itemIndex].quantity = newQuantity;
     } else {
-      if (quantity > product.stock) {
+      if (quantity > selectedSize.stock) {
         return res.status(400).json({
           message: "Not enough stock",
         });
@@ -106,7 +116,15 @@ const updateCartItem = async (req, res) => {
       });
     }
 
-    if (quantity > product.stock) {
+    const selectedSize = product.sizes.find((s) => s.size === size);
+
+    if (!selectedSize) {
+      return res.status(400).json({
+        message: "Invalid size selected",
+      });
+    }
+
+    if (quantity > selectedSize.stock) {
       return res.status(400).json({
         message: "Not enough stock",
       });
@@ -131,6 +149,12 @@ const removeFromCart = async (req, res) => {
     const cart = await Cart.findOne({
       user: req.user.id,
     });
+
+    if (!cart) {
+      return res.status(404).json({
+        message: "Cart not found",
+      });
+    }
 
     cart.products = cart.products.filter(
       (item) => !(item.product.toString() === productId && item.size === size),

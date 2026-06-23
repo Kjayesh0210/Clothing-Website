@@ -19,9 +19,17 @@ const placeOrder = async (req, res) => {
     }
 
     for (const item of cart.products) {
-      if (item.quantity > item.product.stock) {
+      const selectedSize = item.product.sizes.find((s) => s.size === item.size);
+
+      if (!selectedSize) {
         return res.status(400).json({
-          message: `${item.product.title} has only ${item.product.stock} items left`,
+          message: `Size ${item.size} not found for ${item.product.title}`,
+        });
+      }
+
+      if (item.quantity > selectedSize.stock) {
+        return res.status(400).json({
+          message: `${item.product.title} (${item.size}) has only ${selectedSize.stock} items left`,
         });
       }
     }
@@ -72,7 +80,11 @@ const placeOrder = async (req, res) => {
     }
 
     for (const item of cart.products) {
-      item.product.stock -= item.quantity;
+      const sizeObj = item.product.sizes.find((s) => s.size === item.size);
+
+      if (sizeObj) {
+        sizeObj.stock -= item.quantity;
+      }
 
       await item.product.save();
     }
@@ -148,14 +160,14 @@ const updateOrderStatus = async (req, res) => {
           user.email,
           "Order Shipped",
           `
-      <h2>
-        Your order is on the way.
-      </h2>
+          <h2>
+            Your order is on the way.
+          </h2>
 
-      <p>
-        Order ID: ${order._id}
-      </p>
-      `,
+          <p>
+            Order ID: ${order._id}
+          </p>
+          `,
         );
       } catch (error) {
         console.log("Shipment Email Error:", error.message);
@@ -168,18 +180,18 @@ const updateOrderStatus = async (req, res) => {
           user.email,
           "Order Delivered",
           `
-      <h2>
-        Your order has been delivered.
-      </h2>
+          <h2>
+            Your order has been delivered.
+          </h2>
 
-      <p>
-        Order ID: ${order._id}
-      </p>
+          <p>
+            Order ID: ${order._id}
+          </p>
 
-      <p>
-        Thank you for shopping with us.
-      </p>
-      `,
+          <p>
+            Thank you for shopping with us.
+          </p>
+          `,
         );
       } catch (error) {
         console.log("Delivery Email Error:", error.message);

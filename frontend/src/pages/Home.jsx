@@ -6,25 +6,35 @@ import Newsletter from "../components/Newsletter";
 
 function Home() {
   return (
-    <>
+    <div className="bg-gray-50 min-h-screen">
       <Hero />
 
-      <div
+      <main
         className="
         max-w-7xl
         mx-auto
         px-4
+        md:px-6
+        lg:px-8
         "
       >
-        <Categories />
+        <section className="py-12">
+          <Categories />
+        </section>
 
-        <FeaturedProducts />
+        <section className="py-12">
+          <FeaturedProducts />
+        </section>
 
-        <WhyChooseUs />
-      </div>
+        <section className="py-12">
+          <WhyChooseUs />
+        </section>
+      </main>
 
-      <Newsletter />
-    </>
+      <section className="mt-10">
+        <Newsletter />
+      </section>
+    </div>
   );
 }
 

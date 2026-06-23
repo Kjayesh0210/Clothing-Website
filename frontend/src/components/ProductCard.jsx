@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 
 function ProductCard({ product }) {
+  const totalStock =
+    product.sizes?.reduce((sum, item) => sum + item.stock, 0) || 0;
+
+  const inStock = product.sizes?.some((item) => item.stock > 0) || false;
+
   return (
     <Link
       to={`/products/${product._id}`}
@@ -59,71 +64,66 @@ function ProductCard({ product }) {
           items-center
           "
         >
-          <span
-            className="
-            text-xl
-            font-bold
-            "
-          >
-            <div>
+          <div>
+            <span
+              className="
+              text-xl
+              font-bold
+              "
+            >
+              ₹{product.price}
+            </span>
+
+            {product.originalPrice > product.price && (
+              <>
+                <span
+                  className="
+                  line-through
+                  text-gray-500
+                  ml-2
+                  "
+                >
+                  ₹{product.originalPrice}
+                </span>
+
+                <span
+                  className="
+                  text-green-600
+                  ml-2
+                  "
+                >
+                  {product.discountPercentage}% OFF
+                </span>
+              </>
+            )}
+          </div>
+
+          {inStock ? (
+            totalStock <= 5 ? (
               <span
                 className="
-    text-xl
-    font-bold
-    "
+                text-orange-500
+                text-sm
+                "
               >
-                ₹{product.price}
+                Only {totalStock} left
               </span>
-
-              {product.originalPrice > product.price && (
-                <>
-                  <span
-                    className="
-        line-through
-        text-gray-500
-        ml-2
-        "
-                  >
-                    ₹{product.originalPrice}
-                  </span>
-
-                  <span
-                    className="
-        text-green-600
-        ml-2
-        "
-                  >
-                    {product.discountPercentage}% OFF
-                  </span>
-                </>
-              )}
-            </div>
-          </span>
-
-          {product.stock > 5 ? (
-            <span
-              className="
-    text-green-600
-    text-sm
-    "
-            >
-              In Stock
-            </span>
-          ) : product.stock > 0 ? (
-            <span
-              className="
-    text-orange-500
-    text-sm
-    "
-            >
-              Only {product.stock} left
-            </span>
+            ) : (
+              <span
+                className="
+                text-green-600
+                text-sm
+                "
+              >
+                In Stock
+              </span>
+            )
           ) : (
             <span
               className="
-    text-red-500
-    text-sm
-    "
+              text-red-500
+              text-sm
+              "
             >
               Out of Stock
             </span>

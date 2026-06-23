@@ -17,9 +17,15 @@ function EditProduct() {
     originalPrice: "",
     discountPercentage: "",
     category: "",
-    stock: "",
+    gender: "Unisex",
     images: [],
-    sizes: [],
+    sizes: [
+      { size: "S", stock: 0 },
+      { size: "M", stock: 0 },
+      { size: "L", stock: 0 },
+      { size: "XL", stock: 0 },
+      { size: "XXL", stock: 0 },
+    ],
   });
 
   useEffect(() => {
@@ -39,9 +45,18 @@ function EditProduct() {
         originalPrice: res.data.originalPrice || "",
         discountPercentage: res.data.discountPercentage || "",
         category: res.data.category || "",
-        stock: res.data.stock || "",
+        gender: res.data.gender || "Unisex",
         images: res.data.images || [],
-        sizes: res.data.sizes || [],
+        sizes:
+          res.data.sizes?.length > 0
+            ? res.data.sizes
+            : [
+                { size: "S", stock: 0 },
+                { size: "M", stock: 0 },
+                { size: "L", stock: 0 },
+                { size: "XL", stock: 0 },
+                { size: "XXL", stock: 0 },
+              ],
       });
     } catch (error) {
       console.log(error);
@@ -59,13 +74,15 @@ function EditProduct() {
     setNewImages(Array.from(e.target.files));
   };
 
-  const handleSizeChange = (size) => {
-    setForm((prev) => ({
-      ...prev,
-      sizes: prev.sizes.includes(size)
-        ? prev.sizes.filter((s) => s !== size)
-        : [...prev.sizes, size],
-    }));
+  const handleSizeStockChange = (index, value) => {
+    const updatedSizes = [...form.sizes];
+
+    updatedSizes[index].stock = Number(value);
+
+    setForm({
+      ...form,
+      sizes: updatedSizes,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -99,9 +116,9 @@ function EditProduct() {
           originalPrice: Number(form.originalPrice),
           discountPercentage: Number(form.discountPercentage),
           category: form.category,
-          stock: Number(form.stock),
+          gender: form.gender,
           images: uploadedImages,
-          sizes: form.sizes,
+          sizes: form.sizes.filter((item) => item.stock > 0),
         },
         {
           headers: {
@@ -115,8 +132,6 @@ function EditProduct() {
       navigate("/admin/products");
     } catch (error) {
       console.log(error);
-
-      console.log(error.response?.data);
 
       toast.error(error.response?.data?.message || error.message);
     }
@@ -151,6 +166,7 @@ function EditProduct() {
           className="border p-3"
           placeholder="Price"
         />
+
         <input
           type="number"
           name="originalPrice"
@@ -168,6 +184,7 @@ function EditProduct() {
           className="border p-3"
           placeholder="Discount %"
         />
+
         <input
           name="category"
           value={form.category}
@@ -176,38 +193,35 @@ function EditProduct() {
           placeholder="Category"
         />
 
-        <input
-          type="number"
-          name="stock"
-          value={form.stock}
+        <select
+          name="gender"
+          value={form.gender}
           onChange={handleChange}
           className="border p-3"
-          placeholder="Stock"
-        />
-        
+        >
+          <option value="Male">Male</option>
+
+          <option value="Female">Female</option>
+
+          <option value="Unisex">Unisex</option>
+        </select>
+
         <div>
-          <p className="mb-2 font-semibold">Available Sizes</p>
+          <p className="mb-2 font-semibold">Size Inventory</p>
 
-          <div className="flex gap-3 flex-wrap">
-            {["S", "M", "L", "XL", "XXL"].map((size) => (
-              <label
-                key={size}
-                className="
-          flex
-          items-center
-          gap-1
-          "
-              >
-                <input
-                  type="checkbox"
-                  checked={form.sizes.includes(size)}
-                  onChange={() => handleSizeChange(size)}
-                />
+          {form.sizes.map((item, index) => (
+            <div key={item.size} className="flex items-center gap-4 mb-2">
+              <span className="w-12">{item.size}</span>
 
-                {size}
-              </label>
-            ))}
-          </div>
+              <input
+                type="number"
+                min="0"
+                value={item.stock}
+                onChange={(e) => handleSizeStockChange(index, e.target.value)}
+                className="border p-2 w-24"
+              />
+            </div>
+          ))}
         </div>
 
         <div className="flex gap-3 flex-wrap">

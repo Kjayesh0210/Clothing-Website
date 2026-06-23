@@ -7,6 +7,7 @@ function AdminDashboard() {
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState(null);
   const [lowStockProducts, setLowStockProducts] = useState([]);
+
   useEffect(() => {
     fetchOrders();
     fetchStats();
@@ -74,23 +75,24 @@ function AdminDashboard() {
   return (
     <div className="p-4 md:p-10">
       <h1 className="text-4xl mb-5">Admin Dashboard</h1>
+
       {stats && (
         <div
           className="
-    grid
-    grid-cols-1
-    sm:grid-cols-2
-    lg:grid-cols-4
-    gap-5
-    mb-10
-    "
+          grid
+          grid-cols-1
+          sm:grid-cols-2
+          lg:grid-cols-4
+          gap-5
+          mb-10
+          "
         >
           <div
             className="
-      border
-      rounded
-      p-5
-      "
+            border
+            rounded
+            p-5
+            "
           >
             <h3 className="text-gray-500">Revenue</h3>
 
@@ -99,10 +101,10 @@ function AdminDashboard() {
 
           <div
             className="
-      border
-      rounded
-      p-5
-      "
+            border
+            rounded
+            p-5
+            "
           >
             <h3 className="text-gray-500">Orders</h3>
 
@@ -111,10 +113,10 @@ function AdminDashboard() {
 
           <div
             className="
-      border
-      rounded
-      p-5
-      "
+            border
+            rounded
+            p-5
+            "
           >
             <h3 className="text-gray-500">Products</h3>
 
@@ -123,10 +125,10 @@ function AdminDashboard() {
 
           <div
             className="
-      border
-      rounded
-      p-5
-      "
+            border
+            rounded
+            p-5
+            "
           >
             <h3 className="text-gray-500">Users</h3>
 
@@ -134,23 +136,25 @@ function AdminDashboard() {
           </div>
         </div>
       )}
+
       <AdminCharts orders={orders} />
+
       {lowStockProducts.length > 0 && (
         <div
           className="
-    border
-    border-red-500
-    p-5
-    rounded
-    mb-10
-    "
+          border
+          border-red-500
+          p-5
+          rounded
+          mb-10
+          "
         >
           <h2
             className="
-      text-2xl
-      text-red-500
-      mb-4
-      "
+            text-2xl
+            text-red-500
+            mb-4
+            "
           >
             Low Stock Alert
           </h2>
@@ -159,33 +163,38 @@ function AdminDashboard() {
             <div
               key={product._id}
               className="
-          flex
-          justify-between
-          border-b
-          py-2
-          "
+              border-b
+              py-2
+              "
             >
-              <span>{product.title}</span>
+              <p className="font-semibold">{product.title}</p>
 
-              <span>Stock: {product.stock}</span>
+              {product.sizes
+                ?.filter((size) => size.stock <= 5 && size.stock > 0)
+                .map((size) => (
+                  <p key={size.size}>
+                    {size.size}: {size.stock}
+                  </p>
+                ))}
             </div>
           ))}
         </div>
       )}
+
       {orders.map((order) => (
         <div
           key={order._id}
           className="
-        border
-        p-5
-        mb-4
-        rounded
-        flex
-        flex-col
-        md:flex-row
-        justify-between
-        gap-4
-        "
+          border
+          p-5
+          mb-4
+          rounded
+          flex
+          flex-col
+          md:flex-row
+          justify-between
+          gap-4
+          "
         >
           <div>
             <h2 className="font-semibold break-all">Order: {order._id}</h2>
@@ -195,6 +204,24 @@ function AdminDashboard() {
             <p>₹{order.totalAmount}</p>
 
             <p>Status: {order.status}</p>
+
+            <div className="mt-3 space-y-3">
+              {order.products?.map((item) => (
+                <div
+                  key={`${item.product?._id}-${item.size}`}
+                  className="
+                  border-l-2
+                  pl-3
+                  "
+                >
+                  <p className="font-medium">{item.product?.title}</p>
+
+                  <p className="text-sm text-gray-600">Size: {item.size}</p>
+
+                  <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div>
@@ -202,20 +229,16 @@ function AdminDashboard() {
               value={order.status}
               onChange={(e) => updateStatus(order._id, e.target.value)}
               className="
-            border
-            p-2
-            w-full
-            md:w-auto
-            "
+              border
+              p-2
+              w-full
+              md:w-auto
+              "
             >
               <option>Pending</option>
-
               <option>Confirmed</option>
-
               <option>Shipped</option>
-
               <option>Delivered</option>
-
               <option>Cancelled</option>
             </select>
           </div>
