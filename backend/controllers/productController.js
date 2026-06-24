@@ -2,6 +2,38 @@ const Product = require("../models/Product");
 
 const createProduct = async (req, res) => {
   try {
+    const { title, category, price, gender, sizes } = req.body;
+
+    if (!title?.trim()) {
+      return res.status(400).json({
+        message: "Title is required",
+      });
+    }
+
+    if (!category?.trim()) {
+      return res.status(400).json({
+        message: "Category is required",
+      });
+    }
+
+    if (price < 0) {
+      return res.status(400).json({
+        message: "Price cannot be negative",
+      });
+    }
+
+    if (gender && !["Male", "Female", "Unisex"].includes(gender)) {
+      return res.status(400).json({
+        message: "Invalid gender",
+      });
+    }
+
+    if (sizes?.some((item) => item.stock < 0)) {
+      return res.status(400).json({
+        message: "Stock cannot be negative",
+      });
+    }
+
     const product = await Product.create(req.body);
 
     res.status(201).json(product);
@@ -109,9 +141,21 @@ const getProducts = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  try {
+    const product = await Product.findById(req.params.id);
 
-  res.json(product);
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 const deleteProduct = async (req, res) => {
@@ -145,7 +189,37 @@ const updateProduct = async (req, res) => {
         message: "Product not found",
       });
     }
+    const { title, category, price, gender, sizes } = req.body;
 
+    if (title !== undefined && !title.trim()) {
+      return res.status(400).json({
+        message: "Title is required",
+      });
+    }
+
+    if (category !== undefined && !category.trim()) {
+      return res.status(400).json({
+        message: "Category is required",
+      });
+    }
+
+    if (price !== undefined && price < 0) {
+      return res.status(400).json({
+        message: "Price cannot be negative",
+      });
+    }
+
+    if (gender && !["Male", "Female", "Unisex"].includes(gender)) {
+      return res.status(400).json({
+        message: "Invalid gender",
+      });
+    }
+
+    if (sizes?.some((item) => item.stock < 0)) {
+      return res.status(400).json({
+        message: "Stock cannot be negative",
+      });
+    }
     Object.assign(product, req.body);
 
     await product.save();
@@ -161,7 +235,17 @@ const updateProduct = async (req, res) => {
 const addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({
+        message: "Rating must be between 1 and 5",
+      });
+    }
 
+    if (!comment?.trim()) {
+      return res.status(400).json({
+        message: "Comment is required",
+      });
+    }
     const product = await Product.findById(req.params.id);
 
     if (!product) {
@@ -258,7 +342,9 @@ const searchProducts = async (req, res) => {
         $regex: keyword,
         $options: "i",
       },
-    }).limit(5);
+    })
+      .select("title images price")
+      .limit(5);
 
     res.json(products);
   } catch (error) {
@@ -289,7 +375,7 @@ const getLowStockProducts = async (req, res) => {
   }
 };
 
-module.exports = {  
+module.exports = {
   createProduct,
   getProducts,
   getProduct,

@@ -15,16 +15,19 @@ const {
 } = require("../controllers/authController");
 
 const protect = require("../middleware/authMiddleware");
+const {
+  loginLimiter,
+  registerLimiter,
+  forgotPasswordLimiter,
+} = require("../middleware/rateLimitMiddleware");
 
-router.post("/register", register);
+router.post("/register", registerLimiter, register);
 
-router.post("/login", login);
+router.post("/login", loginLimiter, login);
 
-router.post("/forgot-password", forgotPassword);
+router.post("/forgot-password", forgotPasswordLimiter, forgotPassword);
 
 router.post("/reset-password/:token", resetPassword);
-
-router.put("/change-password", protect, changePassword);
 
 router.put("/change-password", protect, changePassword);
 

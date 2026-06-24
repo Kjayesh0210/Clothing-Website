@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import ProductCard from "../components/ProductCard";
-
+import ProductCardSkeleton from "../components/ProductCardSkeleton";
 function FeaturedProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,15 +57,7 @@ function FeaturedProducts() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, index) => (
-            <div
-              key={index}
-              className="
-              h-[350px]
-              bg-gray-200
-              animate-pulse
-              rounded-xl
-              "
-            />
+            <ProductCardSkeleton key={index} />
           ))}
         </div>
       ) : products.length > 0 ? (

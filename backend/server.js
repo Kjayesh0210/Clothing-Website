@@ -4,8 +4,10 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const couponRoutes = require("./routes/couponRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 const connectDB = require("./config/db");
+
 
 dotenv.config();
 
@@ -43,6 +45,7 @@ app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/upload", require("./routes/uploadRoutes"));
 app.use("/api/payment", require("./routes/paymentRoutes"));
 app.use("/api/coupons", couponRoutes);
+app.use("/api/categories", categoryRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running");

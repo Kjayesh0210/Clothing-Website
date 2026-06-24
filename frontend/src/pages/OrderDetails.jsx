@@ -84,7 +84,94 @@ function OrderDetails() {
     }
   };
 
-  if (!order) return <h1>Loading...</h1>;
+  const downloadInvoice = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await api.get(`/orders/${order._id}/invoice`, {
+        headers: {
+          Authorization: token,
+        },
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement("a");
+
+      link.href = url;
+
+      link.setAttribute("download", `invoice-${order._id}.pdf`);
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (!order) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8 animate-pulse">
+        <div className="h-10 bg-gray-200 rounded w-64 mb-8"></div>
+
+        <div className="grid lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-2 border rounded-xl p-6">
+            <div className="h-8 bg-gray-200 rounded w-48 mb-6"></div>
+
+            <div className="space-y-4">
+              <div className="h-4 bg-gray-200 rounded"></div>
+              <div className="h-4 bg-gray-200 rounded"></div>
+              <div className="h-4 bg-gray-200 rounded"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            </div>
+
+            <div className="h-10 bg-gray-200 rounded w-40 mt-6"></div>
+          </div>
+
+          <div className="border rounded-xl p-6">
+            <div className="h-8 bg-gray-200 rounded w-40 mb-6"></div>
+
+            <div className="space-y-4">
+              <div className="h-4 bg-gray-200 rounded"></div>
+              <div className="h-4 bg-gray-200 rounded"></div>
+              <div className="h-4 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="h-8 bg-gray-200 rounded w-56 mb-5"></div>
+
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className="
+          border
+          rounded-xl
+          p-4
+          flex
+          gap-5
+          items-center
+          mb-4
+          "
+          >
+            <div className="w-24 h-24 bg-gray-200 rounded-lg"></div>
+
+            <div className="flex-1">
+              <div className="h-5 bg-gray-200 rounded w-48 mb-3"></div>
+
+              <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+
+              <div className="h-4 bg-gray-200 rounded w-64"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -169,8 +256,19 @@ function OrderDetails() {
               Cancel Order
             </button>
           )}
+          <button
+            onClick={downloadInvoice}
+            className="
+  bg-black
+  text-white
+  px-5
+  py-2
+  rounded
+  "
+          >
+            Download Invoice
+          </button>
         </div>
-
         <div className="border rounded-xl p-6 shadow-sm bg-white">
           <h2 className="text-xl font-semibold mb-4">Order Tracking</h2>
 

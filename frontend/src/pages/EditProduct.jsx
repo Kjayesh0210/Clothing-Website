@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import toast from "react-hot-toast";
+import imageCompression from "browser-image-compression";
 
 function EditProduct() {
   const { id } = useParams();
@@ -9,6 +10,7 @@ function EditProduct() {
 
   const [product, setProduct] = useState(null);
   const [newImages, setNewImages] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const [form, setForm] = useState({
     title: "",
@@ -30,6 +32,7 @@ function EditProduct() {
 
   useEffect(() => {
     fetchProduct();
+    fetchCategories();
   }, [id]);
 
   const fetchProduct = async () => {
@@ -63,6 +66,16 @@ function EditProduct() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get("/categories");
+
+      setCategories(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -70,8 +83,28 @@ function EditProduct() {
     });
   };
 
-  const handleFiles = (e) => {
-    setNewImages(Array.from(e.target.files));
+  const handleFiles = async (e) => {
+    try {
+      const files = Array.from(e.target.files);
+
+      const compressedFiles = await Promise.all(
+        files.map(async (file) => {
+          return await imageCompression(file, {
+            maxSizeMB: 0.3,
+            maxWidthOrHeight: 1200,
+            useWebWorker: true,
+            fileType: "image/webp",
+          });
+        }),
+      );
+
+      setNewImages(compressedFiles);
+
+      toast.success("Images compressed successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to compress images");
+    }
   };
 
   const handleSizeStockChange = (index, value) => {
@@ -87,6 +120,11 @@ function EditProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.category) {
+      toast.error("Please select a category");
+      return;
+    }
 
     try {
       const token = localStorage.getItem("token");
@@ -185,13 +223,20 @@ function EditProduct() {
           placeholder="Discount %"
         />
 
-        <input
+        <select
           name="category"
           value={form.category}
           onChange={handleChange}
           className="border p-3"
-          placeholder="Category"
-        />
+        >
+          <option value="">Select Category</option>
+
+          {categories.map((category) => (
+            <option key={category._id} value={category.name}>
+              {category.name}
+            </option>
+          ))}
+        </select>
 
         <select
           name="gender"

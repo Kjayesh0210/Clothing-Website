@@ -17,31 +17,40 @@ function Navbar() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedKeyword(keyword);
+      setDebouncedKeyword(keyword.trim());
     }, 500);
 
     return () => clearTimeout(timer);
   }, [keyword]);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchSuggestions = async () => {
-      if (debouncedKeyword.trim().length < 2) {
+      if (debouncedKeyword.length < 2) {
         setSuggestions([]);
         return;
       }
 
       try {
         const res = await api.get(
-          `/products/search?keyword=${debouncedKeyword}`,
+          `/products/search?keyword=${encodeURIComponent(debouncedKeyword)}`,
+          {
+            signal: controller.signal,
+          },
         );
 
         setSuggestions(res.data);
       } catch (error) {
-        console.log(error);
+        if (error.name !== "CanceledError") {
+          console.log(error);
+        }
       }
     };
 
     fetchSuggestions();
+
+    return () => controller.abort();
   }, [debouncedKeyword]);
 
   const searchProducts = (value) => {

@@ -14,6 +14,7 @@ const {
   requestReturn,
   getOrderById,
   getDashboardStats,
+  generateInvoice,
 } = require("../controllers/orderController");
 
 router.post("/place", protect, placeOrder);
@@ -29,6 +30,8 @@ router.put("/:id", protect, isAdmin, updateOrderStatus);
 router.put("/:id/cancel", protect, cancelOrder);
 
 router.put("/:id/request-return", protect, requestReturn);
+
+router.get("/:id/invoice", protect, generateInvoice);
 
 router.get("/:id", protect, getOrderById);
 

@@ -4,21 +4,29 @@ import api from "../services/api";
 import { Link } from "react-router-dom";
 function MyOrders() {
   const [orders, setOrders] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetchOrders();
   }, []);
 
   const fetchOrders = async () => {
-    const token = localStorage.getItem("token");
+    try {
+      setLoading(true);
 
-    const res = await api.get("/orders/myorders", {
-      headers: {
-        Authorization: token,
-      },
-    });
+      const token = localStorage.getItem("token");
 
-    setOrders(res.data);
+      const res = await api.get("/orders/myorders", {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      setOrders(res.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const cancelOrder = async (orderId) => {
@@ -53,7 +61,28 @@ function MyOrders() {
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-6">My Orders</h1>
 
-      {orders.length === 0 ? (
+      {loading ? (
+        [...Array(4)].map((_, index) => (
+          <div
+            key={index}
+            className="
+      border
+      p-4
+      mt-4
+      rounded
+      animate-pulse
+      "
+          >
+            <div className="h-6 bg-gray-200 rounded w-32 mb-3"></div>
+
+            <div className="h-4 bg-gray-200 rounded w-40 mb-2"></div>
+
+            <div className="h-4 bg-gray-200 rounded w-48 mb-4"></div>
+
+            <div className="h-10 bg-gray-200 rounded w-32"></div>
+          </div>
+        ))
+      ) : orders.length === 0 ? (
         <p>No Orders Found</p>
       ) : (
         orders.map((order) => (

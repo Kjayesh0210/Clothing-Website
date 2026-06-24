@@ -1,25 +1,30 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProductDetails from "./pages/ProductDetails";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Products from "./pages/Products";
-import Cart from "./pages/Cart";
-import Wishlist from "./pages/Wishlist";
-import Checkout from "./pages/Checkout";
-import MyOrders from "./pages/MyOrders";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminProducts from "./pages/AdminProducts";
-import AddProduct from "./pages/AddProduct";
-import EditProduct from "./pages/EditProduct";
-import OrderDetails from "./pages/OrderDetails";
-import Profile from "./pages/Profile";
-import Addresses from "./pages/Addresses";
+import { lazy, Suspense } from "react";
+
+const ProductDetails = lazy(() => import("./pages/ProductDetails"));
+const Home = lazy(() => import("./pages/Home"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const Products = lazy(() => import("./pages/Products"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Wishlist = lazy(() => import("./pages/Wishlist"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const MyOrders = lazy(() => import("./pages/MyOrders"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AdminProducts = lazy(() => import("./pages/AdminProducts"));
+const AddProduct = lazy(() => import("./pages/AddProduct"));
+const EditProduct = lazy(() => import("./pages/EditProduct"));
+const OrderDetails = lazy(() => import("./pages/OrderDetails"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Addresses = lazy(() => import("./pages/Addresses"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const ChangePassword = lazy(() => import("./pages/ChangePassword"));
+const AdminCategories = lazy(() => import("./pages/AdminCategories"));
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import ChangePassword from "./pages/ChangePassword";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
@@ -36,45 +41,93 @@ function App() {
         ) && <Navbar />}
 
         <div className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center min-h-[60vh]">
+                Loading...
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<Home />} />
 
-            <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<Login />} />
 
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            <Route path="/register" element={<Register />} />
+              <Route path="/register" element={<Register />} />
 
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPassword />}
+              />
 
-            <Route path="/products" element={<Products />} />
+              <Route path="/products" element={<Products />} />
 
-            <Route path="/products/:id" element={<ProductDetails />} />
+              <Route path="/products/:id" element={<ProductDetails />} />
 
-            <Route path="/cart" element={<Cart />} />
+              <Route path="/cart" element={<Cart />} />
 
-            <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/wishlist" element={<Wishlist />} />
 
-            <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout" element={<Checkout />} />
 
-            <Route path="/orders" element={<MyOrders />} />
+              <Route path="/orders" element={<MyOrders />} />
 
-            <Route path="/orders/:id" element={<OrderDetails />} />
+              <Route path="/orders/:id" element={<OrderDetails />} />
 
-            <Route path="/profile" element={<Profile />} />
+              <Route path="/profile" element={<Profile />} />
 
-            <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/change-password" element={<ChangePassword />} />
 
-            <Route path="/addresses" element={<Addresses />} />
+              <Route path="/addresses" element={<Addresses />} />
 
-            <Route path="/admin" element={<AdminDashboard />} />
+              <Route
+                path="/admin"
+                element={
+                  <AdminRoute>
+                    <AdminDashboard />
+                  </AdminRoute>
+                }
+              />
 
-            <Route path="/admin/products" element={<AdminProducts />} />
+              <Route
+                path="/admin/products"
+                element={
+                  <AdminRoute>
+                    <AdminProducts />
+                  </AdminRoute>
+                }
+              />
 
-            <Route path="/admin/products/add" element={<AddProduct />} />
+              <Route
+                path="/admin/products/add"
+                element={
+                  <AdminRoute>
+                    <AddProduct />
+                  </AdminRoute>
+                }
+              />
 
-            <Route path="/admin/products/edit/:id" element={<EditProduct />} />
-          </Routes>
+              <Route
+                path="/admin/products/edit/:id"
+                element={
+                  <AdminRoute>
+                    <EditProduct />
+                  </AdminRoute>
+                }
+              />
+
+              <Route
+                path="/admin/categories"
+                element={
+                  <AdminRoute>
+                    <AdminCategories />
+                  </AdminRoute>
+                }
+              />
+            </Routes>
+          </Suspense>
         </div>
 
         {!["/login", "/register", "/forgot-password"].includes(

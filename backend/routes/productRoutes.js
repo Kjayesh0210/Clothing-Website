@@ -25,7 +25,7 @@ router.post("/", protect, isAdmin, createProduct);
 
 router.get("/search", searchProducts);
 
-router.get("/low-stock", getLowStockProducts);
+router.get("/low-stock", protect, isAdmin, getLowStockProducts);
 
 router.get("/:id", getProduct);
 

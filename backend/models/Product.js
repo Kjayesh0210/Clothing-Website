@@ -44,7 +44,7 @@ const productSchema = new mongoose.Schema(
         },
       },
     ],
-    
+
     ratings: {
       type: Number,
       default: 0,
@@ -87,6 +87,10 @@ const productSchema = new mongoose.Schema(
       enum: ["Male", "Female", "Unisex"],
       default: "Unisex",
       required: true,
+    },
+    color: {
+      type: String,
+      default: "",
     },
   },
   {

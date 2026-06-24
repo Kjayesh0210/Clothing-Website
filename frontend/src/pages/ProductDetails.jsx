@@ -3,7 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import toast from "react-hot-toast";
 
-import RelatedProducts from "../components/RelatedProducts";
+import { lazy, Suspense } from "react";
+
+const RelatedProducts = lazy(() => import("../components/RelatedProducts"));
 import { CartContext } from "../context/CartContext";
 
 function ProductDetails() {
@@ -160,7 +162,43 @@ function ProductDetails() {
   };
 
   if (!product) {
-    return <div className="p-10 text-center">Loading...</div>;
+    return (
+      <div className="max-w-7xl mx-auto p-4 md:p-10 animate-pulse">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div>
+            <div className="h-[500px] bg-gray-200 rounded-lg"></div>
+
+            <div className="flex gap-3 mt-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="w-24 h-24 bg-gray-200 rounded" />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="h-10 bg-gray-200 rounded w-3/4 mb-4"></div>
+
+            <div className="h-5 bg-gray-200 rounded w-40 mb-4"></div>
+
+            <div className="h-8 bg-gray-200 rounded w-32 mb-6"></div>
+
+            <div className="h-4 bg-gray-200 rounded mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6 mb-6"></div>
+
+            <div className="flex gap-3 mb-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="w-14 h-10 bg-gray-200 rounded" />
+              ))}
+            </div>
+
+            <div className="h-12 bg-gray-200 rounded mb-3"></div>
+
+            <div className="h-12 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -381,6 +419,69 @@ function ProductDetails() {
             >
               Add To Wishlist
             </button>
+            <div className="mt-5">
+              <p className="font-semibold mb-3">Share Product</p>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success("Link copied");
+                  }}
+                  className="
+      border
+      px-4
+      py-2
+      rounded-lg
+      hover:bg-gray-100
+      "
+                >
+                  Copy Link
+                </button>
+
+                <button
+                  onClick={() =>
+                    window.open(
+                      `https://wa.me/?text=${encodeURIComponent(
+                        window.location.href,
+                      )}`,
+                      "_blank",
+                    )
+                  }
+                  className="
+      bg-green-500
+      text-white
+      px-4
+      py-2
+      rounded-lg
+      hover:bg-green-600
+      "
+                >
+                  WhatsApp
+                </button>
+
+                <button
+                  onClick={() =>
+                    window.open(
+                      `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                        window.location.href,
+                      )}`,
+                      "_blank",
+                    )
+                  }
+                  className="
+      bg-black
+      text-white
+      px-4
+      py-2
+      rounded-lg
+      hover:bg-gray-800
+      "
+                >
+                  Share on X
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="mt-10">
@@ -464,7 +565,9 @@ function ProductDetails() {
             </div>
           ))
         )}
-        <RelatedProducts productId={product._id} />
+        <Suspense fallback={null}>
+          <RelatedProducts productId={product._id} />
+        </Suspense>
       </div>
     </div>
   );

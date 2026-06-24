@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import toast from "react-hot-toast";
+import imageCompression from "browser-image-compression";
 
 function AddProduct() {
   const navigate = useNavigate();
 
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const [form, setForm] = useState({
     title: "",
@@ -26,14 +28,55 @@ function AddProduct() {
     ],
   });
 
-  const handleFiles = (e) => {
-    const files = Array.from(e.target.files);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-    setImages(files);
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get("/categories");
 
-    const previews = files.map((file) => URL.createObjectURL(file));
+      setCategories(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    setPreviewImages(previews);
+  const handleFiles = async (e) => {
+    try {
+      const files = Array.from(e.target.files);
+
+      const compressedFiles = await Promise.all(
+        files.map(async (file) => {
+          return await imageCompression(file, {
+            maxSizeMB: 0.3,
+            maxWidthOrHeight: 1200,
+            useWebWorker: true,
+            fileType: "image/webp",
+          });
+        }),
+      );
+
+      setImages(compressedFiles);
+
+      const previews = compressedFiles.map((file) => URL.createObjectURL(file));
+
+      setPreviewImages(previews);
+
+      const originalSize = files.reduce((sum, file) => sum + file.size, 0);
+
+      const compressedSize = compressedFiles.reduce(
+        (sum, file) => sum + file.size,
+        0,
+      );
+
+      console.log(
+        `Reduced from ${(originalSize / 1024 / 1024).toFixed(2)} MB to ${(compressedSize / 1024 / 1024).toFixed(2)} MB`,
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to compress images");
+    }
   };
 
   const handleChange = (e) => {
@@ -57,6 +100,14 @@ function AddProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!form.category) {
+      toast.error("Please select a category");
+      return;
+    }
+    if (images.length === 0) {
+      toast.error("Please upload at least one image");
+      return;
+    }
     try {
       const uploadedImages = [];
 
@@ -66,7 +117,6 @@ function AddProduct() {
         formData.append("image", image);
 
         const uploadRes = await api.post("/upload", formData);
-
         uploadedImages.push(uploadRes.data.url);
       }
 
@@ -147,13 +197,20 @@ function AddProduct() {
           className="border p-3"
         />
 
-        <input
-          type="text"
+        <select
           name="category"
-          placeholder="Category"
+          value={form.category}
           onChange={handleChange}
           className="border p-3"
-        />
+        >
+          <option value="">Select Category</option>
+
+          {categories.map((category) => (
+            <option key={category._id} value={category.name}>
+              {category.name}
+            </option>
+          ))}
+        </select>
 
         <select
           name="gender"

@@ -3,6 +3,7 @@ const Cart = require("../models/Cart");
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
 const Product = require("../models/Product");
+const PDFDocument = require("pdfkit");
 
 const placeOrder = async (req, res) => {
   try {
@@ -223,6 +224,15 @@ const getOrderById = async (req, res) => {
       });
     }
 
+    if (
+      order.user._id.toString() !== req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({
+        message: "Unauthorized",
+      });
+    }
+
     res.json(order);
   } catch (error) {
     res.status(500).json({
@@ -271,7 +281,7 @@ const cancelOrder = async (req, res) => {
       });
     }
 
-    if (order.user.toString() !== req.user.id) {
+    if (order.user.toString() !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({
         message: "Unauthorized",
       });
@@ -376,6 +386,76 @@ const requestReturn = async (req, res) => {
   }
 };
 
+const generateInvoice = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate("products.product")
+      .populate("user");
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    if (
+      order.user._id.toString() !== req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const doc = new PDFDocument();
+
+    res.setHeader("Content-Type", "application/pdf");
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=invoice-${order._id}.pdf`,
+    );
+
+    doc.pipe(res);
+
+    doc.fontSize(22).text("DRIPSTORE Invoice");
+
+    doc.moveDown();
+
+    doc.text(`Order ID: ${order._id}`);
+    doc.text(`Payment ID: ${order.paymentId}`);
+    doc.text(`Status: ${order.status}`);
+    doc.text(`Date: ${order.createdAt.toDateString()}`);
+
+    doc.moveDown();
+
+    doc.text(`Address:`);
+    doc.text(order.address);
+
+    doc.moveDown();
+
+    doc.text("Products:");
+
+    order.products.forEach((item) => {
+      doc.text(
+        `${item.product.title}
+         | Qty: ${item.quantity}
+         | ₹${item.product.price}`,
+      );
+    });
+
+    doc.moveDown();
+
+    doc.text(`Total: ₹${order.totalAmount}`);
+
+    doc.end();
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   placeOrder,
   getMyOrders,
@@ -385,4 +465,5 @@ module.exports = {
   requestReturn,
   getOrderById,
   getDashboardStats,
+  generateInvoice,
 };
