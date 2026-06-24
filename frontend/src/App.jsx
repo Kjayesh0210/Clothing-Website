@@ -17,6 +17,9 @@ import Profile from "./pages/Profile";
 import Addresses from "./pages/Addresses";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   return (
@@ -28,7 +31,9 @@ function App() {
         flex-col
         "
       >
-        <Navbar />
+        {!["/login", "/register", "/forgot-password"].includes(
+          window.location.pathname,
+        ) && <Navbar />}
 
         <div className="flex-1">
           <Routes>
@@ -36,7 +41,11 @@ function App() {
 
             <Route path="/login" element={<Login />} />
 
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+
             <Route path="/register" element={<Register />} />
+
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
             <Route path="/products" element={<Products />} />
 
@@ -54,6 +63,8 @@ function App() {
 
             <Route path="/profile" element={<Profile />} />
 
+            <Route path="/change-password" element={<ChangePassword />} />
+
             <Route path="/addresses" element={<Addresses />} />
 
             <Route path="/admin" element={<AdminDashboard />} />
@@ -66,7 +77,9 @@ function App() {
           </Routes>
         </div>
 
-        <Footer />
+        {!["/login", "/register", "/forgot-password"].includes(
+          window.location.pathname,
+        ) && <Footer />}
       </div>
     </BrowserRouter>
   );

@@ -45,6 +45,26 @@ const orderSchema = new mongoose.Schema(
     paidAt: Date,
 
     paymentId: String,
+    estimatedDelivery: Date,
+    returnRequest: {
+      requested: {
+        type: Boolean,
+        default: false,
+      },
+
+      reason: {
+        type: String,
+        default: "",
+      },
+
+      status: {
+        type: String,
+        enum: ["Pending", "Approved", "Rejected", "Refunded"],
+        default: "Pending",
+      },
+
+      requestedAt: Date,
+    },
   },
   {
     timestamps: true,

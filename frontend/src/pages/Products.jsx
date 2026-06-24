@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import ProductCard from "../components/ProductCard";
+import { useSearchParams } from "react-router-dom";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -14,7 +15,17 @@ function Products() {
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [gender, setGender] = useState("");
+  
+  const [searchParams] = useSearchParams();
+  const [gender, setGender] = useState(searchParams.get("gender") || "");
+
+  // useEffect(() => {
+  //   const genderParam = searchParams.get("gender");
+
+  //   if (genderParam) {
+  //     setGender(genderParam);
+  //   }
+  // }, [searchParams]);
 
   useEffect(() => {
     fetchProducts();
@@ -143,8 +154,8 @@ function Products() {
             setKeyword("");
             setMinPrice("");
             setMaxPrice("");
-            setSort("");
             setGender("");
+            setSort("");
             setInStock(false);
             setPage(1);
           }}

@@ -33,6 +33,13 @@ const userSchema = new mongoose.Schema(
         address: String,
       },
     ],
+    resetPasswordToken: {
+      type: String,
+    },
+
+    resetPasswordExpires: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

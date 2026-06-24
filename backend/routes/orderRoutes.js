@@ -10,6 +10,8 @@ const {
   getMyOrders,
   getAllOrders,
   updateOrderStatus,
+  cancelOrder,
+  requestReturn,
   getOrderById,
   getDashboardStats,
 } = require("../controllers/orderController");
@@ -23,6 +25,10 @@ router.get("/all", protect, isAdmin, getAllOrders);
 router.get("/admin/stats", protect, isAdmin, getDashboardStats);
 
 router.put("/:id", protect, isAdmin, updateOrderStatus);
+
+router.put("/:id/cancel", protect, cancelOrder);
+
+router.put("/:id/request-return", protect, requestReturn);
 
 router.get("/:id", protect, getOrderById);
 

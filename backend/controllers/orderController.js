@@ -39,6 +39,10 @@ const placeOrder = async (req, res) => {
       0,
     );
 
+    const estimatedDelivery = new Date();
+
+    estimatedDelivery.setDate(estimatedDelivery.getDate() + 10);
+
     const order = await Order.create({
       user: req.user.id,
       products: cart.products,
@@ -47,6 +51,7 @@ const placeOrder = async (req, res) => {
       paymentId,
       isPaid: true,
       paidAt: Date.now(),
+      estimatedDelivery,
     });
 
     const user = await User.findById(req.user.id);
@@ -254,11 +259,130 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+const cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate(
+      "products.product",
+    );
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    if (order.user.toString() !== req.user.id) {
+      return res.status(403).json({
+        message: "Unauthorized",
+      });
+    }
+
+    if (order.status !== "Pending" && order.status !== "Confirmed") {
+      return res.status(400).json({
+        message: "Order cannot be cancelled",
+      });
+    }
+
+    order.status = "Cancelled";
+
+    await order.save();
+
+    for (const item of order.products) {
+      const sizeObj = item.product.sizes.find((s) => s.size === item.size);
+
+      if (sizeObj) {
+        sizeObj.stock += item.quantity;
+      }
+
+      await item.product.save();
+    }
+
+    const user = await User.findById(order.user);
+
+    try {
+      await sendEmail(
+        user.email,
+        "Order Cancelled",
+        `
+        <h2>Your order has been cancelled.</h2>
+
+        <p>Order ID: ${order._id}</p>
+        `,
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+
+    res.json({
+      success: true,
+      message: "Order cancelled successfully",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const requestReturn = async (req, res) => {
+  try {
+    const { reason } = req.body;
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    if (order.user.toString() !== req.user.id) {
+      return res.status(403).json({
+        message: "Unauthorized",
+      });
+    }
+
+    if (order.status !== "Delivered") {
+      return res.status(400).json({
+        message: "Only delivered orders can be returned",
+      });
+    }
+
+    if (order.returnRequest?.requested) {
+      return res.status(400).json({
+        message: "Return already requested",
+      });
+    }
+
+    order.returnRequest = {
+      requested: true,
+      reason,
+      status: "Pending",
+      requestedAt: Date.now(),
+    };
+
+    await order.save();
+
+    res.json({
+      success: true,
+      message: "Return request submitted",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   placeOrder,
   getMyOrders,
   getAllOrders,
   updateOrderStatus,
+  cancelOrder,
+  requestReturn,
   getOrderById,
   getDashboardStats,
 };

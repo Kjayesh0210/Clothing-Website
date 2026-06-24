@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import toast from "react-hot-toast";
+
 import RelatedProducts from "../components/RelatedProducts";
+import { CartContext } from "../context/CartContext";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -13,7 +15,9 @@ function ProductDetails() {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
-
+  const { fetchCartCount } = useContext(CartContext);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(false);
   useEffect(() => {
     fetchProduct();
   }, [id]);
@@ -31,6 +35,8 @@ function ProductDetails() {
 
   const addToCart = async () => {
     try {
+      if (cartLoading) return;
+      setCartLoading(true);
       if (product.sizes?.length > 0 && !selectedSize) {
         toast.error("Please select a size");
 
@@ -62,10 +68,14 @@ function ProductDetails() {
         },
       );
 
+      await fetchCartCount();
+
       toast.success("Added To Cart");
     } catch (error) {
       console.log(error);
       toast.error("Failed To Add To Cart");
+    } finally {
+      setCartLoading(false);
     }
   };
 
@@ -105,7 +115,13 @@ function ProductDetails() {
   const submitReview = async () => {
     try {
       const token = localStorage.getItem("token");
+      if (!comment.trim()) {
+        toast.error("Please write a review");
+        return;
+      }
 
+      if (reviewLoading) return;
+      setReviewLoading(true);
       if (!token) {
         navigate("/login", {
           state: {
@@ -138,6 +154,8 @@ function ProductDetails() {
     } catch (error) {
       console.log(error);
       toast.error("Failed To Add Review");
+    } finally {
+      setReviewLoading(false);
     }
   };
 
@@ -151,6 +169,7 @@ function ProductDetails() {
         <div>
           <div className="relative">
             <img
+              loading="lazy"
               src={selectedImage || "https://via.placeholder.com/500"}
               alt={product.title}
               className="
@@ -185,7 +204,8 @@ function ProductDetails() {
               <img
                 key={index}
                 src={image}
-                alt=""
+                alt={`${product.title} ${index + 1}`}
+                loading="lazy"
                 onClick={() => setSelectedImage(image)}
                 className={`
           w-24
@@ -222,47 +242,21 @@ function ProductDetails() {
             ⭐ {product.rating} ({product.numReviews} Reviews)
           </div>
 
-          <p
-            className="
-            text-3xl
-            font-bold
-            mb-4
-            "
-          >
-            <div className="mb-4">
-              <span
-                className="
-                text-3xl
-                font-bold
-                "
-              >
-                ₹{product.price}
-              </span>
+          <div className="mb-4">
+            <span className="text-3xl font-bold">₹{product.price}</span>
 
-              {product.originalPrice > product.price && (
-                <>
-                  <span
-                    className="
-                    line-through
-                    text-gray-500
-                    ml-3
-                    "
-                  >
-                    ₹{product.originalPrice}
-                  </span>
+            {product.originalPrice > product.price && (
+              <>
+                <span className="line-through text-gray-500 ml-3">
+                  ₹{product.originalPrice}
+                </span>
 
-                  <span
-                    className="
-                    text-green-600
-                    ml-3
-                    "
-                  >
-                    {product.discountPercentage}% OFF
-                  </span>
-                </>
-              )}
-            </div>
-          </p>
+                <span className="text-green-600 ml-3">
+                  {product.discountPercentage}% OFF
+                </span>
+              </>
+            )}
+          </div>
 
           <p
             className="
@@ -309,7 +303,11 @@ function ProductDetails() {
       border
       rounded
 
-      ${selectedSize === item.size ? "bg-black text-white" : ""}
+      ${
+        selectedSize === item.size
+          ? "bg-black text-white border-black"
+          : "hover:border-black"
+      }
 
       ${item.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}
     `}
@@ -325,15 +323,11 @@ function ProductDetails() {
             {product.sizes?.some((s) => s.stock > 0) ? (
               <>
                 <button
+                  disabled={cartLoading}
                   onClick={addToCart}
-                  className="
-                  bg-black
-                  text-white
-                  py-3
-                  rounded
-                  "
+                  className="bg-black text-white py-3 rounded disabled:opacity-50"
                 >
-                  Add To Cart
+                  {cartLoading ? "Adding..." : "Add To Cart"}
                 </button>
 
                 {/* <button
@@ -430,17 +424,11 @@ function ProductDetails() {
             />
 
             <button
+              disabled={reviewLoading}
               onClick={submitReview}
-              className="
-              bg-black
-              text-white
-              px-6
-              py-3
-              mt-3
-              rounded
-              "
+              className="bg-black text-white px-6 py-3 mt-3 rounded disabled:opacity-50"
             >
-              Submit Review
+              {reviewLoading ? "Submitting..." : "Submit Review"}
             </button>
           </div>
         </div>
@@ -462,7 +450,7 @@ function ProductDetails() {
         ) : (
           product.reviews?.map((review, index) => (
             <div
-              key={index}
+              key={review._id || index}
               className="
               border-b
               py-4

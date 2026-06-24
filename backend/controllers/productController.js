@@ -289,7 +289,7 @@ const getLowStockProducts = async (req, res) => {
   }
 };
 
-module.exports = {
+module.exports = {  
   createProduct,
   getProducts,
   getProduct,

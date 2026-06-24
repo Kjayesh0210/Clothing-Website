@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import toast from "react-hot-toast";
 import api from "../services/api";
 import { Link } from "react-router-dom";
 function MyOrders() {
@@ -21,6 +21,34 @@ function MyOrders() {
     setOrders(res.data);
   };
 
+  const cancelOrder = async (orderId) => {
+    const confirmCancel = window.confirm(
+      "Are you sure you want to cancel this order?",
+    );
+
+    if (!confirmCancel) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await api.put(
+        `/orders/${orderId}/cancel`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      );
+
+      toast.success(res.data.message);
+
+      fetchOrders();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to cancel order");
+    }
+  };
+
   return (
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-6">My Orders</h1>
@@ -29,28 +57,47 @@ function MyOrders() {
         <p>No Orders Found</p>
       ) : (
         orders.map((order) => (
-          <Link key={order._id} to={`/orders/${order._id}`}>
-            <div
-              className="
-            border
-            p-4
-            mt-4
-            rounded
-            hover:shadow-md
-            transition
-            cursor-pointer
-            "
-            >
-              <h2 className="text-xl font-semibold">₹{order.totalAmount}</h2>
+          <div
+            key={order._id}
+            className="
+    border
+    p-4
+    mt-4
+    rounded
+    hover:shadow-md
+    transition
+    "
+          >
+            <Link to={`/orders/${order._id}`}>
+              <div className="cursor-pointer">
+                <h2 className="text-xl font-semibold">₹{order.totalAmount}</h2>
 
-              <p>Status: {order.status}</p>
+                <p>Status: {order.status}</p>
 
-              <p>
-                Payment:
-                {order.isPaid ? " Paid" : " Pending"}
-              </p>
-            </div>
-          </Link>
+                <p>
+                  Payment:
+                  {order.isPaid ? " Paid" : " Pending"}
+                </p>
+              </div>
+            </Link>
+
+            {(order.status === "Pending" || order.status === "Confirmed") && (
+              <button
+                onClick={() => cancelOrder(order._id)}
+                className="
+        mt-4
+        bg-red-500
+        hover:bg-red-600
+        text-white
+        px-4
+        py-2
+        rounded
+        "
+              >
+                Cancel Order
+              </button>
+            )}
+          </div>
         ))
       )}
     </div>

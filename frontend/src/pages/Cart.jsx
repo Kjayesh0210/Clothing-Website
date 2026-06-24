@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import api from "../services/api";
 import { Link } from "react-router-dom";
-
+import { CartContext } from "../context/CartContext";
 function Cart() {
   const [cart, setCart] = useState(null);
+  const { fetchCartCount } = useContext(CartContext);
 
   useEffect(() => {
     fetchCart();
@@ -42,6 +43,7 @@ function Cart() {
       },
     );
 
+    await fetchCartCount();
     fetchCart();
   };
 
@@ -59,6 +61,7 @@ function Cart() {
       },
     });
 
+    await fetchCartCount();
     fetchCart();
   };
 

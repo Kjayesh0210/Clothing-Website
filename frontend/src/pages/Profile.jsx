@@ -9,6 +9,12 @@ function Profile() {
     phone: "",
   });
 
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -61,6 +67,39 @@ function Profile() {
     } catch (error) {
       console.log(error);
       toast.error("Failed to update profile");
+    }
+  };
+
+  const changePassword = async () => {
+    try {
+      if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+        return toast.error("Passwords do not match");
+      }
+
+      const token = localStorage.getItem("token");
+
+      const res = await api.put(
+        "/auth/change-password",
+        {
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      );
+
+      toast.success(res.data.message);
+
+      setPasswordForm({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to change password");
     }
   };
 
@@ -154,6 +193,20 @@ w-full mx-auto p-10"
         >
           Save Changes
         </button>
+        <Link
+          to="/change-password"
+          className="
+  border
+  rounded-lg
+  p-5
+  hover:shadow-lg
+  transition
+  "
+        >
+          <h3 className="text-lg font-semibold">Security</h3>
+
+          <p className="text-gray-500 mt-1">Change your account password</p>
+        </Link>
         <button
           onClick={handleLogout}
           className="

@@ -60,13 +60,22 @@ function Login() {
           }
         />
 
+        <div className="text-right mb-3">
+          <a
+            href="/forgot-password"
+            className="text-sm text-gray-600 hover:text-black"
+          >
+            Forgot Password?
+          </a>
+        </div>
+
         <button
           className="
-          bg-black
-          text-white
-          p-2
-          w-full
-          "
+  bg-black
+  text-white
+  p-2
+  w-full
+  "
         >
           Login
         </button>

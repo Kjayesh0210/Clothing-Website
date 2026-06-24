@@ -12,18 +12,40 @@ function ProductCard({ product }) {
       className="
       group
       border
-      rounded-lg
+      rounded-xl
       overflow-hidden
       bg-white
-      hover:shadow-xl
-      transition
+      hover:shadow-2xl
+      hover:-translate-y-1
+      transition-all
       duration-300
       "
     >
-      <div className="overflow-hidden">
+      <div className="overflow-hidden relative">
+        {product.discountPercentage > 0 && (
+          <span
+            className="
+            absolute
+            top-3
+            left-3
+            bg-red-500
+            text-white
+            text-xs
+            font-semibold
+            px-2
+            py-1
+            rounded
+            z-10
+            "
+          >
+            {product.discountPercentage}% OFF
+          </span>
+        )}
+
         <img
           src={product.images?.[0]}
           alt={product.title}
+          loading="lazy"
           className="
           w-full
           h-80
@@ -38,7 +60,9 @@ function ProductCard({ product }) {
       <div className="p-4">
         <p
           className="
-          text-sm
+          text-xs
+          uppercase
+          tracking-wider
           text-gray-500
           mb-2
           "
@@ -50,60 +74,58 @@ function ProductCard({ product }) {
           className="
           font-semibold
           text-lg
-          mb-2
+          mb-3
           line-clamp-2
+          min-h-[56px]
           "
         >
           {product.title}
         </h3>
 
-        <div
-          className="
-          flex
-          justify-between
-          items-center
-          "
-        >
-          <div>
-            <span
-              className="
-              text-xl
-              font-bold
-              "
-            >
-              ₹{product.price}
-            </span>
+        <div className="mb-3">
+          <span
+            className="
+            text-2xl
+            font-bold
+            "
+          >
+            ₹{product.price}
+          </span>
 
-            {product.originalPrice > product.price && (
-              <>
-                <span
-                  className="
-                  line-through
-                  text-gray-500
-                  ml-2
-                  "
-                >
-                  ₹{product.originalPrice}
-                </span>
+          {product.originalPrice > product.price && (
+            <>
+              <span
+                className="
+                line-through
+                text-gray-400
+                ml-2
+                "
+              >
+                ₹{product.originalPrice}
+              </span>
 
-                <span
-                  className="
-                  text-green-600
-                  ml-2
-                  "
-                >
-                  {product.discountPercentage}% OFF
-                </span>
-              </>
-            )}
-          </div>
+              <span
+                className="
+                text-green-600
+                ml-2
+                text-sm
+                font-medium
+                "
+              >
+                {product.discountPercentage}% OFF
+              </span>
+            </>
+          )}
+        </div>
 
+        <div className="mb-4">
           {inStock ? (
             totalStock <= 5 ? (
               <span
                 className="
                 text-orange-500
                 text-sm
+                font-medium
                 "
               >
                 Only {totalStock} left
@@ -113,9 +135,10 @@ function ProductCard({ product }) {
                 className="
                 text-green-600
                 text-sm
+                font-medium
                 "
               >
-                In Stock
+                ✓ In Stock
               </span>
             )
           ) : (
@@ -123,6 +146,7 @@ function ProductCard({ product }) {
               className="
               text-red-500
               text-sm
+              font-medium
               "
             >
               Out of Stock

@@ -4,48 +4,105 @@ function Hero() {
   return (
     <section
       className="
-      h-[80vh]
+      relative
+      h-[85vh]
       flex
       items-center
-      justify-center
-      text-center
-      bg-gray-100
       "
     >
-      <div>
-        <h1
-          className="
-          text-5xl
-          md:text-7xl
-          font-bold
-          mb-5
-          "
-        >
-          Wear Your Style
-        </h1>
+      <div
+        className="
+        absolute
+        inset-0
+        bg-gradient-to-r
+        from-black
+        via-gray-900
+        to-gray-800
+        "
+      />
 
-        <p
-          className="
-          text-gray-600
-          text-lg
-          mb-6
-          "
-        >
-          Discover premium fashion for every occasion.
-        </p>
+      <div
+        className="
+        relative
+        max-w-7xl
+        mx-auto
+        px-6
+        w-full
+        "
+      >
+        <div className="max-w-2xl text-white">
+          <p
+            className="
+            uppercase
+            tracking-[4px]
+            text-sm
+            text-gray-300
+            mb-4
+            "
+          >
+            New Collection 2026
+          </p>
 
-        <Link
-          to="/products"
-          className="
-          bg-black
-          text-white
-          px-8
-          py-4
-          rounded
-          "
-        >
-          Shop Now
-        </Link>
+          <h1
+            className="
+            text-5xl
+            md:text-7xl
+            font-bold
+            leading-tight
+            mb-6
+            "
+          >
+            Wear Your
+            <br />
+            Style With Confidence
+          </h1>
+
+          <p
+            className="
+            text-lg
+            text-gray-300
+            mb-8
+            max-w-lg
+            "
+          >
+            Discover premium fashion designed for comfort, confidence and
+            everyday style.
+          </p>
+
+          <div className="flex gap-4 flex-wrap">
+            <Link
+              to="/products"
+              className="
+              bg-white
+              text-black
+              px-8
+              py-4
+              rounded-lg
+              font-semibold
+              hover:bg-gray-200
+              transition
+              "
+            >
+              Shop Now
+            </Link>
+
+            <Link
+              to="/products"
+              className="
+              border
+              border-white
+              px-8
+              py-4
+              rounded-lg
+              hover:bg-white
+              hover:text-black
+              transition
+              "
+            >
+              Explore Collection
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );
