@@ -121,6 +121,7 @@ const getProducts = async (req, res) => {
     const skip = (currentPage - 1) * pageLimit;
 
     const products = await Product.find(filter)
+      .populate("category", "name")
       .sort(sortOption)
       .skip(skip)
       .limit(pageLimit);
@@ -142,7 +143,12 @@ const getProducts = async (req, res) => {
 
 const getProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate(
+      "category",
+      "name",
+    );
+
+    console.log(product);
 
     if (!product) {
       return res.status(404).json({
@@ -152,6 +158,9 @@ const getProduct = async (req, res) => {
 
     res.json(product);
   } catch (error) {
+    console.log("GET PRODUCT ERROR:");
+    console.log(error);
+
     res.status(500).json({
       message: error.message,
     });

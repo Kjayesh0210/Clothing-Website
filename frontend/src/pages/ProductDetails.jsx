@@ -302,7 +302,7 @@ function ProductDetails() {
             mb-2
             "
           >
-            Category: {product.category}
+            <p>Category: {product.category?.name}</p>
           </p>
           <p className="text-gray-500">Gender: {product.gender}</p>
           <p

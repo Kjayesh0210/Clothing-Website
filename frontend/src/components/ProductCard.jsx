@@ -68,7 +68,7 @@ function ProductCard({ product }) {
           mb-2
           "
         >
-          {product.category}
+          {product.category?.name}
         </p>
 
         <h3

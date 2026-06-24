@@ -15,10 +15,12 @@ const productSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+      min: 0,
     },
 
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
     },
 
@@ -30,6 +32,7 @@ const productSchema = new mongoose.Schema(
     images: [
       {
         type: String,
+        required: true,
       },
     ],
 
@@ -44,11 +47,6 @@ const productSchema = new mongoose.Schema(
         },
       },
     ],
-
-    ratings: {
-      type: Number,
-      default: 0,
-    },
     reviews: [
       {
         user: {
@@ -73,14 +71,18 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
     originalPrice: {
       type: Number,
       default: 0,
+      min: 0,
     },
 
     discountPercentage: {
       type: Number,
       default: 0,
+      min: 0,
+      max: 90,
     },
     gender: {
       type: String,
@@ -91,6 +93,27 @@ const productSchema = new mongoose.Schema(
     color: {
       type: String,
       default: "",
+    },
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+    bestSeller: {
+      type: Boolean,
+      default: false,
+    },
+    newArrival: {
+      type: Boolean,
+      default: false,
+    },
+    material: {
+      type: String,
+      default: "",
+    },
+    fit: {
+      type: String,
+      enum: ["Slim", "Regular", "Relaxed", "Oversized"],
+      default: "Regular",
     },
   },
   {

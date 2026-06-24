@@ -142,7 +142,7 @@ function AdminProducts() {
 
                   <p>Price: ₹{product.price}</p>
 
-                  <p>Category: {product.category}</p>
+                  <p>Category: {product.category?.name || "No Category"}</p>
 
                   <p>Gender: {product.gender}</p>
 

@@ -38,7 +38,7 @@ function EditProduct() {
   const fetchProduct = async () => {
     try {
       const res = await api.get(`/products/${id}`);
-
+      console.log(res.data);
       setProduct(res.data);
 
       setForm({
@@ -47,7 +47,7 @@ function EditProduct() {
         price: res.data.price || "",
         originalPrice: res.data.originalPrice || "",
         discountPercentage: res.data.discountPercentage || "",
-        category: res.data.category || "",
+        category: res.data.category?._id || "",
         gender: res.data.gender || "Unisex",
         images: res.data.images || [],
         sizes:
@@ -232,7 +232,7 @@ function EditProduct() {
           <option value="">Select Category</option>
 
           {categories.map((category) => (
-            <option key={category._id} value={category.name}>
+            <option key={category._id} value={category._id}>
               {category.name}
             </option>
           ))}
