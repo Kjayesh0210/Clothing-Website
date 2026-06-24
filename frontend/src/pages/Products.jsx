@@ -7,17 +7,26 @@ function Products() {
 
   const [categories, setCategories] = useState([]);
 
-  const [category, setCategory] = useState("");
-  const [keyword, setKeyword] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [sort, setSort] = useState("");
-  const [inStock, setInStock] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [page, setPage] = useState(1);
+  const [category, setCategory] = useState(searchParams.get("category") || "");
+
+  const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
+
+  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
+
+  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
+
+  const [sort, setSort] = useState(searchParams.get("sort") || "");
+
+  const [inStock, setInStock] = useState(
+    searchParams.get("inStock") === "true",
+  );
+
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
+
   const [totalPages, setTotalPages] = useState(1);
 
-  const [searchParams] = useSearchParams();
   const [gender, setGender] = useState(searchParams.get("gender") || "");
 
   const [loading, setLoading] = useState(true);
@@ -36,6 +45,31 @@ function Products() {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    const params = {};
+
+    if (category) params.category = category;
+    if (keyword) params.keyword = keyword;
+    if (minPrice) params.minPrice = minPrice;
+    if (maxPrice) params.maxPrice = maxPrice;
+    if (sort) params.sort = sort;
+    if (gender) params.gender = gender;
+    if (inStock) params.inStock = "true";
+    if (page > 1) params.page = String(page);
+
+    setSearchParams(params);
+  }, [
+    category,
+    keyword,
+    minPrice,
+    maxPrice,
+    sort,
+    gender,
+    inStock,
+    page,
+    setSearchParams,
+  ]);
 
   const fetchProducts = async () => {
     try {

@@ -133,7 +133,7 @@ function AddProduct() {
           category: form.category,
           gender: form.gender,
           images: uploadedImages,
-          sizes: form.sizes.filter((item) => item.stock > 0),
+          sizes: form.sizes,
         },
         {
           headers: {

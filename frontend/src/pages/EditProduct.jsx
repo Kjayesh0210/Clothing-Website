@@ -41,6 +41,22 @@ function EditProduct() {
       console.log(res.data);
       setProduct(res.data);
 
+      const defaultSizes = [
+        { size: "S", stock: 0 },
+        { size: "M", stock: 0 },
+        { size: "L", stock: 0 },
+        { size: "XL", stock: 0 },
+        { size: "XXL", stock: 0 },
+      ];
+
+      const mergedSizes = defaultSizes.map((sizeObj) => {
+        const existing = res.data.sizes?.find(
+          (item) => item.size === sizeObj.size,
+        );
+
+        return existing || sizeObj;
+      });
+
       setForm({
         title: res.data.title || "",
         description: res.data.description || "",
@@ -50,16 +66,7 @@ function EditProduct() {
         category: res.data.category?._id || "",
         gender: res.data.gender || "Unisex",
         images: res.data.images || [],
-        sizes:
-          res.data.sizes?.length > 0
-            ? res.data.sizes
-            : [
-                { size: "S", stock: 0 },
-                { size: "M", stock: 0 },
-                { size: "L", stock: 0 },
-                { size: "XL", stock: 0 },
-                { size: "XXL", stock: 0 },
-              ],
+        sizes: mergedSizes,
       });
     } catch (error) {
       console.log(error);
@@ -156,7 +163,7 @@ function EditProduct() {
           category: form.category,
           gender: form.gender,
           images: uploadedImages,
-          sizes: form.sizes.filter((item) => item.stock > 0),
+          sizes: form.sizes,
         },
         {
           headers: {
