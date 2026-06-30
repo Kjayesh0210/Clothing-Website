@@ -105,19 +105,35 @@ function Cart() {
   const total = subtotal + shipping - discount;
 
   return (
-    <div className="bg-neutral-50 min-h-screen py-10">
-      <div className="max-w-7xl mx-auto px-4 lg:px-8">
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold tracking-tight">Shopping Bag</h1>
+    <section className="min-h-screen bg-[#F8F8F8] py-16">
+      <div className="mx-auto w-full px-8 lg:px-16">
+        {/* Header */}
+        <div className="h-5"></div>
+        <div className="flex p-6">
+          <div className="w-10"></div>
+          <div className="mb-14 flex items-end justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.3em] text-neutral-400">
+                Shopping
+              </p>
 
-          <p className="text-neutral-500 mt-2">
-            {cart.products.length}{" "}
-            {cart.products.length === 1 ? "Item" : "Items"} in your bag
-          </p>
+              <h1 className="mt-3 text-5xl font-bold tracking-tight text-neutral-900">
+                Shopping Bag
+              </h1>
+
+              <p className="mt-4 text-lg text-neutral-500">
+                {cart.products.length}{" "}
+                {cart.products.length === 1 ? "Item" : "Items"} in your bag
+              </p>
+            </div>
+          </div>
         </div>
+        <div className="h-5"></div>
 
-        <div className="grid lg:grid-cols-3 gap-10">
-          <div className="lg:col-span-2 space-y-6">
+        {/* Content */}
+        <div className="grid gap-10 lg:grid-cols-[1px_1fr_420px_1px]">
+          {/* Cart Items */}
+          <div className="col-start-2 flex flex-col gap-8">
             {cart.products.map((item) => (
               <CartItem
                 key={`${item.product._id}-${item.size}`}
@@ -127,18 +143,21 @@ function Cart() {
               />
             ))}
           </div>
-
-          <div className="lg:sticky lg:top-24 h-fit">
-            <CartSummary
-              subtotal={subtotal}
-              shipping={shipping}
-              discount={discount}
-              total={total}
-            />
-          </div>
+          {/* Summary */}
+          <aside className="lg:sticky lg:top-28 h-fit col-start-3">
+            <div className="rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
+              <CartSummary
+                subtotal={subtotal}
+                shipping={shipping}
+                discount={discount}
+                total={total}
+              />
+            </div>
+          </aside>
         </div>
+        <div className="h-10"></div>
       </div>
-    </div>
+    </section>
   );
 }
 

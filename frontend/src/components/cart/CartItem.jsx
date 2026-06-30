@@ -34,7 +34,7 @@ function CartItem({ item, updateQuantity, removeItem }) {
         <div className="flex-1 flex flex-col justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400">
-              DRIPSTORE
+              THREADDOT
             </p>
 
             <h2 className="mt-1 text-xl font-semibold text-neutral-900">
