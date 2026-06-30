@@ -1,9 +1,16 @@
 import { useEffect, useState, useContext } from "react";
 import api from "../services/api";
-import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
+
+import CartItem from "../components/cart/CartItem";
+import CartSummary from "../components/cart/CartSummary";
+import EmptyCart from "../components/cart/EmptyCart";
+import CartSkeleton from "../components/cart/CartSkeleton";
+
 function Cart() {
   const [cart, setCart] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const { fetchCartCount } = useContext(CartContext);
 
   useEffect(() => {
@@ -11,139 +18,126 @@ function Cart() {
   }, []);
 
   const fetchCart = async () => {
-    const token = localStorage.getItem("token");
+    try {
+      setLoading(true);
 
-    const res = await api.get("/cart", {
-      headers: {
-        Authorization: token,
-      },
-    });
+      const token = localStorage.getItem("token");
 
-    console.log(res.data);
+      const res = await api.get("/cart", {
+        headers: {
+          Authorization: token,
+        },
+      });
 
-    setCart(res.data);
+      setCart(res.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const updateQuantity = async (productId, quantity, size) => {
     if (quantity < 1) return;
 
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    await api.put(
-      "/cart/update",
-      {
-        productId,
-        quantity,
-        size,
-      },
-      {
-        headers: {
-          Authorization: token,
+      await api.put(
+        "/cart/update",
+        {
+          productId,
+          quantity,
+          size,
         },
-      },
-    );
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      );
 
-    await fetchCartCount();
-    fetchCart();
+      await fetchCartCount();
+      fetchCart();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const removeItem = async (productId, size) => {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    await api.delete("/cart/remove", {
-      headers: {
-        Authorization: token,
-      },
+      await api.delete("/cart/remove", {
+        headers: {
+          Authorization: token,
+        },
+        data: {
+          productId,
+          size,
+        },
+      });
 
-      data: {
-        productId,
-        size,
-      },
-    });
-
-    await fetchCartCount();
-    fetchCart();
+      await fetchCartCount();
+      fetchCart();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  if (!cart) {
-    return <h1>Empty Cart</h1>;
+  if (loading) {
+    return <CartSkeleton />;
   }
 
-  const total =
-    cart?.products?.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0,
-    ) || 0;
+  if (!cart || cart.products.length === 0) {
+    return <EmptyCart />;
+  }
+
+  const subtotal = cart.products.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0,
+  );
+
+  const shipping = subtotal >= 999 ? 0 : 99;
+
+  const discount = 0;
+
+  const total = subtotal + shipping - discount;
 
   return (
-    <div className="p-10">
-      <h1 className="text-3xl mb-6">My Cart</h1>
+    <div className="bg-neutral-50 min-h-screen py-10">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="mb-10">
+          <h1 className="text-4xl font-bold tracking-tight">Shopping Bag</h1>
 
-      {cart.products.map((item) => (
-        <div
-          key={`${item.product._id}-${item.size}`}
-          className="
-          flex
-          justify-between
-          items-center
-          border-b
-          py-4
-          "
-        >
-          <div>
-            <h2>{item.product.title}</h2>
-
-            <p>Size: {item.size}</p>
-
-            <p>₹{item.product.price}</p>
-          </div>
-
-          <div className="flex gap-3">
-            <button
-              onClick={() =>
-                updateQuantity(item.product._id, item.quantity - 1, item.size)
-              }
-            >
-              -
-            </button>
-
-            <span>{item.quantity}</span>
-
-            <button
-              onClick={() =>
-                updateQuantity(item.product._id, item.quantity + 1, item.size)
-              }
-            >
-              +
-            </button>
-          </div>
-
-          <button
-            onClick={() => removeItem(item.product._id, item.size)}
-            className="text-red-500"
-          >
-            Remove
-          </button>
+          <p className="text-neutral-500 mt-2">
+            {cart.products.length}{" "}
+            {cart.products.length === 1 ? "Item" : "Items"} in your bag
+          </p>
         </div>
-      ))}
 
-      <div className="mt-10">
-        <h2 className="text-3xl">Total: ₹{total}</h2>
+        <div className="grid lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-2 space-y-6">
+            {cart.products.map((item) => (
+              <CartItem
+                key={`${item.product._id}-${item.size}`}
+                item={item}
+                updateQuantity={updateQuantity}
+                removeItem={removeItem}
+              />
+            ))}
+          </div>
+
+          <div className="lg:sticky lg:top-24 h-fit">
+            <CartSummary
+              subtotal={subtotal}
+              shipping={shipping}
+              discount={discount}
+              total={total}
+            />
+          </div>
+        </div>
       </div>
-
-      <Link
-        to="/checkout"
-        className="
-        bg-black
-        text-white
-        px-6
-        py-3
-        mt-5
-        inline-block
-        "
-      >
-        Checkout
-      </Link>
     </div>
   );
 }

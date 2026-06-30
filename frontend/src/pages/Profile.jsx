@@ -2,6 +2,19 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+
+import {
+  User,
+  Mail,
+  Phone,
+  Package,
+  MapPin,
+  Shield,
+  LogOut,
+  Save,
+  ArrowRight,
+} from "lucide-react";
+
 function Profile() {
   const [form, setForm] = useState({
     name: "",
@@ -9,11 +22,7 @@ function Profile() {
     phone: "",
   });
 
-  const [passwordForm, setPasswordForm] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProfile();
@@ -21,6 +30,8 @@ function Profile() {
 
   const fetchProfile = async () => {
     try {
+      setLoading(true);
+
       const token = localStorage.getItem("token");
 
       const res = await api.get("/auth/profile", {
@@ -36,14 +47,16 @@ function Profile() {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const saveProfile = async () => {
@@ -63,164 +76,455 @@ function Profile() {
         },
       );
 
-      toast.success("Profile Updated");
+      toast.success("Profile Updated Successfully");
     } catch (error) {
-      console.log(error);
       toast.error("Failed to update profile");
-    }
-  };
-
-  const changePassword = async () => {
-    try {
-      if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-        return toast.error("Passwords do not match");
-      }
-
-      const token = localStorage.getItem("token");
-
-      const res = await api.put(
-        "/auth/change-password",
-        {
-          currentPassword: passwordForm.currentPassword,
-          newPassword: passwordForm.newPassword,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        },
-      );
-
-      toast.success(res.data.message);
-
-      setPasswordForm({
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to change password");
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+
     toast.success("Logged Out");
 
     setTimeout(() => {
       window.location.href = "/";
-    }, 100);
+    }, 300);
   };
 
-  return (
-    <div
-      className="max-w-xl
-w-full mx-auto p-10"
-    >
-      <h1 className="text-4xl mb-6">My Profile</h1>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-neutral-50 py-16 animate-pulse">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="h-14 w-64 rounded bg-neutral-200" />
 
-      <div className="flex flex-col gap-4">
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          placeholder="Name"
-          className="
-          border
-          p-3
-          "
-        />
+          <div className="mt-12 h-64 rounded-3xl bg-neutral-200" />
 
-        <input
-          value={form.email}
-          disabled
-          className="
-          border
-          p-3
-          bg-gray-100
-          "
-        />
+          <div className="grid md:grid-cols-3 gap-6 mt-10">
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="h-44 rounded-3xl bg-neutral-200" />
+            ))}
+          </div>
 
-        <input
-          name="phone"
-          value={form.phone}
-          onChange={handleChange}
-          placeholder="Phone"
-          className="
-          border
-          p-3
-          "
-        />
-        <div className="grid md:grid-cols-2 gap-4 mt-6">
-          <Link
-            to="/orders"
-            className="
-    border
-    rounded-lg
-    p-5
-    hover:shadow-lg
-    transition
-    "
-          >
-            <h3 className="text-lg font-semibold">My Orders</h3>
-
-            <p className="text-gray-500 mt-1">View and track your orders</p>
-          </Link>
-
-          <Link
-            to="/addresses"
-            className="
-    border
-    rounded-lg
-    p-5
-    hover:shadow-lg
-    transition
-    "
-          >
-            <h3 className="text-lg font-semibold">Saved Addresses</h3>
-
-            <p className="text-gray-500 mt-1">Manage delivery addresses</p>
-          </Link>
+          <div className="mt-10 h-[420px] rounded-3xl bg-neutral-200" />
         </div>
-        <button
-          onClick={saveProfile}
-          className="
-          bg-black
-          text-white
-          py-3
-          "
-        >
-          Save Changes
-        </button>
-        <Link
-          to="/change-password"
-          className="
-  border
-  rounded-lg
-  p-5
-  hover:shadow-lg
-  transition
-  "
-        >
-          <h3 className="text-lg font-semibold">Security</h3>
+      </div>
+    );
+  }
+  return (
+    <div className="min-h-screen bg-neutral-50 py-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="mb-14">
+          <h1 className="text-5xl font-bold tracking-tight">My Account</h1>
 
-          <p className="text-gray-500 mt-1">Change your account password</p>
-        </Link>
-        <button
-          onClick={handleLogout}
+          <p className="text-lg text-neutral-500 mt-3">
+            Manage your profile, orders and account settings.
+          </p>
+        </div>
+
+        <div
           className="
-  bg-red-500
-  hover:bg-red-600
-  text-white
-  py-3
-  mt-3
-  rounded
-  transition
-  "
+          bg-white
+          rounded-[32px]
+          border
+          border-neutral-200
+          shadow-sm
+          p-10
+        "
         >
-          Logout
-        </button>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
+            <div className="flex items-center gap-8">
+              <div
+                className="
+                w-28
+                h-28
+                rounded-full
+                bg-black
+                text-white
+                flex
+                items-center
+                justify-center
+                text-4xl
+                font-bold
+                shrink-0
+              "
+              >
+                {form.name ? form.name.charAt(0).toUpperCase() : "U"}
+              </div>
+
+              <div>
+                <h2 className="text-4xl font-bold">{form.name || "User"}</h2>
+
+                <div className="mt-6 space-y-4">
+                  <div className="flex items-center gap-3 text-neutral-600">
+                    <Mail size={18} />
+
+                    <span>{form.email}</span>
+                  </div>
+
+                  <div className="flex items-center gap-3 text-neutral-600">
+                    <Phone size={18} />
+
+                    <span>{form.phone || "No phone number"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={saveProfile}
+              className="
+              h-16
+              px-10
+              rounded-2xl
+              bg-black
+              text-white
+              font-semibold
+              text-lg
+              flex
+              items-center
+              justify-center
+              gap-3
+              hover:bg-neutral-800
+              transition-all
+              duration-300
+              hover:-translate-y-1
+              active:scale-[0.98]
+            "
+            >
+              <Save size={20} />
+              Save Changes
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-12">
+          <div className="grid md:grid-cols-3 gap-6">
+            <Link
+              to="/orders"
+              className="
+      group
+      bg-white
+      rounded-3xl
+      border
+      border-neutral-200
+      shadow-sm
+      p-8
+      transition-all
+      duration-300
+      hover:-translate-y-1
+      hover:shadow-lg
+    "
+            >
+              <Package
+                size={34}
+                className="text-black transition group-hover:scale-110"
+              />
+
+              <h3 className="text-xl font-semibold mt-6">My Orders</h3>
+
+              <p className="text-neutral-500 mt-2 leading-7">
+                View, track and manage your recent orders.
+              </p>
+
+              <div className="mt-8 flex items-center gap-2 font-semibold">
+                Open
+                <ArrowRight size={18} />
+              </div>
+            </Link>
+
+            <Link
+              to="/addresses"
+              className="
+      group
+      bg-white
+      rounded-3xl
+      border
+      border-neutral-200
+      shadow-sm
+      p-8
+      transition-all
+      duration-300
+      hover:-translate-y-1
+      hover:shadow-lg
+    "
+            >
+              <MapPin
+                size={34}
+                className="text-black transition group-hover:scale-110"
+              />
+
+              <h3 className="text-xl font-semibold mt-6">Addresses</h3>
+
+              <p className="text-neutral-500 mt-2 leading-7">
+                Manage saved delivery addresses.
+              </p>
+
+              <div className="mt-8 flex items-center gap-2 font-semibold">
+                Open
+                <ArrowRight size={18} />
+              </div>
+            </Link>
+
+            <Link
+              to="/change-password"
+              className="
+      group
+      bg-white
+      rounded-3xl
+      border
+      border-neutral-200
+      shadow-sm
+      p-8
+      transition-all
+      duration-300
+      hover:-translate-y-1
+      hover:shadow-lg
+    "
+            >
+              <Shield
+                size={34}
+                className="text-black transition group-hover:scale-110"
+              />
+
+              <h3 className="text-xl font-semibold mt-6">Security</h3>
+
+              <p className="text-neutral-500 mt-2 leading-7">
+                Update your password and account security.
+              </p>
+
+              <div className="mt-8 flex items-center gap-2 font-semibold">
+                Open
+                <ArrowRight size={18} />
+              </div>
+            </Link>
+          </div>
+
+          <div
+            className="
+    mt-12
+    bg-white
+    rounded-[32px]
+    border
+    border-neutral-200
+    shadow-sm
+    p-10
+  "
+          >
+            <h2 className="text-3xl font-bold">Personal Information</h2>
+
+            <p className="text-neutral-500 mt-2">
+              Keep your account information up to date.
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-8 mt-10">
+              <div>
+                <label className="block font-medium mb-3">Full Name</label>
+
+                <div className="relative">
+                  <User
+                    size={18}
+                    className="
+            absolute
+            left-5
+            top-1/2
+            -translate-y-1/2
+            text-neutral-400
+          "
+                  />
+
+                  <input
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    className="
+            w-full
+            h-14
+            rounded-2xl
+            border
+            border-neutral-300
+            pl-14
+            pr-5
+            outline-none
+            transition
+            focus:border-black
+            focus:ring-4
+            focus:ring-neutral-100
+          "
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-medium mb-3">Email Address</label>
+
+                <div className="relative">
+                  <Mail
+                    size={18}
+                    className="
+            absolute
+            left-5
+            top-1/2
+            -translate-y-1/2
+            text-neutral-400
+          "
+                  />
+
+                  <input
+                    value={form.email}
+                    disabled
+                    className="
+            w-full
+            h-14
+            rounded-2xl
+            border
+            border-neutral-200
+            bg-neutral-100
+            pl-14
+            pr-5
+            text-neutral-500
+          "
+                  />
+                </div>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block font-medium mb-3">Phone Number</label>
+
+                <div className="relative">
+                  <Phone
+                    size={18}
+                    className="
+            absolute
+            left-5
+            top-1/2
+            -translate-y-1/2
+            text-neutral-400
+          "
+                  />
+
+                  <input
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
+                    className="
+            w-full
+            h-14
+            rounded-2xl
+            border
+            border-neutral-300
+            pl-14
+            pr-5
+            outline-none
+            transition
+            focus:border-black
+            focus:ring-4
+            focus:ring-neutral-100
+          "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12">
+            <div
+              className="
+    bg-white
+    rounded-[32px]
+    border
+    border-neutral-200
+    shadow-sm
+    p-10
+  "
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+                <div>
+                  <h2 className="text-3xl font-bold">Save Your Changes</h2>
+
+                  <p className="text-neutral-500 mt-3 leading-7">
+                    Your profile information helps us personalize your shopping
+                    experience and keep your account updated.
+                  </p>
+                </div>
+
+                <button
+                  onClick={saveProfile}
+                  className="
+        h-16
+        px-10
+        rounded-2xl
+        bg-black
+        text-white
+        font-semibold
+        text-lg
+        flex
+        items-center
+        justify-center
+        gap-3
+        transition-all
+        duration-300
+        hover:bg-neutral-800
+        hover:-translate-y-1
+        active:scale-[0.98]
+      "
+                >
+                  <Save size={20} />
+                  Save Changes
+                </button>
+              </div>
+            </div>
+
+            <div
+              className="
+    mt-12
+    bg-white
+    rounded-[32px]
+    border
+    border-red-200
+    shadow-sm
+    p-10
+  "
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+                <div>
+                  <h2 className="text-3xl font-bold text-red-600">Logout</h2>
+
+                  <p className="text-neutral-500 mt-3 leading-7 max-w-xl">
+                    Logging out will end your current session. You'll need to
+                    sign in again to access your account and orders.
+                  </p>
+                </div>
+
+                <button
+                  onClick={handleLogout}
+                  className="
+        h-16
+        px-10
+        rounded-2xl
+        border-2
+        border-red-500
+        text-red-600
+        font-semibold
+        text-lg
+        flex
+        items-center
+        justify-center
+        gap-3
+        transition-all
+        duration-300
+        hover:bg-red-500
+        hover:text-white
+      "
+                >
+                  <LogOut size={20} />
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

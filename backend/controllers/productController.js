@@ -275,7 +275,7 @@ const addReview = async (req, res) => {
 
     const review = {
       user: req.user.id,
-      name: "User",
+      name: req.user.name,
       rating: Number(rating),
       comment,
     };
@@ -370,11 +370,10 @@ const getLowStockProducts = async (req, res) => {
         $elemMatch: {
           stock: {
             $lte: 5,
-            $gt: 0,
           },
         },
       },
-    });
+    }).sort({ updatedAt: -1 });
 
     res.json(products);
   } catch (error) {

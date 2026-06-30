@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 const ProductDetails = lazy(() => import("./pages/ProductDetails"));
@@ -22,13 +22,19 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ChangePassword = lazy(() => import("./pages/ChangePassword"));
 const AdminCategories = lazy(() => import("./pages/AdminCategories"));
 
-import Navbar from "./components/Navbar";
+import ScrollToTop from "./components/ScrollToTop";
+import Navbar from "./components/layout/Navbar/Navbar";
 import Footer from "./components/Footer";
 import AdminRoute from "./components/AdminRoute";
-
 function App() {
+  const location = useLocation();
+
+  const hideLayout = ["/login", "/register", "/forgot-password"].includes(
+    location.pathname,
+  );
   return (
-    <BrowserRouter>
+    <>
+      <ScrollToTop />
       <div
         className="
         min-h-screen
@@ -36,9 +42,7 @@ function App() {
         flex-col
         "
       >
-        {!["/login", "/register", "/forgot-password"].includes(
-          window.location.pathname,
-        ) && <Navbar />}
+        {!hideLayout && <Navbar />}
 
         <div className="flex-1">
           <Suspense
@@ -130,11 +134,9 @@ function App() {
           </Suspense>
         </div>
 
-        {!["/login", "/register", "/forgot-password"].includes(
-          window.location.pathname,
-        ) && <Footer />}
+        {!hideLayout && <Footer />}
       </div>
-    </BrowserRouter>
+    </>
   );
 }
 
