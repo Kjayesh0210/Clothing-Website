@@ -2,6 +2,7 @@
 A full-stack MERN e-commerce application for a modern clothing brand. THREADDOT is built with scalability, security, and user experience in mind, featuring a complete shopping experience for customers along with a powerful admin dashboard for managing products, orders, categories, and more.
 ## Live Demo
 🌐 Frontend: https://threaddot.vercel.app
+
 ⚙️ Backend: https://threaddot.onrender.com
 ---
 ## Tech Stack
