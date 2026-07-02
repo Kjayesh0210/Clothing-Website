@@ -184,6 +184,32 @@ const getAddresses = async (req, res) => {
   }
 };
 
+const deleteAddress = async (req, res) => {
+  try {
+    const user = await User.findById(req.user);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const address = user.addresses.id(req.params.id);
+
+    if (!address) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    address.deleteOne();
+
+    await user.save();
+
+    res.json({ message: "Address deleted successfully" });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -329,4 +355,5 @@ module.exports = {
   updateProfile,
   addAddress,
   getAddresses,
+  deleteAddress,
 };

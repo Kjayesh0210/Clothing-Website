@@ -2,38 +2,11 @@ import { TicketPercent, CheckCircle, ArrowRight, Copy } from "lucide-react";
 import toast from "react-hot-toast";
 
 function CouponCard({ coupon, setCoupon, applyCoupon, discount }) {
-  const offers = [
-    {
-      code: "SAVE10",
-      discount: "10% OFF",
-      description: "Orders above ₹999",
-    },
-    {
-      code: "SAVE20",
-      discount: "20% OFF",
-      description: "Orders above ₹1999",
-    },
-    {
-      code: "FREESHIP",
-      discount: "FREE",
-      description: "Free Shipping",
-    },
-  ];
-
-  const copyCoupon = (code) => {
-    navigator.clipboard.writeText(code);
-    toast.success(`${code} copied`);
-  };
-
   return (
     <div className="space-y-8">
+      <div className="h-4"></div>
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
-          <TicketPercent
-            size={20}
-            className="absolute left-5 top-1/2 -translate-y-1/2 text-neutral-400"
-          />
-
           <input
             value={coupon}
             onChange={(e) => setCoupon(e.target.value.toUpperCase())}
@@ -78,6 +51,7 @@ function CouponCard({ coupon, setCoupon, applyCoupon, discount }) {
           <ArrowRight size={18} />
         </button>
       </div>
+      <div className="h-4"></div>
 
       {discount > 0 && (
         <div className="rounded-2xl border border-green-200 bg-green-50 p-5 flex gap-4">
@@ -99,63 +73,6 @@ function CouponCard({ coupon, setCoupon, applyCoupon, discount }) {
           </div>
         </div>
       )}
-
-      <div>
-        <h3 className="font-semibold text-lg mb-4">Popular Coupons</h3>
-
-        <div className="grid md:grid-cols-3 gap-4">
-          {offers.map((offer) => (
-            <div
-              key={offer.code}
-              className="
-                rounded-2xl
-                border
-                border-neutral-200
-                bg-white
-                p-5
-                transition
-                hover:shadow-lg
-                hover:-translate-y-1
-              "
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4 className="font-bold">{offer.code}</h4>
-
-                  <p className="text-sm text-neutral-500 mt-2">
-                    {offer.description}
-                  </p>
-                </div>
-
-                <span className="text-xs bg-neutral-100 rounded-full px-3 py-1 font-semibold">
-                  {offer.discount}
-                </span>
-              </div>
-
-              <button
-                onClick={() => copyCoupon(offer.code)}
-                className="
-                  mt-5
-                  w-full
-                  h-11
-                  rounded-xl
-                  border
-                  border-neutral-200
-                  flex
-                  items-center
-                  justify-center
-                  gap-2
-                  hover:bg-neutral-100
-                  transition
-                "
-              >
-                <Copy size={16} />
-                Copy Code
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

@@ -5,7 +5,6 @@ function ReviewsList({ reviews, currentUserId, deleteReview }) {
   return (
     <section className="mt-20">
       {/* Header */}
-
       <div className="mb-10">
         <p className="text-sm font-medium uppercase tracking-widest text-neutral-500">
           Customer Experience
@@ -15,7 +14,6 @@ function ReviewsList({ reviews, currentUserId, deleteReview }) {
           Customer Reviews
         </h2>
       </div>
-
       {reviews?.length === 0 ? (
         <div
           className="
@@ -39,7 +37,14 @@ function ReviewsList({ reviews, currentUserId, deleteReview }) {
           </p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div
+          className="
+          max-h-[700px]
+          overflow-y-auto
+          pr-2
+          space-y-4
+           "
+        >
           {reviews.map((review, index) => {
             const isCurrentUser =
               review.user?.toString?.() === currentUserId ||
@@ -90,14 +95,14 @@ function ReviewsList({ reviews, currentUserId, deleteReview }) {
 
                         <span
                           className="
-        rounded-full
-        bg-green-100
-        px-3
-        py-1
-        text-sm
-        font-semibold
-        text-green-700
-      "
+                        rounded-full
+                        bg-green-100
+                        px-3
+                        py-1
+                        text-sm
+                        font-semibold
+                        text-green-700
+                      "
                         >
                           ★ {review.rating}.0
                         </span>

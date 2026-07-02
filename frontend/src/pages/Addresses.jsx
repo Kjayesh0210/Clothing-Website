@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import toast from "react-hot-toast";
 
-import { MapPin, Home, Building2, Plus } from "lucide-react";
+import { MapPin, Home, Building2, Plus, Trash2 } from "lucide-react";
 
 function Addresses() {
   const [addresses, setAddresses] = useState([]);
@@ -79,6 +79,24 @@ function Addresses() {
     }
   };
 
+  const deleteAddress = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await api.delete(`/auth/addresses/${id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      toast.success("Address deleted");
+
+      fetchAddresses();
+    } catch (error) {
+      toast.error("Failed to delete address");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-neutral-50 py-10">
@@ -99,54 +117,53 @@ function Addresses() {
     );
   }
   return (
-    <div className="min-h-screen bg-neutral-50 py-12">
-      <div className="max-w-6xl mx-auto px-6 lg:px-8">
-        <div className="mb-14">
-          <div className="flex items-center gap-5">
-            <div
-              className="
-              w-16
-              h-16
-              rounded-2xl
-              bg-black
-              text-white
-              flex
-              items-center
-              justify-center
-            "
-            >
-              <MapPin size={30} />
-            </div>
+    <div className="min-h-screen bg-neutral-50 flex justify-center py-12">
+      <div className="w-full max-w-7xl px-6 lg:px-8">
+        <div className="h-10"></div>
+        {/* Header */}
+        <div className="mb-14 flex items-center gap-6">
+          <div
+            className="
+            w-16
+            h-16
+            rounded-3xl
+            bg-black
+            text-white
+            flex
+            items-center
+            justify-center
+            shadow-md
+          "
+          >
+            <MapPin size={30} />
+          </div>
 
-            <div>
-              <h1 className="text-5xl font-bold tracking-tight">
-                Saved Addresses
-              </h1>
+          <div>
+            <h1 className="text-5xl font-bold tracking-tight text-neutral-900">
+              Saved Addresses
+            </h1>
 
-              <p className="text-lg text-neutral-500 mt-2">
-                Manage your delivery locations for faster checkout.
-              </p>
-            </div>
+            <p className="mt-3 text-lg text-neutral-500">
+              Manage your saved delivery locations for a faster checkout
+              experience.
+            </p>
           </div>
         </div>
+        <div className="h-5"></div>
 
+        {/* Add Address */}
         <div
           className="
-          bg-white
-          rounded-[32px]
-          border
-          border-neutral-200
-          shadow-sm
           p-10
-          mb-12
+          mb-14
         "
         >
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-10">
             <div>
               <h2 className="text-3xl font-bold">Add New Address</h2>
 
-              <p className="text-neutral-500 mt-2">
-                Save multiple delivery addresses for your future orders.
+              <p className="mt-2 text-neutral-500">
+                Save multiple addresses for home, office or any other location.
               </p>
             </div>
 
@@ -174,7 +191,7 @@ function Addresses() {
               className="
               w-full
               h-14
-              rounded-2xl
+              rounded-xl
               border
               border-neutral-300
               px-5
@@ -186,6 +203,7 @@ function Addresses() {
               focus:ring-neutral-100
             "
             />
+            <div className="h-4"></div>
 
             <textarea
               rows={5}
@@ -194,12 +212,12 @@ function Addresses() {
               onChange={(e) => setAddress(e.target.value)}
               className="
               w-full
-              rounded-2xl
+              rounded-xl
               border
               border-neutral-300
               p-5
-              outline-none
               resize-none
+              outline-none
               transition-all
               duration-300
               focus:border-black
@@ -213,15 +231,16 @@ function Addresses() {
               disabled={adding}
               className="
               h-14
+              w-50
               px-8
               rounded-2xl
               bg-black
               text-white
               font-semibold
-              flex
+              inline-flex
               items-center
               justify-center
-              gap-2
+              gap-3
               transition-all
               duration-300
               hover:bg-neutral-800
@@ -236,127 +255,140 @@ function Addresses() {
             </button>
           </div>
         </div>
+        <div className="h-4"></div>
 
-        <div>
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-bold">Your Addresses</h2>
+        {/* Saved Addresses Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-3xl font-bold">Your Addresses</h2>
 
-              <p className="text-neutral-500 mt-2">
-                {addresses.length} Saved Address
-                {addresses.length !== 1 ? "es" : ""}
-              </p>
-            </div>
+            <p className="mt-2 text-neutral-500">
+              {addresses.length} Saved Address
+              {addresses.length !== 1 ? "es" : ""}
+            </p>
           </div>
+        </div>
+        <div className="h-4"></div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {addresses.length === 0 ? (
+        <div className="grid md:grid-cols-4 gap-8">
+          {addresses.length === 0 ? (
+            <div
+              className="
+      col-span-full
+      bg-white
+      rounded-3xl
+      border
+      border-dashed
+      border-neutral-300
+      p-20
+      text-center
+      flex
+      flex-col
+      items-center
+      justify-center
+    "
+            >
               <div
                 className="
-                col-span-full
-                bg-white
-                rounded-[32px]
-                border
-                border-dashed
-                border-neutral-300
-                p-16
-                text-center
-              "
+        w-24
+        h-24
+        rounded-full
+        bg-neutral-100
+        flex
+        items-center
+        justify-center
+      "
               >
-                <div
-                  className="
-                  w-20
-                  h-20
-                  mx-auto
-                  rounded-full
-                  bg-neutral-100
-                  flex
-                  items-center
-                  justify-center
-                "
-                >
-                  <MapPin size={36} className="text-neutral-500" />
-                </div>
-
-                <h3 className="text-2xl font-bold mt-6">No Saved Addresses</h3>
-
-                <p className="text-neutral-500 mt-3 max-w-md mx-auto leading-7">
-                  Save your first address to make checkout faster and more
-                  convenient.
-                </p>
+                <MapPin size={40} className="text-neutral-500" />
               </div>
-            ) : (
-              addresses.map((item, index) => (
-                <div
-                  key={index}
-                  className="
-                  bg-white
-                  rounded-[28px]
-                  border
-                  border-neutral-200
-                  shadow-sm
-                  hover:shadow-lg
-                  hover:-translate-y-1
-                  transition-all
-                  duration-300
-                  p-8
-                "
-                >
-                  <div className="flex justify-between items-start gap-5">
-                    <div className="flex gap-4">
-                      <div
+
+              <h3 className="mt-8 text-3xl font-bold">No Saved Addresses</h3>
+
+              <p className="mt-4 max-w-md text-neutral-500 leading-8">
+                Save your first delivery address to make checkout faster and
+                more convenient for future orders.
+              </p>
+            </div>
+          ) : (
+            addresses.map((item, index) => (
+              <div
+                key={index}
+                className="
+        group
+        bg-white
+        rounded-3xl
+        border
+        border-neutral-200
+        shadow-sm
+        hover:shadow-lg
+        hover:-translate-y-1
+        transition-all
+        duration-300
+        p-8
+      "
+              >
+                <div className="flex items-start gap-5">
+                  <div
+                    className="
+            w-16
+            h-16
+            rounded-2xl
+            bg-neutral-100
+            flex
+            items-center
+            justify-center
+            shrink-0
+            transition
+            group-hover:bg-black
+            group-hover:text-white
+          "
+                  >
+                    {item.label.toLowerCase().includes("home") ? (
+                      <Home size={26} />
+                    ) : (
+                      <Building2 size={26} />
+                    )}
+                  </div>
+
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-2xl font-bold">{item.label}</h3>
+
+                        <span className="rounded-full bg-green-100 text-green-700 text-xs font-semibold px-3 py-1">
+                          Saved
+                        </span>
+                      </div>
+
+                      <button
+                        onClick={() => deleteAddress(item._id)}
                         className="
-                        w-14
-                        h-14
-                        rounded-2xl
-                        bg-neutral-100
-                        flex
-                        items-center
-                        justify-center
-                      "
+      flex
+      h-10
+      w-10
+      items-center
+      justify-center
+      rounded-xl
+      text-neutral-500
+      transition
+      hover:bg-red-50
+      hover:text-red-600
+    "
                       >
-                        {item.label.toLowerCase().includes("home") ? (
-                          <Home size={24} />
-                        ) : (
-                          <Building2 size={24} />
-                        )}
-                      </div>
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
 
-                      <div>
-                        <div className="flex items-center gap-3">
-                          <h3 className="text-xl font-bold">{item.label}</h3>
-
-                          <span
-                            className="
-                            px-3
-                            py-1
-                            rounded-full
-                            bg-green-100
-                            text-green-700
-                            text-xs
-                            font-semibold
-                          "
-                          >
-                            Saved
-                          </span>
-                        </div>
-
-                        <p
-                          className="
-                          mt-5
-                          text-neutral-600
-                          leading-7
-                        "
-                        >
-                          {item.address}
-                        </p>
-                      </div>
+                    <div className="mt-6 border-t border-neutral-200 pt-6">
+                      <p className="text-neutral-600 leading-8">
+                        {item.address}
+                      </p>
                     </div>
                   </div>
                 </div>
-              ))
-            )}
-          </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

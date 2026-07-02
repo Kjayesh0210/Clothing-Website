@@ -174,212 +174,391 @@ function OrderDetails() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Order Details</h1>
+    <div className="min-h-screen bg-neutral-50 py-12">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-12">
+          <h1 className="text-5xl font-bold tracking-tight text-neutral-900">
+            Order Details
+          </h1>
 
-      <div className="grid lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-2 border rounded-xl p-6 shadow-sm bg-white">
-          <div className="flex justify-between items-center mb-5">
-            <h2 className="text-xl font-semibold">Order Summary</h2>
-
-            <span
-              className={`
-              px-4
-              py-1
-              rounded-full
-              text-sm
-              font-medium
-              ${
-                order.status === "Delivered"
-                  ? "bg-green-100 text-green-700"
-                  : order.status === "Cancelled"
-                    ? "bg-red-100 text-red-700"
-                    : "bg-yellow-100 text-yellow-700"
-              }
-            `}
-            >
-              {order.status}
-            </span>
-          </div>
-
-          <div className="space-y-3 text-gray-700">
-            <p>
-              <span className="font-semibold">Total Amount:</span> ₹
-              {order.totalAmount}
-            </p>
-
-            <p>
-              <span className="font-semibold">Payment:</span>
-              {order.isPaid ? " Paid" : " Unpaid"}
-            </p>
-
-            <p>
-              <span className="font-semibold">Payment ID:</span>{" "}
-              {order.paymentId}
-            </p>
-
-            <p>
-              <span className="font-semibold">Delivery Address:</span>{" "}
-              {order.address}
-            </p>
-
-            {order.status !== "Delivered" &&
-              order.status !== "Cancelled" &&
-              order.estimatedDelivery && (
-                <p>
-                  <span className="font-semibold">Delivery By:</span>{" "}
-                  {new Date(order.estimatedDelivery).toLocaleDateString(
-                    "en-IN",
-                    {
-                      day: "numeric",
-                      month: "long",
-                    },
-                  )}
-                </p>
-              )}
-          </div>
-
-          {(order.status === "Pending" || order.status === "Confirmed") && (
-            <button
-              onClick={cancelOrder}
-              className="
-            mt-6
-            bg-red-500
-            hover:bg-red-600
-            text-white
-            px-5
-            py-2
-            rounded-lg
-            transition
-            "
-            >
-              Cancel Order
-            </button>
-          )}
-          <button
-            onClick={downloadInvoice}
-            className="
-  bg-black
-  text-white
-  px-5
-  py-2
-  rounded
-  "
-          >
-            Download Invoice
-          </button>
-        </div>
-        <div className="border rounded-xl p-6 shadow-sm bg-white">
-          <h2 className="text-xl font-semibold mb-4">Order Tracking</h2>
-
-          <OrderTimeline status={order.status} />
-        </div>
-      </div>
-
-      {order.status === "Delivered" && !order.returnRequest?.requested && (
-        <div className="border rounded-xl p-6 shadow-sm bg-white mb-8">
-          <h2 className="text-xl font-semibold mb-4">Request Return</h2>
-
-          <textarea
-            placeholder="Tell us why you want to return this order..."
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            className="
-            border
-            rounded-lg
-            p-3
-            w-full
-            h-32
-            resize-none
-            mb-4
-            "
-          />
-
-          <button
-            onClick={requestReturn}
-            className="
-            bg-black
-            text-white
-            px-5
-            py-2
-            rounded-lg
-            "
-          >
-            Submit Request
-          </button>
-        </div>
-      )}
-
-      {order.returnRequest?.requested && (
-        <div
-          className="
-        border
-        rounded-xl
-        p-6
-        shadow-sm
-        bg-gray-50
-        mb-8
-        "
-        >
-          <h2 className="text-xl font-semibold mb-4">Return Request</h2>
-
-          <p className="mb-2">
-            <span className="font-semibold">Reason:</span>{" "}
-            {order.returnRequest.reason}
-          </p>
-
-          <p>
-            <span className="font-semibold">Status:</span>{" "}
-            {order.returnRequest.status}
+          <p className="mt-3 text-lg text-neutral-500">
+            View your order summary, delivery progress and purchased items.
           </p>
         </div>
-      )}
 
-      <h2 className="text-2xl font-semibold mb-5">Ordered Products</h2>
-
-      <div className="space-y-4">
-        {order.products.map((item) => (
+        {/* Summary + Timeline */}
+        <div className="grid lg:grid-cols-[2fr_1fr] gap-8 mb-12">
+          {/* Summary */}
           <div
-            key={`${item.product._id}-${item.size}`}
             className="
-          border
-          rounded-xl
-          p-4
-          flex
-          gap-5
-          items-center
-          hover:shadow-md
-          transition
-          bg-white
+            bg-white
+            rounded-3xl
+            border
+            border-neutral-200
+            shadow-sm
+            p-8
           "
           >
-            <img
-              src={item.product.images?.[0]}
-              alt={item.product.title}
-              loading="lazy"
-              className="
-            w-24
-            h-24
-            object-cover
-            rounded-lg
-            "
-            />
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+              <div>
+                <h2 className="text-2xl font-bold">Order Summary</h2>
 
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg">{item.product.title}</h3>
-
-              <p className="text-gray-500">Category: {item.product.category}</p>
-
-              <div className="flex gap-6 mt-2 text-sm text-gray-700">
-                <p>Price: ₹{item.product.price}</p>
-
-                <p>Size: {item.size || "N/A"}</p>
-
-                <p>Qty: {item.quantity}</p>
+                <p className="text-neutral-500 mt-2">
+                  Order ID #{order._id.slice(-8).toUpperCase()}
+                </p>
               </div>
+
+              <span
+                className={`
+                inline-flex
+                items-center
+                justify-center
+                px-5
+                py-2
+                rounded-full
+                text-sm
+                font-semibold
+                ${
+                  order.status === "Delivered"
+                    ? "bg-green-100 text-green-700"
+                    : order.status === "Cancelled"
+                      ? "bg-red-100 text-red-700"
+                      : order.status === "Shipped"
+                        ? "bg-blue-100 text-blue-700"
+                        : "bg-yellow-100 text-yellow-700"
+                }
+              `}
+              >
+                {order.status}
+              </span>
+            </div>
+
+            <div className="border-t border-neutral-200 my-8"></div>
+
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <span className="text-neutral-500">Total Amount</span>
+
+                <span className="text-3xl font-bold">₹{order.totalAmount}</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-neutral-500">Payment</span>
+
+                <span
+                  className={`font-semibold ${
+                    order.isPaid ? "text-green-600" : "text-yellow-600"
+                  }`}
+                >
+                  {order.isPaid ? "Paid" : "Pending"}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-neutral-500">Payment ID</span>
+
+                <span className="font-medium text-neutral-800">
+                  {order.paymentId || "-"}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-start gap-6">
+                <span className="text-neutral-500 shrink-0">
+                  Delivery Address
+                </span>
+
+                <span className="text-right font-medium leading-7">
+                  {order.address}
+                </span>
+              </div>
+
+              {order.status !== "Delivered" &&
+                order.status !== "Cancelled" &&
+                order.estimatedDelivery && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-neutral-500">Estimated Delivery</span>
+
+                    <span className="font-semibold">
+                      {new Date(order.estimatedDelivery).toLocaleDateString(
+                        "en-IN",
+                        {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        },
+                      )}
+                    </span>
+                  </div>
+                )}
+            </div>
+
+            <div className="flex flex-wrap gap-4 mt-10">
+              {(order.status === "Pending" || order.status === "Confirmed") && (
+                <button
+                  onClick={cancelOrder}
+                  className="
+                  h-14
+                  px-8
+                  rounded-2xl
+                  border-2
+                  border-red-200
+                  text-red-600
+                  font-semibold
+                  transition-all
+                  duration-300
+                  hover:bg-red-50
+                "
+                >
+                  Cancel Order
+                </button>
+              )}
+
+              <button
+                onClick={downloadInvoice}
+                className="
+                h-14
+                px-8
+                rounded-2xl
+                bg-black
+                text-white
+                font-semibold
+                transition-all
+                duration-300
+                hover:bg-neutral-800
+                hover:-translate-y-0.5
+              "
+              >
+                Download Invoice
+              </button>
             </div>
           </div>
-        ))}
+
+          {/* Timeline */}
+          <div
+            className="
+            bg-white
+            rounded-3xl
+            border
+            border-neutral-200
+            shadow-sm
+            p-8
+          "
+          >
+            <h2 className="text-2xl font-bold">Order Tracking</h2>
+
+            <p className="text-neutral-500 mt-2 mb-8">
+              Track your order status in real time.
+            </p>
+
+            <OrderTimeline status={order.status} />
+          </div>
+        </div>
+        {/* Return Request */}
+        {order.status === "Delivered" && !order.returnRequest?.requested && (
+          <div
+            className="
+            bg-white
+            rounded-3xl
+            border
+            border-neutral-200
+            shadow-sm
+            p-8
+            mb-12
+          "
+          >
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-bold">Request a Return</h2>
+
+              <p className="mt-3 text-neutral-500 leading-7">
+                If you're not completely satisfied with your purchase, let us
+                know the reason for your return request.
+              </p>
+
+              <textarea
+                placeholder="Tell us why you want to return this order..."
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                className="
+                mt-8
+                w-full
+                h-40
+                rounded-2xl
+                border
+                border-neutral-300
+                p-5
+                resize-none
+                outline-none
+                transition
+                focus:border-black
+                focus:ring-4
+                focus:ring-neutral-100
+              "
+              />
+
+              <button
+                onClick={requestReturn}
+                className="
+                mt-8
+                h-14
+                px-8
+                rounded-2xl
+                bg-black
+                text-white
+                font-semibold
+                transition-all
+                duration-300
+                hover:bg-neutral-800
+                hover:-translate-y-0.5
+              "
+              >
+                Submit Return Request
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Return Status */}
+        {order.returnRequest?.requested && (
+          <div
+            className="
+            bg-white
+            rounded-3xl
+            border
+            border-neutral-200
+            shadow-sm
+            p-8
+            mb-12
+          "
+          >
+            <div className="flex items-center justify-between flex-wrap gap-6">
+              <div>
+                <h2 className="text-3xl font-bold">Return Request</h2>
+
+                <p className="text-neutral-500 mt-2">
+                  Your request has been submitted successfully.
+                </p>
+              </div>
+
+              <span
+                className="
+                inline-flex
+                items-center
+                rounded-full
+                bg-yellow-100
+                text-yellow-700
+                px-5
+                py-2
+                font-semibold
+              "
+              >
+                {order.returnRequest.status}
+              </span>
+            </div>
+
+            <div className="border-t border-neutral-200 my-8"></div>
+
+            <div>
+              <p className="text-neutral-500 mb-2">Reason</p>
+
+              <p className="leading-8">{order.returnRequest.reason}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Products */}
+        <div className="mb-8">
+          <h2 className="text-4xl font-bold">Ordered Products</h2>
+
+          <p className="mt-3 text-neutral-500">
+            Products included in this order.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          {order.products.map((item) => (
+            <div
+              key={`${item.product._id}-${item.size}`}
+              className="
+              bg-white
+              rounded-3xl
+              border
+              border-neutral-200
+              shadow-sm
+              hover:shadow-lg
+              hover:-translate-y-1
+              transition-all
+              duration-300
+              p-6
+            "
+            >
+              <div className="flex flex-col md:flex-row gap-6">
+                <img
+                  src={item.product.images?.[0]}
+                  alt={item.product.title}
+                  loading="lazy"
+                  className="
+                  w-32
+                  h-32
+                  rounded-2xl
+                  object-cover
+                  bg-neutral-100
+                  shrink-0
+                "
+                />
+
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold">{item.product.title}</h3>
+
+                  <p className="mt-2 text-neutral-500">
+                    {item.product.category}
+                  </p>
+
+                  <div className="flex flex-wrap gap-3 mt-6">
+                    <span
+                      className="
+                      bg-neutral-100
+                      rounded-full
+                      px-4
+                      py-2
+                      text-sm
+                      font-medium
+                    "
+                    >
+                      ₹{item.product.price}
+                    </span>
+
+                    <span
+                      className="
+                      bg-neutral-100
+                      rounded-full
+                      px-4
+                      py-2
+                      text-sm
+                      font-medium
+                    "
+                    >
+                      Size {item.size || "N/A"}
+                    </span>
+
+                    <span
+                      className="
+                      bg-neutral-100
+                      rounded-full
+                      px-4
+                      py-2
+                      text-sm
+                      font-medium
+                    "
+                    >
+                      Qty {item.quantity}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

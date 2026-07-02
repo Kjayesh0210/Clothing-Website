@@ -224,114 +224,128 @@ function Checkout() {
   }
   return (
     <div className="min-h-screen bg-neutral-50 py-10">
-      <div className="max-w-7xl mx-auto px-4 lg:px-8">
-        <div className="mb-10">
-          <div className="flex items-center gap-3">
-            <ShieldCheck className="text-green-600" size={30} />
+      <div className="h-5"></div>
+      <div className="flex">
+        <div className="w-10"></div>
+        <div className="mx-auto w-full px-6">
+          <div>
+            <div className="flex items-center gap-3">
+              <ShieldCheck className="text-green-600" size={30} />
 
-            <div>
-              <h1 className="text-4xl font-bold tracking-tight">
-                Secure Checkout
-              </h1>
+              <div>
+                <h1 className="text-4xl font-bold tracking-tight">
+                  Secure Checkout
+                </h1>
 
-              <p className="text-neutral-500 mt-2">
-                Complete your purchase safely and securely.
-              </p>
+                <p className="text-neutral-500 mt-2">
+                  Complete your purchase safely and securely.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+          <div className="h-5"></div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm p-8">
-              <div className="flex items-center gap-3 mb-8">
-                <MapPin className="text-black" size={24} />
+          <div className="grid lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
+              <div className="bg-white rounded-xl border border-neutral-200 shadow-sm p-8">
+                <div className="flex items-center gap-3 mb-8">
+                  <MapPin className="text-black" size={24} />
 
-                <h2 className="text-2xl font-bold">Delivery Address</h2>
+                  <h2 className="text-2xl font-bold">Delivery Address</h2>
+                </div>
+                <div className="h-5"></div>
+
+                <AddressSelector
+                  addresses={addresses}
+                  selectedAddress={selectedAddress}
+                  setSelectedAddress={setSelectedAddress}
+                  useSavedAddress={useSavedAddress}
+                  setUseSavedAddress={setUseSavedAddress}
+                  address={address}
+                  setAddress={setAddress}
+                />
               </div>
+              <div className="h-5"></div>
 
-              <AddressSelector
-                addresses={addresses}
-                selectedAddress={selectedAddress}
-                setSelectedAddress={setSelectedAddress}
-                useSavedAddress={useSavedAddress}
-                setUseSavedAddress={setUseSavedAddress}
-                address={address}
-                setAddress={setAddress}
-              />
-            </div>
+              <div className="bg-white rounded-xl border border-neutral-200 shadow-sm p-8">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="h-5"></div>
 
-            <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm p-8">
-              <div className="flex items-center gap-3 mb-8">
-                <TicketPercent size={24} />
+                  <TicketPercent size={24} />
 
-                <h2 className="text-2xl font-bold">Coupon</h2>
+                  <h2 className="text-2xl font-bold">Coupon</h2>
+                </div>
+
+                <CouponCard
+                  coupon={coupon}
+                  setCoupon={setCoupon}
+                  applyCoupon={applyCoupon}
+                  discount={discount}
+                />
               </div>
+              <div className="h-5"></div>
 
-              <CouponCard
-                coupon={coupon}
-                setCoupon={setCoupon}
-                applyCoupon={applyCoupon}
-                discount={discount}
-              />
-            </div>
+              <div className="bg-white rounded-xl border border-neutral-200 shadow-sm p-8">
+                <div className="flex items-center gap-3 mb-8">
+                  <CreditCard size={24} />
 
-            <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm p-8">
-              <div className="flex items-center gap-3 mb-8">
-                <CreditCard size={24} />
+                  <h2 className="text-2xl font-bold">Payment Method</h2>
+                </div>
+                <div className="h-5"></div>
 
-                <h2 className="text-2xl font-bold">Payment Method</h2>
-              </div>
+                <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-lg">Razorpay</p>
 
-              <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-lg">Razorpay</p>
+                      <p className="text-neutral-500 mt-1">
+                        Credit Card • Debit Card • UPI • Net Banking • Wallets
+                      </p>
+                    </div>
 
-                    <p className="text-neutral-500 mt-1">
-                      Credit Card • Debit Card • UPI • Net Banking • Wallets
-                    </p>
+                    <div className="px-4 py-2 rounded-full bg-green-100 text-green-700 font-medium text-sm">
+                      Recommended
+                    </div>
                   </div>
+                </div>
+                <div className="h-5"></div>
 
-                  <div className="px-4 py-2 rounded-full bg-green-100 text-green-700 font-medium text-sm">
-                    Recommended
+                <div className="mt-8 rounded-2xl bg-green-50 border border-green-200 p-5">
+                  <div className="flex items-start gap-4">
+                    <ShieldCheck
+                      size={24}
+                      className="text-green-600 shrink-0 mt-1"
+                    />
+
+                    <div>
+                      <p className="font-semibold text-green-700">
+                        100% Secure Payments
+                      </p>
+
+                      <p className="text-green-600 mt-1 text-sm leading-6">
+                        Your payment details are encrypted and securely
+                        processed through Razorpay.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <div className="mt-8 rounded-2xl bg-green-50 border border-green-200 p-5">
-                <div className="flex items-start gap-4">
-                  <ShieldCheck
-                    size={24}
-                    className="text-green-600 shrink-0 mt-1"
-                  />
-
-                  <div>
-                    <p className="font-semibold text-green-700">
-                      100% Secure Payments
-                    </p>
-
-                    <p className="text-green-600 mt-1 text-sm leading-6">
-                      Your payment details are encrypted and securely processed
-                      through Razorpay.
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
 
-          <div className="lg:sticky lg:top-24 h-fit">
-            <CheckoutSummary
-              subtotal={subtotal}
-              shipping={shipping}
-              discount={discountAmount}
-              total={total}
-              paymentLoading={paymentLoading}
-              handlePayment={handlePayment}
-            />
+            <div className="lg:sticky lg:top-24 h-fit">
+              <CheckoutSummary
+                subtotal={subtotal}
+                shipping={shipping}
+                discount={discountAmount}
+                total={total}
+                paymentLoading={paymentLoading}
+                handlePayment={handlePayment}
+              />
+            </div>
+            <div className="h-5"></div>
           </div>
         </div>
+        <div className="w-10"></div>
       </div>
     </div>
   );

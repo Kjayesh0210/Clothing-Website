@@ -159,8 +159,9 @@ function MyOrders() {
 
   const canCancel = (status) => status === "Pending" || status === "Confirmed";
   return (
-    <div className="min-h-screen bg-neutral-50 py-10">
-      <div className="max-w-6xl mx-auto px-4">
+    <div className="min-h-screen w-full bg-neutral-50 flex justify-center">
+      <div className="max-w-6xl w-full px-4">
+        <div className="h-10"></div>
         <div className="mb-16">
           <div className="flex items-center gap-6">
             <div className="w-14 h-14 rounded-2xl bg-black text-white flex items-center justify-center">
@@ -175,6 +176,7 @@ function MyOrders() {
               </p>
             </div>
           </div>
+          <div className="h-5"></div>
         </div>
 
         {orders.length === 0 ? (
@@ -222,7 +224,7 @@ function MyOrders() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="gap-4 flex flex-col">
             {orders.map((order) => {
               const status = getStatus(order.status);
 
@@ -244,6 +246,7 @@ function MyOrders() {
                 "
                 >
                   <div className="flex flex-col lg:flex-row lg:justify-between gap-8">
+                    <div></div>
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-4">
                         <h2 className="text-3xl font-bold">
@@ -319,6 +322,7 @@ function MyOrders() {
                     </div>
 
                     <div className="lg:w-64 flex flex-col gap-4">
+                      <div> </div>
                       <Link
                         to={`/orders/${order._id}`}
                         className="
@@ -356,6 +360,7 @@ function MyOrders() {
                           Cancel Order
                         </button>
                       )}
+                      <div> </div>
                     </div>
                   </div>
                 </div>

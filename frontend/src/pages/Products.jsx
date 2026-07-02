@@ -100,32 +100,37 @@ function Products() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-[1500px] mx-auto px-4 py-8">
+        <div className="h-5"></div>
         <div className="grid lg:grid-cols-[320px_1fr] gap-8 items-start">
           {/* FILTER SIDEBAR */}
-          <ProductFilters
-            keyword={keyword}
-            setKeyword={setKeyword}
-            category={category}
-            setCategory={setCategory}
-            categories={categories}
-            gender={gender}
-            setGender={setGender}
-            minPrice={minPrice}
-            setMinPrice={setMinPrice}
-            maxPrice={maxPrice}
-            setMaxPrice={setMaxPrice}
-            sort={sort}
-            setSort={setSort}
-            inStock={inStock}
-            setInStock={setInStock}
-            setPage={setPage}
-          />
+          <div className="flex">
+            <div className="w-10"></div>
+            <ProductFilters
+              keyword={keyword}
+              setKeyword={setKeyword}
+              category={category}
+              setCategory={setCategory}
+              categories={categories}
+              gender={gender}
+              setGender={setGender}
+              minPrice={minPrice}
+              setMinPrice={setMinPrice}
+              maxPrice={maxPrice}
+              setMaxPrice={setMaxPrice}
+              sort={sort}
+              setSort={setSort}
+              inStock={inStock}
+              setInStock={setInStock}
+              setPage={setPage}
+            />
+          </div>
 
           {/* PRODUCTS */}
           <div className="pt-6">
             <ProductHeader loading={loading} products={products} />
 
             <ProductGrid loading={loading} products={products} />
+            <div className="h-5"></div>
 
             <ProductPagination
               loading={loading}
@@ -133,6 +138,7 @@ function Products() {
               totalPages={totalPages}
               setPage={setPage}
             />
+            <div className="h-5"></div>
           </div>
         </div>
       </div>

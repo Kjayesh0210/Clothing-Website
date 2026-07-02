@@ -16,18 +16,18 @@ function FilterSection({ title, children, defaultOpen = false }) {
         type="button"
         onClick={() => setOpen(!open)}
         className="
-    group
-    w-full
-    flex
-    items-center
-    justify-between
-    py-5
-    px-1
-    rounded-xl
-    transition-all
-    duration-300
-    hover:bg-neutral-50
-  "
+        group
+        w-full
+        flex
+        items-center
+        justify-between
+        py-5
+        px-1
+        rounded-xl
+        transition-all
+        duration-300
+        hover:bg-neutral-50
+      "
       >
         <span
           className="

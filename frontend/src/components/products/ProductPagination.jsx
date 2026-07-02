@@ -46,6 +46,7 @@ function ProductPagination({ loading, page, totalPages, setPage }) {
 
         <button
           disabled={page === 1}
+          
           onClick={() => setPage(page - 1)}
           className="
             flex

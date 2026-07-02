@@ -51,26 +51,29 @@ function ProductFilters({
       className="
     sticky
     top-24
-    h-[calc(100vh-7rem)]
-    bg-white
-    shadow-[0_15px_50px_rgba(0,0,0,0.06)]
-    overflow-hidden
-    rounded-2xl
+    h-[calc(100vh-6rem)]
+    rounded-xl
+    bg-neutral-50
+    border
+    border-neutral-200
+    flex
+    flex-col
   "
     >
       {/* Header */}
+      <div className="h-4"></div>
 
       <div
         className="
-          flex
-          items-center
-          justify-between
-          px-7
-          py-6
-          border-b
-          border-neutral-200
-          bg-neutral-50
-        "
+    flex
+    items-center
+    justify-between
+    px-7
+    py-6
+    border-b
+    border-neutral-200
+    shrink-0
+  "
       >
         <div>
           <h2
@@ -105,124 +108,114 @@ function ProductFilters({
           Clear
         </button>
       </div>
+      <div className="flex-1 overflow-y-auto">
+        <div className="px-7 py-6">
+          {/* CATEGORY */}
 
-      <div
-        className="
-    px-7
-    py-6
-    h-[calc(100%-88px)]
-    overflow-y-auto
-    scrollbar-thin
-    scrollbar-thumb-neutral-300
-    scrollbar-track-transparent
-  "
-      >
-        {/* CATEGORY */}
-
-        <FilterSection title="Category">
-          <div className="space-y-2">
-            <button
-              onClick={() => {
-                setCategory("");
-                setPage(1);
-              }}
-              className={itemClass(category === "")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>All Categories</span>
-              </div>
-            </button>
-
-            {categories.map((cat) => (
+          <FilterSection title="Category">
+            <div className="space-y-2">
               <button
-                key={cat._id}
                 onClick={() => {
-                  setCategory(cat._id);
+                  setCategory("");
                   setPage(1);
                 }}
-                className={itemClass(category === cat._id)}
+                className={itemClass(category === "")}
               >
                 <div className="flex items-center gap-4">
                   <div className="w-6 flex-shrink-0" />
-                  <span>{cat.name}</span>
+                  <span>All Categories</span>
                 </div>
               </button>
-            ))}
-          </div>
-        </FilterSection>
 
-        {/* GENDER */}
+              {categories.map((cat) => (
+                <button
+                  key={cat._id}
+                  onClick={() => {
+                    setCategory(cat._id);
+                    setPage(1);
+                  }}
+                  className={itemClass(category === cat._id)}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-6 flex-shrink-0" />
+                    <span>{cat.name}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </FilterSection>
 
-        <FilterSection title="Gender">
-          <div className="space-y-2">
-            <button
-              onClick={() => {
-                setGender("");
-                setPage(1);
-              }}
-              className={itemClass(gender === "")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>All</span>
-              </div>
-            </button>
+          {/* GENDER */}
 
-            <button
-              onClick={() => {
-                setGender("Male");
-                setPage(1);
-              }}
-              className={itemClass(gender === "Male")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>Male</span>
-              </div>
-            </button>
+          <FilterSection title="Gender">
+            <div className="space-y-2">
+              <button
+                onClick={() => {
+                  setGender("");
+                  setPage(1);
+                }}
+                className={itemClass(gender === "")}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span>All</span>
+                </div>
+              </button>
 
-            <button
-              onClick={() => {
-                setGender("Female");
-                setPage(1);
-              }}
-              className={itemClass(gender === "Female")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>Female</span>
-              </div>
-            </button>
+              <button
+                onClick={() => {
+                  setGender("Male");
+                  setPage(1);
+                }}
+                className={itemClass(gender === "Male")}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span>Male</span>
+                </div>
+              </button>
 
-            <button
-              onClick={() => {
-                setGender("Unisex");
-                setPage(1);
-              }}
-              className={itemClass(gender === "Unisex")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>Unisex</span>
-              </div>
-            </button>
-          </div>
-        </FilterSection>
+              <button
+                onClick={() => {
+                  setGender("Female");
+                  setPage(1);
+                }}
+                className={itemClass(gender === "Female")}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span>Female</span>
+                </div>
+              </button>
 
-        {/* PRICE */}
+              <button
+                onClick={() => {
+                  setGender("Unisex");
+                  setPage(1);
+                }}
+                className={itemClass(gender === "Unisex")}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span>Unisex</span>
+                </div>
+              </button>
+            </div>
+          </FilterSection>
 
-        <FilterSection title="Price">
-          <div className="grid grid-cols-2 gap-4 px-4">
-            <input
-              type="number"
-              placeholder="Min ₹"
-              value={minPrice}
-              onChange={(e) => {
-                setMinPrice(e.target.value);
-                setPage(1);
-              }}
-              className="
+          {/* PRICE */}
+
+          <FilterSection title="Price">
+            <div className="grid grid-cols-2 gap-4 px-4">
+              <input
+                type="number"
+                placeholder="Min ₹"
+                value={minPrice}
+                onChange={(e) => {
+                  setMinPrice(e.target.value);
+                  setPage(1);
+                }}
+                className="
               h-8
               rounded-xl
               border
@@ -237,17 +230,17 @@ function ProductFilters({
               focus:ring-black/5
               focus:outline-none
             "
-            />
+              />
 
-            <input
-              type="number"
-              placeholder="Max ₹"
-              value={maxPrice}
-              onChange={(e) => {
-                setMaxPrice(e.target.value);
-                setPage(1);
-              }}
-              className="
+              <input
+                type="number"
+                placeholder="Max ₹"
+                value={maxPrice}
+                onChange={(e) => {
+                  setMaxPrice(e.target.value);
+                  setPage(1);
+                }}
+                className="
               h-8
               rounded-xl
               border
@@ -262,90 +255,90 @@ function ProductFilters({
               focus:ring-black/5
               focus:outline-none
             "
-            />
-          </div>
-        </FilterSection>
+              />
+            </div>
+          </FilterSection>
 
-        {/* SORT */}
+          {/* SORT */}
 
-        <FilterSection title="Sort By">
-          <div className="space-y-3">
+          <FilterSection title="Sort By">
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  setSort("");
+                  setPage(1);
+                }}
+                className={itemClass(sort === "")}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span>Default</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSort("newest");
+                  setPage(1);
+                }}
+                className={itemClass(sort === "newest")}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span>Newest</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSort("rating");
+                  setPage(1);
+                }}
+                className={itemClass(sort === "rating")}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span>Best Rated</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSort("price-low");
+                  setPage(1);
+                }}
+                className={itemClass(sort === "price-low")}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span>Price: Low → High</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSort("price-high");
+                  setPage(1);
+                }}
+                className={itemClass(sort === "price-high")}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span>Price: High → Low</span>
+                </div>
+              </button>
+            </div>
+          </FilterSection>
+
+          {/* AVAILABILITY */}
+
+          <FilterSection title="Availability">
             <button
               onClick={() => {
-                setSort("");
+                setInStock(!inStock);
                 setPage(1);
               }}
-              className={itemClass(sort === "")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>Default</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => {
-                setSort("newest");
-                setPage(1);
-              }}
-              className={itemClass(sort === "newest")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>Newest</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => {
-                setSort("rating");
-                setPage(1);
-              }}
-              className={itemClass(sort === "rating")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>Best Rated</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => {
-                setSort("price-low");
-                setPage(1);
-              }}
-              className={itemClass(sort === "price-low")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>Price: Low → High</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => {
-                setSort("price-high");
-                setPage(1);
-              }}
-              className={itemClass(sort === "price-high")}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span>Price: High → Low</span>
-              </div>
-            </button>
-          </div>
-        </FilterSection>
-
-        {/* AVAILABILITY */}
-
-        <FilterSection title="Availability">
-          <button
-            onClick={() => {
-              setInStock(!inStock);
-              setPage(1);
-            }}
-            className={`
+              className={`
       w-full
       px-6
       py-2.5
@@ -358,15 +351,15 @@ function ProductFilters({
           : "text-neutral-700 hover:bg-neutral-100"
       }
     `}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-6 flex-shrink-0" />
-                <span className="text-base font-medium">In Stock Only</span>
-              </div>
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-6 flex-shrink-0" />
+                  <span className="text-base font-medium">In Stock Only</span>
+                </div>
 
-              <div
-                className={`
+                <div
+                  className={`
           w-5
           h-5
           rounded-md
@@ -381,12 +374,14 @@ function ProductFilters({
               : "border-neutral-400"
           }
         `}
-              >
-                {inStock && <span className="text-[11px] font-bold">✓</span>}
+                >
+                  {inStock && <span className="text-[11px] font-bold">✓</span>}
+                </div>
               </div>
-            </div>
-          </button>
-        </FilterSection>
+            </button>
+          </FilterSection>
+        </div>
+        <div className="w-4"></div>
       </div>
     </aside>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { CheckCircle2, CircleX, Star } from "lucide-react";
 function ProductInfo({ product, selectedSize, setSelectedSize }) {
   const inStock = product.sizes?.some((s) => s.stock > 0);
 
@@ -7,9 +7,7 @@ function ProductInfo({ product, selectedSize, setSelectedSize }) {
     <>
       {/* Brand */}
 
-      <p className="text-2xl font-bold text-neutral-900">
-        {product.brand || "Clothify"}
-      </p>
+      <p className="text-2xl font-bold text-neutral-900">{"THREADDOT"}</p>
 
       {/* Title */}
 
@@ -19,25 +17,7 @@ function ProductInfo({ product, selectedSize, setSelectedSize }) {
 
       {/* Rating */}
 
-      <div className="mt-7 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="rounded-md bg-green-600 px-2 py-1 text-sm font-semibold text-white">
-            ★ {product.rating}
-          </span>
-
-          <span className="text-neutral-500">{product.numReviews} Reviews</span>
-        </div>
-
-        {inStock ? (
-          <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-            In Stock
-          </span>
-        ) : (
-          <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-600">
-            Out of Stock
-          </span>
-        )}
-      </div>
+      <div className="h-4"></div>
 
       {/* Price */}
 
@@ -62,28 +42,134 @@ function ProductInfo({ product, selectedSize, setSelectedSize }) {
 
         <p className="mt-2 text-sm text-neutral-500">Inclusive of all taxes</p>
       </div>
+      <div className="h-4"></div>
 
+      <div className="mt-7 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div
+            className="
+            inline-flex
+            items-center
+            gap-2
+            rounded-lg
+            bg-yellow-50
+            px-3
+            py-2
+            text-sm
+            font-medium
+            text-yellow-700
+          "
+          >
+            <Star size={18} className="fill-yellow-500 text-yellow-500" />
+            <span>{product.rating}</span>
+
+            <span>({product.numReviews} Reviews)</span>
+          </div>
+        </div>
+
+        {inStock ? (
+          <div
+            className="
+            inline-flex
+            items-center
+            gap-2
+            rounded-lg
+            bg-green-50
+            px-3
+            py-2
+            text-sm
+            font-medium
+            text-green-700
+          "
+          >
+            <CheckCircle2 size={18} className="text-green-600" />
+            <span>In Stock</span>
+          </div>
+        ) : (
+          <div
+            className="
+            inline-flex
+            items-center
+            gap-2
+            rounded-lg
+            bg-red-50
+            px-3
+            py-2
+            text-sm
+            font-medium
+            text-red-700
+          "
+          >
+            <CircleX size={18} className="text-red-600" />
+            <span>Out of Stock</span>
+          </div>
+        )}
+      </div>
       {/* Product Tags */}
+      <div className="h-4"></div>
 
       <div className="mt-10 flex flex-wrap gap-3">
-        <span className="rounded-full border border-neutral-300 bg-neutral-50 px-6 py-2 text-sm font-medium">
+        <span
+          className="
+          inline-flex
+          h-5
+          w-14
+          items-center
+          justify-center
+          rounded-full
+          border
+          border-neutral-300
+          bg-neutral-50
+          px-4
+          text-sm
+          font-medium
+        "
+        >
           {product.category?.name || product.category}
         </span>
 
-        <span className="rounded-full border border-neutral-300 bg-neutral-50 px-4 py-2 text-sm font-medium">
+        <span
+          className="inline-flex
+          h-5
+          w-14
+          items-center
+          justify-center
+          rounded-full
+          border
+          border-neutral-300
+          bg-neutral-50
+          px-4
+          text-sm
+          font-medium"
+        >
           {product.gender}
         </span>
 
-        <span className="rounded-full border border-neutral-300 bg-neutral-50 px-4 py-2 text-sm font-medium">
+        <span
+          className="inline-flex
+          h-5
+          w-28
+          items-center
+          justify-center
+          rounded-full
+          border
+          border-neutral-300
+          bg-neutral-50
+          px-4
+          text-sm
+          font-medium"
+        >
           Premium Quality
         </span>
       </div>
+      <div className="h-1"></div>
 
       {/* Divider */}
 
       <div className="my-10 h-px bg-neutral-200" />
 
       {/* Size */}
+      <div className="h-2"></div>
 
       {product.sizes?.length > 0 && (
         <>
@@ -129,6 +215,7 @@ function ProductInfo({ product, selectedSize, setSelectedSize }) {
           </div>
         </>
       )}
+      <div className="h-4"></div>
 
       {/* Divider */}
 

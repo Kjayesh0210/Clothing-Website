@@ -244,6 +244,8 @@ const updateProduct = async (req, res) => {
 const addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
+    console.log("inside");
+    console.log(req.user);
     if (!rating || rating < 1 || rating > 5) {
       return res.status(400).json({
         message: "Rating must be between 1 and 5",
@@ -292,6 +294,52 @@ const addReview = async (req, res) => {
 
     res.json({
       message: "Review Added",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const deleteReview = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    const review = product.reviews.id(req.params.reviewId);
+
+    if (!review) {
+      return res.status(404).json({
+        message: "Review not found",
+      });
+    }
+
+    if (review.user.toString() !== req.user.id) {
+      return res.status(403).json({
+        message: "Not authorized to delete this review",
+      });
+    }
+
+    review.deleteOne();
+
+    product.numReviews = product.reviews.length;
+
+    product.rating =
+      product.reviews.length === 0
+        ? 0
+        : product.reviews.reduce((acc, item) => acc + item.rating, 0) /
+          product.reviews.length;
+
+    await product.save();
+
+    res.json({
+      message: "Review deleted",
     });
   } catch (error) {
     res.status(500).json({
@@ -390,6 +438,7 @@ module.exports = {
   updateProduct,
   deleteProduct,
   addReview,
+  deleteReview,
   getFeaturedProducts,
   getRelatedProducts,
   searchProducts,

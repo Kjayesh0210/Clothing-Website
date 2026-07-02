@@ -1,17 +1,15 @@
 import { Link, NavLink } from "react-router-dom";
-import { House, Heart, ShoppingBag, User } from "lucide-react";
+import { LayoutDashboard, House, Heart, ShoppingBag, User } from "lucide-react";
 
 function NavActions({ token, cartCount }) {
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
   const loginClass = ({ isActive }) => `
   text-sm
   font-medium
   transition-colors
   duration-200
-  ${
-    isActive
-      ? "text-black"
-      : "text-neutral-600 hover:text-black"
-  }
+  ${isActive ? "text-black" : "text-neutral-600 hover:text-black"}
 `;
   const iconClass = ({ isActive }) => `
   relative
@@ -80,6 +78,26 @@ function NavActions({ token, cartCount }) {
       <NavLink to="/profile" className={iconClass}>
         <User size={22} />
       </NavLink>
+
+      {user?.role === "admin" && (
+        <Link
+          to="/admin"
+          className="
+          flex
+          h-10
+          w-10
+          items-center
+          justify-center
+          rounded-full
+          transition-all
+          duration-300
+          hover:bg-black
+          hover:text-white
+        "
+        >
+          <LayoutDashboard size={22} />
+        </Link>
+      )}
     </div>
   );
 }

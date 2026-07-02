@@ -1,21 +1,21 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-
+import MEN from "../../assets/photos/MEN.png";
+import WOMEN from "../../assets/photos/WOMEN.png";
 function Categories() {
   const categories = [
     {
       name: "Men",
       description: "Trendy styles for every occasion",
       link: "/products?gender=Male",
-      image:
-        "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWVucyUyMGZhc2hpb258ZW58MHx8MHx8fDA%3D",
+      image: MEN,
       position: "center 18%",
     },
     {
       name: "Women",
       description: "Fashion that defines confidence",
       link: "/products?gender=Female",
-      image: "https://images.unsplash.com/photo-1483985988355-763728e1935b",
+      image: WOMEN,
       position: "center 30%",
     },
   ];

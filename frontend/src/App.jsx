@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Navigate ,Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 const ProductDetails = lazy(() => import("./pages/ProductDetails"));
@@ -10,6 +10,7 @@ const Cart = lazy(() => import("./pages/Cart"));
 const Wishlist = lazy(() => import("./pages/Wishlist"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const MyOrders = lazy(() => import("./pages/MyOrders"));
+const Admin = lazy(() => import("./pages/Admin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminProducts = lazy(() => import("./pages/AdminProducts"));
 const AddProduct = lazy(() => import("./pages/AddProduct"));
@@ -90,46 +91,22 @@ function App() {
                 path="/admin"
                 element={
                   <AdminRoute>
-                    <AdminDashboard />
+                    <Admin />
                   </AdminRoute>
                 }
-              />
+              >
+                <Route index element={<Navigate to="dashboard" replace />} />
 
-              <Route
-                path="/admin/products"
-                element={
-                  <AdminRoute>
-                    <AdminProducts />
-                  </AdminRoute>
-                }
-              />
+                <Route path="dashboard" element={<AdminDashboard />} />
 
-              <Route
-                path="/admin/products/add"
-                element={
-                  <AdminRoute>
-                    <AddProduct />
-                  </AdminRoute>
-                }
-              />
+                <Route path="products" element={<AdminProducts />} />
 
-              <Route
-                path="/admin/products/edit/:id"
-                element={
-                  <AdminRoute>
-                    <EditProduct />
-                  </AdminRoute>
-                }
-              />
+                <Route path="products/add" element={<AddProduct />} />
 
-              <Route
-                path="/admin/categories"
-                element={
-                  <AdminRoute>
-                    <AdminCategories />
-                  </AdminRoute>
-                }
-              />
+                <Route path="products/edit/:id" element={<EditProduct />} />
+
+                <Route path="categories" element={<AdminCategories />} />
+              </Route>
             </Routes>
           </Suspense>
         </div>

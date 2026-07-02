@@ -8,6 +8,7 @@ const {
   updateProduct,
   deleteProduct,
   addReview,
+  deleteReview,
   getFeaturedProducts,
   getRelatedProducts,
   searchProducts,
@@ -34,6 +35,8 @@ router.put("/:id", protect, isAdmin, updateProduct);
 router.delete("/:id", protect, isAdmin, deleteProduct);
 
 router.post("/:id/review", protect, addReview);
+
+router.delete("/:id/review/:reviewId", protect, deleteReview);
 
 router.get("/:id/related", getRelatedProducts);
 

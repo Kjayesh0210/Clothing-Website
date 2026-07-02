@@ -182,7 +182,9 @@ function ProductDetails() {
       toast.success("Review deleted");
       fetchProduct();
     } catch (error) {
-      toast.error("Failed to delete review");
+      console.log(error);
+      console.log(error.response?.data);
+      toast.error(error.response?.data?.message || "Failed to delete review");
     }
   };
 
@@ -191,63 +193,69 @@ function ProductDetails() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-10">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <ProductGallery
-          product={product}
-          selectedImage={selectedImage}
-          setSelectedImage={setSelectedImage}
-        />
-
-        <div>
-          <div>
-            <ProductInfo
-              product={product}
-              selectedSize={selectedSize}
-              setSelectedSize={setSelectedSize}
-            />
-          </div>
-
-          <div className="h-10" />
-
-          <div>
-            <ProductActions
-              product={product}
-              cartLoading={cartLoading}
-              addToCart={addToCart}
-              addToWishlist={addToWishlist}
-            />
-          </div>
-
-          <div className="h-8" />
-
-          <div>
-            <ProductShare />
-          </div>
-
-          <div className="h-12" />
-
-          <div>
-            <ReviewForm
-              rating={rating}
-              setRating={setRating}
-              comment={comment}
-              setComment={setComment}
-              reviewLoading={reviewLoading}
-              submitReview={submitReview}
+    <div className="mx-auto w-full px-6 py-10 lg:px-16">
+      <div className="h-5"></div>
+      <div className="grid items-start gap-12 lg:grid-cols-[10px_auto_auto_10px]">
+        <div className="col-start-2">
+          <ProductGallery
+            product={product}
+            selectedImage={selectedImage}
+            setSelectedImage={setSelectedImage}
+          />
+          <div className="h-10"></div>
+          <div className="mt-12">
+            <ReviewsList
+              reviews={product.reviews}
+              currentUserId={currentUser?._id}
+              deleteReview={deleteReview}
             />
           </div>
         </div>
-      </div>
 
-      <ReviewsList
-        reviews={product.reviews}
-        currentUserId={currentUser?._id}
-        deleteReview={deleteReview}
-      />
-      <Suspense fallback={null}>
-        <RelatedProducts productId={product._id} />
-      </Suspense>
+        <div className="w-full max-w-[500px]">
+          <ProductInfo
+            product={product}
+            selectedSize={selectedSize}
+            setSelectedSize={setSelectedSize}
+          />
+
+          <div className="h-10" />
+
+          <ProductActions
+            product={product}
+            cartLoading={cartLoading}
+            addToCart={addToCart}
+            addToWishlist={addToWishlist}
+          />
+
+          <div className="h-8" />
+
+          <ProductShare />
+
+          <div className="h-12" />
+
+          <ReviewForm
+            rating={rating}
+            setRating={setRating}
+            comment={comment}
+            setComment={setComment}
+            reviewLoading={reviewLoading}
+            submitReview={submitReview}
+          />
+        </div>
+      </div>
+      <div className="flex">
+        <div className="w-5"></div>
+        <div>
+          <div className="mt-20">
+            <Suspense fallback={null}>
+              <RelatedProducts productId={product._id} />
+            </Suspense>
+          </div>
+          <div className="h-4"></div>
+        </div>
+        <div className="w-5"></div>
+      </div>
     </div>
   );
 }

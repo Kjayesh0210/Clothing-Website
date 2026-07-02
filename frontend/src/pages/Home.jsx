@@ -14,7 +14,7 @@ function Home() {
       <FeaturedProducts />
       <div className="h-16"></div>
       <WhyChooseUs />
-      <div className="h-16"></div>
+      <div className="bg-[#F8F8F8] h-16"></div>
       <Newsletter />
     </main>
   );
