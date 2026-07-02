@@ -8,7 +8,6 @@ const categoryRoutes = require("./routes/categoryRoutes");
 
 const connectDB = require("./config/db");
 
-
 dotenv.config();
 
 connectDB();
@@ -27,7 +26,7 @@ const { errorHandler } = require("./middleware/errorMiddleware");
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   }),
 );
