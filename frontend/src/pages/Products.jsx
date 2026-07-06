@@ -7,7 +7,7 @@ import ProductGrid from "../components/products/ProductGrid";
 import ProductHeader from "../components/products/ProductHeader";
 import ProductPagination from "../components/products/ProductPagination";
 import ProductFilters from "../components/products/ProductFilters";
-import SearchBar from "../components/layout/navbar/SearchBar";
+import SearchBar from "../components/layout/Navbar/SearchBar";
 
 function Products() {
   const [products, setProducts] = useState([]);
