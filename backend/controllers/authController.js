@@ -26,6 +26,11 @@ const register = async (req, res) => {
       password: hashedPassword,
     });
 
+    res.status(201).json({
+      success: true,
+      user,
+    });
+    
     try {
       await sendEmail(
         user.email,
@@ -43,11 +48,6 @@ const register = async (req, res) => {
     } catch (error) {
       console.log("Email Error:", error.message);
     }
-
-    res.status(201).json({
-      success: true,
-      user,
-    });
   } catch (error) {
     res.status(500).json({
       message: error.message,

@@ -17,10 +17,10 @@ function Register() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    console.count("handleSubmit");
     e.preventDefault();
 
     if (loading) return;
-
     if (!form.name.trim()) {
       return toast.error("Please enter your name");
     }
@@ -36,7 +36,7 @@ function Register() {
     if (form.password.length < 6) {
       return toast.error("Password must be at least 6 characters");
     }
-    
+
     setLoading(true);
 
     try {
@@ -44,7 +44,7 @@ function Register() {
 
       toast.success("Registered Successfully");
 
-      const redirectTo = location.state?.redirectTo || "/";
+      const redirectTo = location.state?.redirectTo || "/login";
 
       navigate(redirectTo);
     } catch (err) {
