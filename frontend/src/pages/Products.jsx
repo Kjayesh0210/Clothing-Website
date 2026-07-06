@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import api from "../services/api";
 import ProductCard from "../components/ProductCard";
 import ProductGrid from "../components/products/ProductGrid";
 import ProductHeader from "../components/products/ProductHeader";
 import ProductPagination from "../components/products/ProductPagination";
 import ProductFilters from "../components/products/ProductFilters";
+import SearchBar from "../components/layout/navbar/SearchBar";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -25,6 +27,10 @@ function Products() {
   const [gender, setGender] = useState(searchParams.get("gender") || "");
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
+  const [showSort, setShowSort] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [debouncedKeyword, setDebouncedKeyword] = useState("");
 
   useEffect(() => {
     setCategory(searchParams.get("category") || "");
@@ -98,16 +104,12 @@ function Products() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-[1500px] mx-auto px-4 py-8">
-        <div className="h-5"></div>
-        <div className="grid lg:grid-cols-[320px_1fr] gap-8 items-start">
-          {/* FILTER SIDEBAR */}
-          <div className="flex">
-            <div className="w-10"></div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="mx-auto w-full max-w-[1500px] px-2 py-6 sm:px-6 lg:py-8">
+        <div className="grid items-start gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
+          {/* Filter Sidebar */}
+          <div className="sticky top-24 hidden self-start lg:block">
             <ProductFilters
-              keyword={keyword}
-              setKeyword={setKeyword}
               category={category}
               setCategory={setCategory}
               categories={categories}
@@ -125,20 +127,144 @@ function Products() {
             />
           </div>
 
-          {/* PRODUCTS */}
-          <div className="pt-6">
+          {/* Products */}
+          <div className="min-w-0 w-full space-y-6">
+            <div className="flex items-center gap-3 lg:hidden">
+              <SearchBar
+                className="flex-1"
+                keyword={keyword}
+                searchProducts={setKeyword}
+                suggestions={suggestions}
+                setSuggestions={setSuggestions}
+              />
+
+              <button
+                onClick={() => setShowFilters(true)}
+                className="
+                flex
+                h-11
+                w-11
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-neutral-200
+                bg-neutral-50
+                transition-colors
+                hover:bg-neutral-100
+              "
+              >
+                <SlidersHorizontal size={18} />
+              </button>
+            </div>
             <ProductHeader loading={loading} products={products} />
-
             <ProductGrid loading={loading} products={products} />
-            <div className="h-5"></div>
+          </div>
+        </div>
+        <ProductPagination
+          loading={loading}
+          page={page}
+          totalPages={totalPages}
+          setPage={setPage}
+        />
+      </div>
+      {/* Mobile Filter Drawer */}
+      <div
+        className={`
+        fixed
+        inset-0
+        z-50
+        bg-black/40
+        transition-opacity
+        duration-300
+        lg:hidden
+        ${showFilters ? "visible opacity-100" : "invisible opacity-0"}
+      `}
+        onClick={() => setShowFilters(false)}
+      >
+        <div
+          className={`
+          absolute
+          right-0
+          top-0
+          h-full
+          w-full
+          max-w-sm
+          bg-white
+          shadow-2xl
+          transition-transform
+          duration-300
+          ${showFilters ? "translate-x-0" : "translate-x-full"}
+        `}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex h-full flex-col">
+            <div className="flex items-center justify-between border-b border-neutral-200 px-5 py-4">
+              <button
+                onClick={() => setShowFilters(false)}
+                className="rounded-lg p-2 transition-colors hover:bg-neutral-100"
+              >
+                ✕
+              </button>
 
-            <ProductPagination
-              loading={loading}
-              page={page}
-              totalPages={totalPages}
-              setPage={setPage}
-            />
-            <div className="h-5"></div>
+              <h2 className="text-lg font-semibold text-neutral-900">
+                Filters
+              </h2>
+
+              <button
+                onClick={() => {
+                  setCategory("");
+                  setMinPrice("");
+                  setMaxPrice("");
+                  setGender("");
+                  setSort("");
+                  setInStock(false);
+                  setPage(1);
+                }}
+                className="text-sm font-medium text-red-500"
+              >
+                Reset
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-4 py-5">
+              <ProductFilters
+                mobile
+                category={category}
+                setCategory={setCategory}
+                categories={categories}
+                gender={gender}
+                setGender={setGender}
+                minPrice={minPrice}
+                setMinPrice={setMinPrice}
+                maxPrice={maxPrice}
+                setMaxPrice={setMaxPrice}
+                sort={sort}
+                setSort={setSort}
+                inStock={inStock}
+                setInStock={setInStock}
+                setPage={setPage}
+              />
+              <div className="border-t border-neutral-200 bg-white p-4">
+                <button
+                  onClick={() => setShowFilters(false)}
+                  className="
+                  h-12
+                  w-full
+                  rounded-xl
+                  bg-black
+                  text-sm
+                  font-semibold
+                  text-white
+                  transition-colors
+                  hover:bg-neutral-800
+                "
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

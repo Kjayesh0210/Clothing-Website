@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Sparkles } from "lucide-react";
 import api from "../services/api";
 import ProductCard from "../components/ProductCard";
 import ProductCardSkeleton from "../components/ProductCardSkeleton";
+
 function FeaturedProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,76 +30,86 @@ function FeaturedProducts() {
   return (
     <section className="bg-neutral-50 py-16 md:py-20 lg:py-28">
       <div className="mx-auto w-[95%] max-w-7xl">
-        <div className="mb-14 flex items-end justify-between">
+        {/* Header */}
+
+        <div className="mb-12 flex flex-col gap-8 md:mb-14 md:flex-row md:items-end md:justify-between">
           <div>
-            <>
-              <p className="text-sm font-medium uppercase tracking-[0.4em] text-neutral-500">
-                Featured Collection
-              </p>
+            <div className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              <Sparkles size={14} />
+              Featured Collection
+            </div>
 
-              <h2 className="mt-4 text-4xl font-black text-neutral-900 md:text-5xl">
-                Trending This Week
-              </h2>
+            <h2 className="mt-5 text-3xl font-black tracking-tight text-neutral-900 sm:text-4xl lg:text-5xl">
+              Trending This Week
+            </h2>
 
-              <p className="mt-4 max-w-xl text-lg text-neutral-600">
-                Hand-picked styles loved by thousands of customers.
-              </p>
-            </>
-
-            <p className="text-gray-500 mt-2">
-              Discover our latest fashion collection
+            <p className="mt-4 max-w-xl text-base leading-7 text-neutral-600 sm:text-lg">
+              Discover our most loved styles, hand-picked for this week's
+              collection.
             </p>
           </div>
 
           <Link
             to="/products"
             className="
-            hidden
-            md:inline-flex
-            items-center
-            gap-2
-            rounded-full
-            border
-            border-neutral-300
-            px-6
-            py-3
-            font-semibold
-            transition
-            hover:border-black
-            hover:bg-black
-            hover:text-white
+              hidden
+              md:inline-flex
+              items-center
+              justify-center
+              rounded-full
+              border
+              border-neutral-300
+              px-7
+              py-3
+              text-sm
+              font-semibold
+              transition-all
+              duration-300
+              hover:border-black
+              hover:bg-black
+              hover:text-white
             "
           >
-            View All
+            View All Products
           </Link>
         </div>
 
+        {/* Products */}
+
         {loading ? (
-          <div className="grid grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
             {[...Array(4)].map((_, index) => (
               <ProductCardSkeleton key={index} />
             ))}
           </div>
         ) : products.length > 0 ? (
           <>
-            <div className="grid grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
               {products.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>
 
-            <div className="flex justify-center mt-10 md:hidden">
+            <div className="mt-10 flex justify-center md:hidden">
               <Link
                 to="/products"
                 className="
-              border border-neutral-300
-              px-8
-              py-4
-              rounded-full
-              hover:bg-black
-              hover:text-white
-              transition
-              "
+                  inline-flex
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-neutral-300
+                  px-8
+                  py-3
+                  text-sm
+                  font-semibold
+                  transition-all
+                  duration-300
+                  hover:border-black
+                  hover:bg-black
+                  hover:text-white
+                "
               >
                 View All Products
               </Link>
@@ -106,13 +118,21 @@ function FeaturedProducts() {
         ) : (
           <div
             className="
-          text-center
-          py-16
-          border border-neutral-200 bg-white
-          rounded-3xl
-          "
+              rounded-3xl
+              border
+              border-neutral-200
+              bg-white
+              py-20
+              text-center
+            "
           >
-            <p className="text-gray-500">No featured products found.</p>
+            <h3 className="text-xl font-semibold text-neutral-900">
+              No Featured Products
+            </h3>
+
+            <p className="mt-2 text-neutral-500">
+              Check back soon for our latest collection.
+            </p>
           </div>
         )}
       </div>

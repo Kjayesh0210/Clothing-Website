@@ -34,37 +34,39 @@ function Register() {
   };
 
   return (
-    <section className="bg-[#F7F4F2]">
-      <div className="mx-auto flex min-h-screen items-center justify-center px-8 py-10 lg:px-16">
+    <section className="min-h-dvh overflow-hidden bg-[#F7F4F2]">
+      <div className="mx-auto flex min-h-dvh items-center justify-center px-4 py-4 sm:px-6 lg:px-16 lg:py-0">
         <div
           className="
           grid
           w-full
-          h-140
           max-w-[1040px]
           overflow-hidden
-          rounded-[32px]
+          rounded-[28px]
+          border
+          border-neutral-200
           bg-white
-          shadow-[0_20px_60px_rgba(0,0,0,0.08)]
+          shadow-[0_10px_40px_rgba(0,0,0,0.06)]
+          lg:min-h-[620px]
           lg:grid-cols-[62%_38%]
-        "
+          "
         >
           {/* Left Side */}
-          <div className="flex items-center justify-center p-10 sm:p-14 lg:p-16">
+          <div className="flex items-center justify-center p-5 sm:p-8 lg:p-14">
             <form onSubmit={handleSubmit} className="w-full max-w-[420px]">
-              <p className="text-sm uppercase tracking-[0.25em] text-neutral-400">
+              <p className="text-sm font-medium uppercase tracking-[0.25em] text-neutral-400">
                 Join THREADDOT
               </p>
 
-              <h2 className="mt-3 text-5xl font-bold tracking-tight text-neutral-900">
+              <h2 className="mt-2 text-4xl font-black tracking-tight text-neutral-900 sm:text-5xl">
                 Create Account
               </h2>
-              <div className="lg:h-10"></div>
-              <p className="mt-4 text-neutral-500">
+
+              <p className="mt-3 text-[15px] leading-7 text-neutral-500">
                 Create your account and start shopping.
               </p>
 
-              <div className="mt-10 space-y-5">
+              <div className="mt-8 space-y-4 sm:mt-10 sm:space-y-5">
                 <input
                   type="text"
                   placeholder="Full Name"
@@ -78,19 +80,20 @@ function Register() {
                   className="
                   h-14
                   w-full
-                  rounded-2xl
+                  rounded-xl
                   border
                   border-neutral-200
-                  bg-neutral-50
+                  bg-white
                   px-5
                   text-[15px]
                   outline-none
                   transition-all
                   focus:border-black
-                  focus:bg-white
+                  focus:ring-2
+                  focus:ring-black/10
                 "
                 />
-                <div className="lg:h-2"></div>
+
                 <input
                   type="email"
                   placeholder="Email Address"
@@ -104,19 +107,20 @@ function Register() {
                   className="
                   h-14
                   w-full
-                  rounded-2xl
+                  rounded-xl
                   border
                   border-neutral-200
-                  bg-neutral-50
+                  bg-white
                   px-5
                   text-[15px]
                   outline-none
                   transition-all
                   focus:border-black
-                  focus:bg-white
-                "
+                  focus:ring-2
+                  focus:ring-black/10
+                  "
                 />
-                <div className="lg:h-2"></div>
+
                 <input
                   type="password"
                   placeholder="Password"
@@ -130,28 +134,28 @@ function Register() {
                   className="
                   h-14
                   w-full
-                  rounded-2xl
+                  rounded-xl
                   border
                   border-neutral-200
-                  bg-neutral-50
+                  bg-white
                   px-5
                   text-[15px]
                   outline-none
                   transition-all
                   focus:border-black
-                  focus:bg-white
-                "
+                  focus:ring-2
+                  focus:ring-black/10
+                  "
                 />
-                <div className="lg:h-2"></div>
               </div>
 
               <button
                 type="submit"
                 className="
-                mt-8
+                mt-6
                 h-14
                 w-full
-                rounded-2xl
+                rounded-xl
                 bg-black
                 text-[15px]
                 font-semibold
@@ -163,7 +167,7 @@ function Register() {
                 Create Account
               </button>
 
-              <div className="mt-5 flex w-full justify-center">
+              <div className="mt-5 text-center text-sm text-neutral-500 sm:mt-6">
                 <button
                   type="button"
                   onClick={() => navigate("/login")}
@@ -184,12 +188,25 @@ function Register() {
               className="absolute inset-0 h-full w-full object-cover"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent"></div>
 
-            <div className="absolute bottom-14 right-14 z-10">
-              <h1 className="text-[34px] font-black tracking-wide text-white">
+            <div className="absolute bottom-8 right-8 z-10">
+              <h1
+                className="
+                text-[34px]
+                font-black
+                tracking-[0.12em]
+                text-white
+                drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]
+                select-none
+              "
+              >
                 THREADDOT
               </h1>
+
+              <p className="mt-1 text-xs uppercase tracking-[0.3em] text-right text-white/80">
+                Premium Streetwear
+              </p>
             </div>
           </div>
         </div>

@@ -12,36 +12,34 @@ function ProductCard({ product }) {
       to={`/products/${product._id}`}
       className="
       group
-      bg-white
-      rounded-2xl
       overflow-hidden
+      rounded-2xl
       border
-      border-gray-100
-      shadow-none
-      hover:border-white
-      hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)]
-      hover:-translate-y-2
+      border-neutral-200
+      bg-white
       transition-all
       duration-300
-      "
+      hover:-translate-y-1
+      hover:border-neutral-300
+      hover:shadow-lg
+    "
     >
-      <div className="relative overflow-hidden rounded-t-2xl">
+      <div className="relative overflow-hidden">
         {product.discountPercentage > 0 && (
           <span
             className="
             absolute
-            top-4
-            left-4
+            left-3
+            top-3
             z-10
             rounded-full
             bg-red-600
-            text-white
-            text-xs
-            font-semibold
             px-3
             py-1
-            shadow
-            "
+            text-xs
+            font-semibold
+            text-white
+          "
           >
             {product.discountPercentage}% OFF
           </span>
@@ -52,79 +50,67 @@ function ProductCard({ product }) {
           alt={product.title}
           loading="lazy"
           className="
-          w-full
           aspect-[3/4]
+          w-full
           object-cover
-          group-hover:scale-105
           transition-transform
           duration-500
-          "
-        />
-        <div
-          className="
-          absolute
-          inset-x-0
-          bottom-0
-          h-24
-          bg-gradient-to-t
-          from-black/20
-          to-transparent
-          pointer-events-none
+          group-hover:scale-105
         "
         />
+
         {product.rating > 0 && (
-          <div className="absolute bottom-4 left-4">
-            <span
-              className="
-              inline-flex
-              items-center
-              gap-1
-              backdrop-blur-sm
-              bg-white/90
-              shadow-md
-              rounded-full
-              px-3.5
-              py-1.5
-              text-sm
-              font-semibold
-              text-gray-800
-              "
-            >
-              ⭐ {product.rating.toFixed(1)}
-            </span>
-          </div>
+          <span
+            className="
+            absolute
+            bottom-3
+            left-3
+            inline-flex
+            items-center
+            gap-1
+            rounded-full
+            bg-white/90
+            px-3
+            py-1
+            text-xs
+            font-semibold
+            text-neutral-800
+            backdrop-blur
+          "
+          >
+            ⭐ {product.rating.toFixed(1)}
+          </span>
         )}
-        <div className="absolute bottom-4 right-4 z-10">
+
+        <div className="absolute bottom-3 right-3">
           {inStock ? (
             totalStock <= 5 ? (
-              <span className="bg-orange-100 text-orange-700 rounded-full px-3 py-1 text-xs font-semibold shadow">
+              <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
                 {totalStock} Left
               </span>
             ) : (
-              <span className="bg-green-100 text-green-700 px-3 py-1 text-base font-semibold shadow">
+              <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
                 In Stock
               </span>
             )
           ) : (
-            <span className="bg-red-100 text-red-700 rounded-full px-3 py-1 text-xs font-semibold shadow">
+            <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
               Sold Out
             </span>
           )}
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="space-y-2 p-2">
         <span
           className="
           inline-block
           rounded-md
-          bg-gray-50
+          bg-neutral-100
           px-2.5
-          py-1
           text-xs
-          font-semibold
-          text-gray-600
-          mb-3
+          font-medium
+          text-neutral-600
         "
         >
           {product.category?.name}
@@ -132,30 +118,29 @@ function ProductCard({ product }) {
 
         <h3
           className="
-          text-lg
+          line-clamp-2
+          text-base
           font-semibold
           leading-6
-          text-gray-900
-          line-clamp-2
-          min-h-[56px]
-          mb-3
-          "
+          text-neutral-900
+          sm:text-lg
+        "
         >
           {product.title}
         </h3>
 
-        <div className="flex items-center flex-wrap gap-2 mb-4">
-          <span className="text-2xl font-bold text-gray-900">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xl font-bold text-neutral-900 sm:text-2xl">
             ₹{product.price}
           </span>
 
           {product.originalPrice > product.price && (
             <>
-              <span className="text-sm text-gray-400 line-through">
+              <span className="text-sm text-neutral-400 line-through">
                 ₹{product.originalPrice}
               </span>
 
-              <span className="text-sm font-bold text-green-700">
+              <span className="text-sm font-semibold text-green-600">
                 {product.discountPercentage}% OFF
               </span>
             </>

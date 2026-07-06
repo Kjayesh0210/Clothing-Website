@@ -69,13 +69,13 @@ function ResetPassword() {
         <button
           disabled={!form.password || form.password !== form.confirmPassword}
           className="
-    bg-black
-    text-white
-    p-2
-    w-full
-    disabled:opacity-50
-    disabled:cursor-not-allowed
-  "
+          bg-black
+          text-white
+          p-2
+          w-full
+          disabled:opacity-50
+          disabled:cursor-not-allowed
+        "
         >
           Reset Password
         </button>

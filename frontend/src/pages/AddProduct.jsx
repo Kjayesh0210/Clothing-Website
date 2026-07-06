@@ -153,28 +153,33 @@ function AddProduct() {
       setUploading(false);
     }
   };
+
+  const inputStyle =
+    "w-full h-14 rounded-2xl border border-neutral-300 px-5 outline-none transition focus:border-black focus:ring-4 focus:ring-neutral-100";
+
+  const textareaStyle =
+    "w-full rounded-2xl border border-neutral-300 p-5 resize-none outline-none transition focus:border-black focus:ring-4 focus:ring-neutral-100";
+
   return (
-    <div className="min-h-screen bg-neutral-50 flex justify-center">
-      <div className="w-full max-w-5xl px-6 lg:px-8 mt-10">
+    <div className="min-h-screen bg-neutral-50">
+      <div className="mx-auto w-full max-w-6xl px-2 sm:px-6 lg:px-8">
         {/* Header */}
 
         <div
           className="
-    mb-14
-    bg-white
-    rounded-3xl
-    border
-    border-neutral-200
-    shadow-sm
-    p-8
-        mb-10
-  "
+          mb-8
+          bg-white
+          rounded-3xl
+          border
+          border-neutral-200
+          shadow-sm
+          p-6
+        "
         >
-          <div className="flex items-center gap-5">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <div
               className="
-              w-16
-              h-16
+              h-14 w-14 sm:h-16 sm:w-16
               rounded-2xl
               bg-black
               text-white
@@ -187,16 +192,18 @@ function AddProduct() {
             </div>
 
             <div>
-              <h1 className="text-5xl font-bold tracking-tight">Add Product</h1>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+                Add Product
+              </h1>
 
-              <p className="text-lg text-neutral-500 mt-2">
+              <p className="text-base sm:text-lg text-neutral-500 mt-2">
                 Create a new product for your clothing store.
               </p>
             </div>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-10">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
 
           <div
@@ -206,14 +213,13 @@ function AddProduct() {
             border
             border-neutral-200
             shadow-sm
-            p-10
+            p-5 sm:p-6 lg:p-6
           "
           >
-            <div className="flex items-center gap-4 mb-10">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center mb-4">
               <div
                 className="
-                w-14
-                h-14
+                h-12 w-12 sm:h-14 sm:w-14
                 rounded-2xl
                 bg-neutral-100
                 flex
@@ -225,7 +231,9 @@ function AddProduct() {
               </div>
 
               <div>
-                <h2 className="text-3xl font-bold">Basic Information</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold">
+                  Basic Information
+                </h2>
 
                 <p className="text-neutral-500 mt-2">
                   Product details visible to customers.
@@ -233,7 +241,7 @@ function AddProduct() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
                 <label className="block font-semibold mb-3">
                   Product Title
@@ -245,19 +253,7 @@ function AddProduct() {
                   value={form.title}
                   onChange={handleChange}
                   placeholder="Oversized Hoodie"
-                  className="
-                  w-full
-                  h-14
-                  rounded-2xl
-                  border
-                  border-neutral-300
-                  px-5
-                  outline-none
-                  transition
-                  focus:border-black
-                  focus:ring-4
-                  focus:ring-neutral-100
-                "
+                  className={inputStyle}
                 />
               </div>
 
@@ -268,19 +264,7 @@ function AddProduct() {
                   name="category"
                   value={form.category}
                   onChange={handleChange}
-                  className="
-                  w-full
-                  h-14
-                  rounded-2xl
-                  border
-                  border-neutral-300
-                  px-5
-                  outline-none
-                  transition
-                  focus:border-black
-                  focus:ring-4
-                  focus:ring-neutral-100
-                "
+                  className={inputStyle}
                 >
                   <option value="">Select Category</option>
 
@@ -293,7 +277,7 @@ function AddProduct() {
               </div>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-4">
               <label className="block font-semibold mb-3">Description</label>
 
               <textarea
@@ -302,23 +286,11 @@ function AddProduct() {
                 value={form.description}
                 onChange={handleChange}
                 placeholder="Write a detailed product description..."
-                className="
-                w-full
-                rounded-2xl
-                border
-                border-neutral-300
-                p-5
-                resize-none
-                outline-none
-                transition
-                focus:border-black
-                focus:ring-4
-                focus:ring-neutral-100
-              "
+                className={inputStyle}
               />
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 mt-8">
+            <div className="grid md:grid-cols-2 gap-8 mt-4">
               <div>
                 <label className="block font-semibold mb-3">Gender</label>
 
@@ -326,19 +298,7 @@ function AddProduct() {
                   name="gender"
                   value={form.gender}
                   onChange={handleChange}
-                  className="
-                  w-full
-                  h-14
-                  rounded-2xl
-                  border
-                  border-neutral-300
-                  px-5
-                  outline-none
-                  transition
-                  focus:border-black
-                  focus:ring-4
-                  focus:ring-neutral-100
-                "
+                  className={inputStyle}
                 >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -357,10 +317,10 @@ function AddProduct() {
             border
             border-neutral-200
             shadow-sm
-            p-10
+            p-8
           "
           >
-            <div className="flex items-center gap-4 mb-10">
+            <div className="flex items-center gap-4 mb-6">
               <div
                 className="
                 w-14
@@ -384,7 +344,7 @@ function AddProduct() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               <div>
                 <label className="block font-semibold mb-3">
                   Selling Price
@@ -395,19 +355,7 @@ function AddProduct() {
                   name="price"
                   value={form.price}
                   onChange={handleChange}
-                  className="
-                  w-full
-                  h-14
-                  rounded-2xl
-                  border
-                  border-neutral-300
-                  px-5
-                  outline-none
-                  transition
-                  focus:border-black
-                  focus:ring-4
-                  focus:ring-neutral-100
-                "
+                  className={inputStyle}
                 />
               </div>
 
@@ -421,19 +369,7 @@ function AddProduct() {
                   name="originalPrice"
                   value={form.originalPrice}
                   onChange={handleChange}
-                  className="
-                  w-full
-                  h-14
-                  rounded-2xl
-                  border
-                  border-neutral-300
-                  px-5
-                  outline-none
-                  transition
-                  focus:border-black
-                  focus:ring-4
-                  focus:ring-neutral-100
-                "
+                  className={inputStyle}
                 />
               </div>
 
@@ -445,19 +381,7 @@ function AddProduct() {
                   name="discountPercentage"
                   value={form.discountPercentage}
                   onChange={handleChange}
-                  className="
-                  w-full
-                  h-14
-                  rounded-2xl
-                  border
-                  border-neutral-300
-                  px-5
-                  outline-none
-                  transition
-                  focus:border-black
-                  focus:ring-4
-                  focus:ring-neutral-100
-                "
+                  className={inputStyle}
                 />
               </div>
             </div>
@@ -471,10 +395,10 @@ function AddProduct() {
             border
             border-neutral-200
             shadow-sm
-            p-10
+            p-6
           "
           >
-            <div className="flex items-center gap-4 mb-10">
+            <div className="flex items-center gap-4 mb-6">
               <div
                 className="
                 w-14
@@ -498,7 +422,7 @@ function AddProduct() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 gap-5">
               {form.sizes.map((item, index) => (
                 <div
                   key={item.size}
@@ -552,7 +476,7 @@ function AddProduct() {
             border
             border-neutral-200
             shadow-sm
-            p-10
+            p-6
           "
           >
             <div className="flex items-center gap-4 mb-10">
@@ -589,7 +513,7 @@ function AddProduct() {
               border-dashed
               border-neutral-300
               rounded-[28px]
-              p-16
+              p-8 sm:p-12 lg:p-16
               cursor-pointer
               transition-all
               duration-300
@@ -599,11 +523,11 @@ function AddProduct() {
             >
               <Upload size={42} className="text-neutral-500" />
 
-              <h3 className="text-xl font-semibold mt-5">
+              <h3 className="text-lg sm:text-xl font-semibold mt-5">
                 Upload Product Images
               </h3>
 
-              <p className="text-neutral-500 mt-2 text-center max-w-md">
+              <p className="text-neutral-500 mt-2 text-center max-w-sm sm:max-w-md">
                 Click to browse or drag and drop multiple product images.
               </p>
 
@@ -620,7 +544,7 @@ function AddProduct() {
               <div className="mt-10">
                 <h3 className="text-2xl font-bold mb-6">Preview</h3>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
                   {previewImages.map((img, index) => (
                     <div
                       key={index}
@@ -635,14 +559,7 @@ function AddProduct() {
                       <img
                         src={img}
                         alt=""
-                        className="
-                        w-full
-                        h-56
-                        object-cover
-                        transition-transform
-                        duration-300
-                        hover:scale-105
-                      "
+                        className="aspect-square w-full object-cover transition-transform duration-300 hover:scale-105"
                       />
                     </div>
                   ))}
@@ -659,10 +576,10 @@ function AddProduct() {
             border
             border-neutral-200
             shadow-sm
-            p-10
+            p-6
           "
           >
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:items-center lg:justify-between gap-8">
               <div>
                 <h2 className="text-3xl font-bold">Ready to Publish?</h2>
 
@@ -673,13 +590,12 @@ function AddProduct() {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                 <button
                   type="button"
                   onClick={() => navigate("/admin/products")}
                   className="
-                  h-14
-                  px-8
+                  h-12 sm:h-14 px-6 sm:px-8
                   rounded-2xl
                   border
                   border-neutral-300
@@ -697,7 +613,7 @@ function AddProduct() {
                   disabled={uploading}
                   className="
                   h-14
-                  px-10
+                  px-6 sm:px-10
                   rounded-2xl
                   bg-black
                   text-white

@@ -9,7 +9,7 @@ function SearchBar({
   className = "",
 }) {
   return (
-    <div className={`relative w-full ${className}`}>
+    <div className={`relative min-w-0 w-full ${className}`}>
       {/* Search Input */}
 
       <div
@@ -55,7 +55,8 @@ function SearchBar({
             className="
               rounded-full
               p-1
-              h-6 w-6
+              h-6
+              w-6
             "
           >
             <X size={16} className="text-neutral-500" />

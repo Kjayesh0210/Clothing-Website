@@ -75,7 +75,7 @@ function Navbar() {
       backdrop-blur-xl  
     "
     >
-      <div className="mx-auto h-[72px] w-full px-10">
+      <div className="mx-auto h-[72px] w-full px-5 sm:px-8 ">
         {/* Mobile */}
 
         <div className="flex h-full items-center justify-between lg:hidden">
@@ -102,7 +102,7 @@ function Navbar() {
           hidden
           h-full
           lg:grid
-          lg:grid-cols-[220px_1fr_auto]
+          lg:grid-cols-[180px_minmax(300px,460px)_1fr]
           lg:items-center
           lg:gap-16
         "
@@ -112,7 +112,7 @@ function Navbar() {
 
           {/* Search */}
 
-          <div className="flex justify-center">
+          <div className="flex justify-center lg:justify-start">
             <SearchBar
               className="w-full max-w-[460px]"
               keyword={keyword}
@@ -124,7 +124,7 @@ function Navbar() {
 
           {/* Right */}
 
-          <div className="flex items-center gap-24">
+          <div className="flex items-center justify-end gap-12 xl:gap-20">
             <DesktopNav />
             <NavActions token={token} cartCount={cartCount} />
             <div></div>

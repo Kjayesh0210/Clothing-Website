@@ -2,49 +2,33 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   const linkClass =
-    "text-neutral-400 transition duration-300 hover:text-white w-fit";
+    "w-fit text-neutral-400 transition duration-300 hover:text-white";
 
   return (
-    <footer className="mt-24 bg-[#111111] text-white">
-      <div className="h-10"></div>
-      <div className="mx-auto w-full max-w-[1440px] px-[80px] py-20">
-        <div className="grid grid-cols-1 gap-16 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
+    <footer className="mt-8 lg:mt-8 bg-[#111111] text-white">
+      <div className="mx-auto w-full max-w-[1440px] px-5 py-14 sm:px-8 lg:px-[80px] lg:py-20">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:gap-16">
           {/* Brand */}
 
-          <div>
-            <h2 className="text-4xl font-black tracking-[0.18em]">THREADDOT</h2>
+          <div className="sm:col-span-2 lg:col-span-1">
+            <h2 className="text-3xl font-black tracking-[0.18em] lg:text-4xl">
+              THREADDOT
+            </h2>
 
-            <p className="text-neutral-400">
+            <p className="mt-5 max-w-[380px] text-sm leading-7 text-neutral-400 sm:text-base">
               Premium fashion crafted for modern lifestyles. Timeless
               essentials, elevated everyday wear, and effortless style.
             </p>
-
-            {/* <div className="mt-8 flex items-center gap-5">
-              <Instagram
-                size={22}
-                className="cursor-pointer text-neutral-400 transition hover:text-white"
-                />
-                
-                <Twitter
-                size={22}
-                className="cursor-pointer text-neutral-400 transition hover:text-white"
-                />
-                
-                <Linkedin
-                size={22}
-                className="cursor-pointer text-neutral-400 transition hover:text-white"
-                />
-                </div> */}
           </div>
 
           {/* Shop */}
 
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-neutral-500">
+            <h3 className="mb-5 text-sm font-semibold uppercase tracking-[0.25em] text-neutral-500">
               Shop
             </h3>
 
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               <li>
                 <Link to="/products" className={linkClass}>
                   New Arrivals
@@ -74,17 +58,14 @@ function Footer() {
           {/* Support */}
 
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-neutral-500">
+            <h3 className="mb-5 text-sm font-semibold uppercase tracking-[0.25em] text-neutral-500">
               Support
             </h3>
 
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               <li className={linkClass}>Contact Us</li>
-
               <li className={linkClass}>Shipping</li>
-
               <li className={linkClass}>Returns</li>
-
               <li className={linkClass}>FAQ</li>
             </ul>
           </div>
@@ -92,26 +73,22 @@ function Footer() {
           {/* Company */}
 
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-neutral-500">
+            <h3 className="mb-5 text-sm font-semibold uppercase tracking-[0.25em] text-neutral-500">
               Company
             </h3>
 
-            <ul className="space-y-4">
-              <li>About Us</li>
-
-              <li>Careers</li>
-
-              <li>Privacy Policy</li>
-
-              <li>Terms & Conditions</li>
+            <ul className="space-y-3">
+              <li className={linkClass}>About Us</li>
+              <li className={linkClass}>Careers</li>
+              <li className={linkClass}>Privacy Policy</li>
+              <li className={linkClass}>Terms & Conditions</li>
             </ul>
           </div>
         </div>
 
-        <div className="h-10"></div>
         {/* Bottom */}
 
-        <div className="mt-20 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 md:flex-row">
+        <div className="mt-12 flex flex-col items-center gap-3 border-t border-white/10 pt-8 text-center md:mt-16 md:flex-row md:justify-between md:text-left">
           <p className="text-sm text-neutral-500">
             © {new Date().getFullYear()} THREADDOT. All rights reserved.
           </p>

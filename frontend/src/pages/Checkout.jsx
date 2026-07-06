@@ -223,131 +223,123 @@ function Checkout() {
     return <CheckoutSkeleton />;
   }
   return (
-    <div className="min-h-screen bg-neutral-50 py-10">
-      <div className="h-5"></div>
-      <div className="flex">
-        <div className="w-10"></div>
-        <div className="mx-auto w-full px-6">
+    <section className="min-h-screen bg-neutral-50 py-8 md:py-6">
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-16">
+        {/* Header */}
+        <div className="mb-4 flex items-start gap-4">
+          <ShieldCheck size={32} className="mt-1 shrink-0 text-green-600" />
+
           <div>
-            <div className="flex items-center gap-3">
-              <ShieldCheck className="text-green-600" size={30} />
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Secure Checkout
+            </h1>
 
-              <div>
-                <h1 className="text-4xl font-bold tracking-tight">
-                  Secure Checkout
-                </h1>
-
-                <p className="text-neutral-500 mt-2">
-                  Complete your purchase safely and securely.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="h-5"></div>
-
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
-              <div className="bg-white rounded-xl border border-neutral-200 shadow-sm p-8">
-                <div className="flex items-center gap-3 mb-8">
-                  <MapPin className="text-black" size={24} />
-
-                  <h2 className="text-2xl font-bold">Delivery Address</h2>
-                </div>
-                <div className="h-5"></div>
-
-                <AddressSelector
-                  addresses={addresses}
-                  selectedAddress={selectedAddress}
-                  setSelectedAddress={setSelectedAddress}
-                  useSavedAddress={useSavedAddress}
-                  setUseSavedAddress={setUseSavedAddress}
-                  address={address}
-                  setAddress={setAddress}
-                />
-              </div>
-              <div className="h-5"></div>
-
-              <div className="bg-white rounded-xl border border-neutral-200 shadow-sm p-8">
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="h-5"></div>
-
-                  <TicketPercent size={24} />
-
-                  <h2 className="text-2xl font-bold">Coupon</h2>
-                </div>
-
-                <CouponCard
-                  coupon={coupon}
-                  setCoupon={setCoupon}
-                  applyCoupon={applyCoupon}
-                  discount={discount}
-                />
-              </div>
-              <div className="h-5"></div>
-
-              <div className="bg-white rounded-xl border border-neutral-200 shadow-sm p-8">
-                <div className="flex items-center gap-3 mb-8">
-                  <CreditCard size={24} />
-
-                  <h2 className="text-2xl font-bold">Payment Method</h2>
-                </div>
-                <div className="h-5"></div>
-
-                <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-lg">Razorpay</p>
-
-                      <p className="text-neutral-500 mt-1">
-                        Credit Card • Debit Card • UPI • Net Banking • Wallets
-                      </p>
-                    </div>
-
-                    <div className="px-4 py-2 rounded-full bg-green-100 text-green-700 font-medium text-sm">
-                      Recommended
-                    </div>
-                  </div>
-                </div>
-                <div className="h-5"></div>
-
-                <div className="mt-8 rounded-2xl bg-green-50 border border-green-200 p-5">
-                  <div className="flex items-start gap-4">
-                    <ShieldCheck
-                      size={24}
-                      className="text-green-600 shrink-0 mt-1"
-                    />
-
-                    <div>
-                      <p className="font-semibold text-green-700">
-                        100% Secure Payments
-                      </p>
-
-                      <p className="text-green-600 mt-1 text-sm leading-6">
-                        Your payment details are encrypted and securely
-                        processed through Razorpay.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:sticky lg:top-24 h-fit">
-              <CheckoutSummary
-                subtotal={subtotal}
-                shipping={shipping}
-                discount={discountAmount}
-                total={total}
-                paymentLoading={paymentLoading}
-                handlePayment={handlePayment}
-              />
-            </div>
-            <div className="h-5"></div>
+            <p className="mt-2 text-sm text-neutral-500 sm:text-base">
+              Complete your purchase safely and securely.
+            </p>
           </div>
         </div>
-        <div className="w-10"></div>
+
+        {/* Content */}
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_400px]">
+          {/* Left */}
+          <div className="space-y-4">
+            {/* Address */}
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
+              <div className="mb-4 flex items-center gap-2">
+                <MapPin size={24} />
+                <h2 className="text-xl font-bold sm:text-2xl">
+                  Delivery Address
+                </h2>
+              </div>
+
+              <AddressSelector
+                addresses={addresses}
+                selectedAddress={selectedAddress}
+                setSelectedAddress={setSelectedAddress}
+                useSavedAddress={useSavedAddress}
+                setUseSavedAddress={setUseSavedAddress}
+                address={address}
+                setAddress={setAddress}
+              />
+            </div>
+
+            {/* Coupon */}
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
+              <div className="mb-4 flex items-center gap-2">
+                <TicketPercent size={24} />
+                <h2 className="text-xl font-bold sm:text-2xl">Coupon</h2>
+              </div>
+
+              <CouponCard
+                coupon={coupon}
+                setCoupon={setCoupon}
+                applyCoupon={applyCoupon}
+                discount={discount}
+              />
+            </div>
+
+            {/* Payment */}
+            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
+              <div className="mb-4 flex items-center gap-2">
+                <CreditCard size={24} />
+                <h2 className="text-xl font-bold sm:text-2xl">
+                  Payment Method
+                </h2>
+              </div>
+
+              <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5 sm:p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-lg font-semibold">Razorpay</p>
+
+                    <p className="mt-1 text-sm leading-6 text-neutral-500">
+                      Credit Card • Debit Card • UPI • Net Banking • Wallets
+                    </p>
+                  </div>
+
+                  <span className="w-fit rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+                    Recommended
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-6 rounded-2xl border border-green-200 bg-green-50 p-5">
+                <div className="flex items-start gap-4">
+                  <ShieldCheck
+                    size={24}
+                    className="mt-1 shrink-0 text-green-600"
+                  />
+
+                  <div>
+                    <p className="font-semibold text-green-700">
+                      100% Secure Payments
+                    </p>
+
+                    <p className="mt-1 text-sm leading-6 text-green-600">
+                      Your payment details are encrypted and securely processed
+                      through Razorpay.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Summary */}
+          <aside className="h-fit lg:sticky lg:top-24">
+            <CheckoutSummary
+              subtotal={subtotal}
+              shipping={shipping}
+              discount={discountAmount}
+              total={total}
+              paymentLoading={paymentLoading}
+              handlePayment={handlePayment}
+            />
+          </aside>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 

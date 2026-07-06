@@ -407,7 +407,10 @@ const generateInvoice = async (req, res) => {
       });
     }
 
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({
+      margin: 50,
+      size: "A4",
+    });
 
     res.setHeader("Content-Type", "application/pdf");
 
@@ -418,35 +421,165 @@ const generateInvoice = async (req, res) => {
 
     doc.pipe(res);
 
-    doc.fontSize(22).text("DRIPSTORE Invoice");
+    // ===========================
+    // Header
+    // ===========================
 
-    doc.moveDown();
+    doc.fontSize(28).fillColor("#111111").text("THREADDOT", 50, 50);
 
-    doc.text(`Order ID: ${order._id}`);
-    doc.text(`Payment ID: ${order.paymentId}`);
-    doc.text(`Status: ${order.status}`);
-    doc.text(`Date: ${order.createdAt.toDateString()}`);
+    doc.fontSize(12).fillColor("#666666").text("Premium Clothing Store");
 
-    doc.moveDown();
-
-    doc.text(`Address:`);
-    doc.text(order.address);
-
-    doc.moveDown();
-
-    doc.text("Products:");
-
-    order.products.forEach((item) => {
-      doc.text(
-        `${item.product.title}
-         | Qty: ${item.quantity}
-         | ₹${item.product.price}`,
-      );
+    doc.fontSize(22).fillColor("#111111").text("INVOICE", 400, 50, {
+      width: 150,
+      align: "right",
     });
 
-    doc.moveDown();
+    doc.moveTo(50, 105).lineTo(550, 105).strokeColor("#DDDDDD").stroke();
 
-    doc.text(`Total: ₹${order.totalAmount}`);
+    // ===========================
+    // Order Details
+    // ===========================
+
+    let y = 125;
+
+    doc.fontSize(12).fillColor("#222222");
+
+    doc.text(
+      `Invoice No : INV-${order._id.toString().slice(-6).toUpperCase()}`,
+      50,
+      y,
+    );
+
+    y += 20;
+
+    doc.text(`Order ID : ${order._id}`, 50, y);
+
+    y += 20;
+
+    doc.text(`Payment ID : ${order.paymentId || "N/A"}`, 50, y);
+
+    y += 20;
+
+    doc.text(`Status : ${order.status}`, 50, y);
+
+    y += 20;
+
+    doc.text(
+      `Date : ${new Date(order.createdAt).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })}`,
+      50,
+      y,
+    );
+
+    // ===========================
+    // Billing Address
+    // ===========================
+
+    y += 50;
+
+    doc.fontSize(15).fillColor("#111111").text("Billing Address", 50, y);
+
+    y += 10;
+
+    doc.moveTo(50, y).lineTo(550, y).strokeColor("#DDDDDD").stroke();
+
+    y += 15;
+
+    doc.fontSize(12).fillColor("#444444").text(order.address, 50, y, {
+      width: 500,
+    });
+
+    // ===========================
+    // Products Table
+    // ===========================
+
+    y += 70;
+
+    doc.fontSize(15).fillColor("#111111").text("Order Items", 50, y);
+
+    y += 20;
+
+    doc.fontSize(12).fillColor("#666666");
+
+    doc.text("Product", 50, y);
+
+    doc.text("Qty", 300, y);
+
+    doc.text("Price", 360, y);
+
+    doc.text("Total", 470, y);
+
+    y += 18;
+
+    doc.moveTo(50, y).lineTo(550, y).strokeColor("#CCCCCC").stroke();
+
+    y += 15;
+
+    order.products.forEach((item) => {
+      const total = item.quantity * item.product.price;
+
+      doc.fontSize(12).fillColor("#222222");
+
+      doc.text(item.product.title, 50, y, {
+        width: 220,
+      });
+
+      doc.text(item.quantity.toString(), 305, y);
+
+      doc.text(`₹${item.product.price.toLocaleString("en-IN")}`, 360, y);
+
+      doc.text(`₹${total.toLocaleString("en-IN")}`, 470, y);
+
+      y += 28;
+    });
+
+    // ===========================
+    // Grand Total
+    // ===========================
+
+    y += 10;
+
+    doc.moveTo(300, y).lineTo(550, y).strokeColor("#CCCCCC").stroke();
+
+    y += 20;
+
+    doc.fontSize(16).fillColor("#111111").text("Grand Total", 340, y);
+
+    doc
+      .fontSize(18)
+      .fillColor("#111111")
+      .text(`₹${order.totalAmount.toLocaleString("en-IN")}`, 470, y);
+
+    // ===========================
+    // Footer
+    // ===========================
+
+    y += 80;
+
+    doc.moveTo(50, y).lineTo(550, y).strokeColor("#DDDDDD").stroke();
+
+    y += 20;
+
+    doc
+      .fontSize(11)
+      .fillColor("#777777")
+      .text("Thank you for shopping with THREADDOT.", 50, y, {
+        align: "center",
+        width: 500,
+      });
+
+    y += 18;
+
+    doc
+      .fontSize(10)
+      .fillColor("#999999")
+      .text("Premium Fashion • THREADDOT", 50, y, {
+        align: "center",
+        width: 500,
+      });
 
     doc.end();
   } catch (error) {

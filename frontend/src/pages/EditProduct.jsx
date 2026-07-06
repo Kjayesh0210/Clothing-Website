@@ -136,7 +136,7 @@ function EditProduct() {
     try {
       const token = localStorage.getItem("token");
 
-      let uploadedImages = product?.images || [];
+      let uploadedImages = [...form.images];
 
       if (newImages.length > 0) {
         uploadedImages = [];
@@ -182,8 +182,28 @@ function EditProduct() {
     }
   };
 
+  const handleDeleteImage = (index) => {
+    if (form.images.length === 1) {
+      toast.error("Product must have at least one image");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this image?",
+    );
+
+    if (!confirmed) return;
+
+    setForm((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+
+    toast.success("Image removed");
+  };
+
   return (
-    <div className="max-w-xl mx-auto p-10">
+    <div className="max-w-xl mx-auto">
       <h1 className="text-4xl mb-6">Edit Product</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -276,20 +296,36 @@ function EditProduct() {
           ))}
         </div>
 
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex flex-wrap gap-4">
           {form.images?.map((img, index) => (
-            <img
-              key={index}
-              src={img}
-              alt=""
-              className="
-              w-24
-              h-24
-              object-cover
-              border
-              rounded
-              "
-            />
+            <div key={index} className="relative">
+              <img
+                src={img}
+                alt=""
+                className="w-28 h-28 rounded-lg border object-cover"
+              />
+
+              <button
+                type="button"
+                onClick={() => handleDeleteImage(index)}
+                className="
+          absolute
+          -top-2
+          -right-2
+          h-7
+          w-7
+          rounded-full
+          bg-red-600
+          text-white
+          text-sm
+          font-bold
+          shadow
+          hover:bg-red-700
+        "
+              >
+                ✕
+              </button>
+            </div>
           ))}
         </div>
 

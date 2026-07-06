@@ -26,13 +26,15 @@ function RelatedProducts({ productId }) {
   }
 
   return (
-    <div className="mt-20">
+    <div className="mt-4">
       <h2
         className="
-        text-3xl
+        mb-6
+        text-2xl
         font-bold
-        mb-8
-        "
+        sm:mb-8
+        sm:text-3xl
+      "
       >
         You May Also Like
       </h2>
@@ -40,11 +42,12 @@ function RelatedProducts({ productId }) {
       <div
         className="
         grid
-        grid-cols-1
-        sm:grid-cols-2
+        grid-cols-2
+        gap-4
+        sm:gap-5
         lg:grid-cols-4
-        gap-6
-        "
+        lg:gap-6
+      "
       >
         {products.map((product) => (
           <ProductCard key={product._id} product={product} />

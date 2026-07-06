@@ -30,6 +30,8 @@ app.use(
     credentials: true,
   }),
 );
+//change here
+
 app.use(express.json());
 app.use(helmet());
 app.use("/api", limiter);
@@ -53,5 +55,5 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

@@ -5,33 +5,35 @@ function ProductActions({ product, cartLoading, addToCart, addToWishlist }) {
   const inStock = product.sizes?.some((s) => s.stock > 0);
 
   return (
-    <div className="mt-10 space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {inStock ? (
         <button
           disabled={cartLoading}
           onClick={addToCart}
           className="
-            w-full
-            h-14
-            rounded-xl
-            bg-black
-            text-white
-            font-semibold
-            text-base
-            flex
-            items-center
-            justify-center
-            gap-3
-            transition-all
-            duration-300
-            hover:bg-neutral-800
-            hover:-translate-y-0.5
-            active:scale-[0.98]
-            disabled:opacity-60
-            disabled:cursor-not-allowed
-          "
+          flex
+          h-12
+          w-full
+          items-center
+          justify-center
+          gap-2
+          rounded-xl
+          bg-black
+          px-6
+          text-sm
+          font-semibold
+          text-white
+          transition
+          hover:bg-neutral-800
+          active:scale-[0.98]
+          disabled:cursor-not-allowed
+          disabled:opacity-60
+          sm:h-14
+          sm:gap-3
+          sm:text-base
+        "
         >
-          <ShoppingBag size={20} />
+          <ShoppingBag className="h-5 w-5" />
 
           {cartLoading ? "Adding..." : "Add To Bag"}
         </button>
@@ -39,41 +41,49 @@ function ProductActions({ product, cartLoading, addToCart, addToWishlist }) {
         <button
           disabled
           className="
-            w-full
-            h-14
-            rounded-xl
-            bg-neutral-300
-            text-neutral-600
-            font-semibold
-            cursor-not-allowed
-          "
+          h-12
+          w-full
+          rounded-xl
+          bg-neutral-300
+          text-sm
+          font-semibold
+          text-neutral-600
+          cursor-not-allowed
+          sm:h-14
+          sm:text-base
+        "
         >
           Out Of Stock
         </button>
       )}
-      <div className="h-4" />
+
       <button
         onClick={addToWishlist}
         className="
-          w-full
-          h-14
-          rounded-xl
-          border-2
-          border-neutral-300
-          bg-white
-          text-neutral-900
-          font-semibold
-          flex
-          items-center
-          justify-center
-          gap-3
-          transition-all
-          duration-300
-          hover:border-black
-          hover:bg-neutral-50
-        "
+        flex
+        h-12
+        w-full
+        items-center
+        justify-center
+        gap-2
+        rounded-xl
+        border
+        border-neutral-300
+        bg-white
+        px-6
+        text-sm
+        font-semibold
+        text-neutral-900
+        transition
+        hover:border-black
+        hover:bg-neutral-50
+        active:scale-[0.98]
+        sm:h-14
+        sm:gap-3
+        sm:text-base
+      "
       >
-        <Heart size={20} />
+        <Heart className="h-5 w-5" />
         Add To Wishlist
       </button>
     </div>

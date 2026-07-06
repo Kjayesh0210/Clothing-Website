@@ -95,27 +95,19 @@ function AdminCharts({ orders }) {
   };
 
   return (
-    <div
-      className="
-      grid
-      grid-cols-1
-      lg:grid-cols-2
-      gap-8
-      mb-10
-      "
-    >
-      <div className="rounded border border-neutral-200 bg-white p-6">
-        <h2 className="text-xl mb-4">Revenue</h2>
+    <div className="mb-10 grid gap-6 lg:grid-cols-2">
+      <div className="rounded-lg border border-neutral-200 bg-white p-5 sm:p-6">
+        <h2 className="mb-4 text-lg font-semibold sm:text-xl">Revenue</h2>
 
-        <div className="h-64">
+        <div className="h-64 sm:h-72">
           <Bar data={revenueData} options={barOptions} />
         </div>
       </div>
 
-      <div className="border border-neutral-200 bg-white p-5 rounded">
-        <h2 className="text-xl mb-4">Order Status</h2>
+      <div className="rounded-lg border border-neutral-200 bg-white p-5 sm:p-6">
+        <h2 className="mb-4 text-lg font-semibold sm:text-xl">Order Status</h2>
 
-        <div className="h-64">
+        <div className="h-64 sm:h-72">
           <Doughnut data={statusData} options={doughnutOptions} />
         </div>
       </div>

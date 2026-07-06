@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import FilterSection from "./FilterSection";
 
 function ProductFilters({
+  mobile = false,
   category,
   setCategory,
   categories,
@@ -48,72 +49,62 @@ function ProductFilters({
 
   return (
     <aside
-      className="
-    sticky
-    top-24
-    h-[calc(100vh-6rem)]
-    rounded-xl
-    bg-neutral-50
-    border
-    border-neutral-200
+      className={`
     flex
     flex-col
-  "
+    ${
+      mobile
+        ? "bg-white"
+        : "rounded-2xl border border-neutral-200 bg-neutral-50"
+    }
+  `}
     >
-      {/* Header */}
-      <div className="h-4"></div>
-
-      <div
-        className="
-    flex
-    items-center
-    justify-between
-    px-7
-    py-6
-    border-b
-    border-neutral-200
-    shrink-0
-  "
-      >
-        <div>
-          <h2
-            className="
-              text-2xl
-              font-bold
-              text-neutral-900
-            "
-          >
-            Filters
-          </h2>
-        </div>
-
-        <button
-          onClick={clearFilters}
+      {!mobile && (
+        <div
           className="
+          flex
+          items-center
+          justify-between
+          border-b
+          border-neutral-200
+          px-5
+          py-4
+          shrink-0
+        "
+        >
+          <h2 className="text-xl font-bold text-neutral-900">Filters</h2>
+
+          <button
+            onClick={clearFilters}
+            className="
             flex
             items-center
             gap-2
             rounded-full
-            px-4
+            px-3
             py-2
             text-sm
             font-medium
             text-red-500
+            transition-colors
             hover:bg-red-50
-            transition-all
-            duration-300
           "
-        >
-          <X size={16} />
-          Clear
-        </button>
-      </div>
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-7 py-6">
-          {/* CATEGORY */}
+          >
+            <X size={16} />
+            Clear
+          </button>
+        </div>
+      )}
 
+      <div className="flex-1">
+        <div
+          className={`
+          space-y-2
+          ${mobile ? "" : "px-5 py-5"}
+        `}
+        >
           <FilterSection title="Category">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <button
                 onClick={() => {
                   setCategory("");
@@ -121,10 +112,7 @@ function ProductFilters({
                 }}
                 className={itemClass(category === "")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>All Categories</span>
-                </div>
+                <span>All Categories</span>
               </button>
 
               {categories.map((cat) => (
@@ -136,19 +124,14 @@ function ProductFilters({
                   }}
                   className={itemClass(category === cat._id)}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-6 flex-shrink-0" />
-                    <span>{cat.name}</span>
-                  </div>
+                  <span>{cat.name}</span>
                 </button>
               ))}
             </div>
           </FilterSection>
 
-          {/* GENDER */}
-
           <FilterSection title="Gender">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <button
                 onClick={() => {
                   setGender("");
@@ -156,10 +139,7 @@ function ProductFilters({
                 }}
                 className={itemClass(gender === "")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>All</span>
-                </div>
+                <span>All</span>
               </button>
 
               <button
@@ -169,10 +149,7 @@ function ProductFilters({
                 }}
                 className={itemClass(gender === "Male")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>Male</span>
-                </div>
+                <span>Male</span>
               </button>
 
               <button
@@ -182,10 +159,7 @@ function ProductFilters({
                 }}
                 className={itemClass(gender === "Female")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>Female</span>
-                </div>
+                <span>Female</span>
               </button>
 
               <button
@@ -195,18 +169,13 @@ function ProductFilters({
                 }}
                 className={itemClass(gender === "Unisex")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>Unisex</span>
-                </div>
+                <span>Unisex</span>
               </button>
             </div>
           </FilterSection>
 
-          {/* PRICE */}
-
           <FilterSection title="Price">
-            <div className="grid grid-cols-2 gap-4 px-4">
+            <div className="grid grid-cols-2 gap-2">
               <input
                 type="number"
                 placeholder="Min ₹"
@@ -216,20 +185,20 @@ function ProductFilters({
                   setPage(1);
                 }}
                 className="
-              h-8
-              rounded-xl
-              border
-              border-neutral-300
-              bg-neutral-50
-              px-4
-              text-base
-              transition
-              focus:bg-white
-              focus:border-black
-              focus:ring-2
-              focus:ring-black/5
-              focus:outline-none
-            "
+                h-10
+                rounded-xl
+                border
+                border-neutral-300
+                bg-neutral-50
+                px-3
+                text-sm
+                transition-colors
+                focus:border-black
+                focus:bg-white
+                focus:outline-none
+                focus:ring-2
+                focus:ring-black/5
+              "
               />
 
               <input
@@ -241,28 +210,26 @@ function ProductFilters({
                   setPage(1);
                 }}
                 className="
-              h-8
-              rounded-xl
-              border
-              border-neutral-300
-              bg-neutral-50
-              px-4
-              text-base
-              transition
-              focus:bg-white
-              focus:border-black
-              focus:ring-2
-              focus:ring-black/5
-              focus:outline-none
-            "
+                h-10
+                rounded-xl
+                border
+                border-neutral-300
+                bg-neutral-50
+                px-3
+                text-sm
+                transition-colors
+                focus:border-black
+                focus:bg-white
+                focus:outline-none
+                focus:ring-2
+                focus:ring-black/5
+              "
               />
             </div>
           </FilterSection>
 
-          {/* SORT */}
-
           <FilterSection title="Sort By">
-            <div className="space-y-3">
+            <div className="space-y-1">
               <button
                 onClick={() => {
                   setSort("");
@@ -270,10 +237,7 @@ function ProductFilters({
                 }}
                 className={itemClass(sort === "")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>Default</span>
-                </div>
+                <span>Default</span>
               </button>
 
               <button
@@ -283,10 +247,7 @@ function ProductFilters({
                 }}
                 className={itemClass(sort === "newest")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>Newest</span>
-                </div>
+                <span>Newest</span>
               </button>
 
               <button
@@ -296,10 +257,7 @@ function ProductFilters({
                 }}
                 className={itemClass(sort === "rating")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>Best Rated</span>
-                </div>
+                <span>Best Rated</span>
               </button>
 
               <button
@@ -309,10 +267,7 @@ function ProductFilters({
                 }}
                 className={itemClass(sort === "price-low")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>Price: Low → High</span>
-                </div>
+                <span>Price: Low → High</span>
               </button>
 
               <button
@@ -322,15 +277,10 @@ function ProductFilters({
                 }}
                 className={itemClass(sort === "price-high")}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span>Price: High → Low</span>
-                </div>
+                <span>Price: High → Low</span>
               </button>
             </div>
           </FilterSection>
-
-          {/* AVAILABILITY */}
 
           <FilterSection title="Availability">
             <button
@@ -339,49 +289,44 @@ function ProductFilters({
                 setPage(1);
               }}
               className={`
-      w-full
-      px-6
-      py-2.5
-      rounded-xl
-      transition-all
-      duration-200
-      ${
-        inStock
-          ? "bg-neutral-200 text-neutral-900"
-          : "text-neutral-700 hover:bg-neutral-100"
-      }
-    `}
+              flex
+              w-full
+              items-center
+              justify-between
+              rounded-xl
+              px-4
+              py-2
+              transition-colors
+              ${
+                inStock
+                  ? "bg-neutral-200 text-neutral-900"
+                  : "text-neutral-700 hover:bg-neutral-100"
+              }
+            `}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-6 flex-shrink-0" />
-                  <span className="text-base font-medium">In Stock Only</span>
-                </div>
+              <span className="text-sm font-medium">In Stock Only</span>
 
-                <div
-                  className={`
-          w-5
-          h-5
-          rounded-md
-          border
-          flex
-          items-center
-          justify-center
-          transition-all
-          ${
-            inStock
-              ? "border-neutral-700 bg-neutral-700 text-white"
-              : "border-neutral-400"
-          }
-        `}
-                >
-                  {inStock && <span className="text-[11px] font-bold">✓</span>}
-                </div>
+              <div
+                className={`
+                flex
+                size-5
+                items-center
+                justify-center
+                rounded-md
+                border
+                transition-colors
+                ${
+                  inStock
+                    ? "border-neutral-700 bg-neutral-700 text-white"
+                    : "border-neutral-400"
+                }
+              `}
+              >
+                {inStock && <span className="text-[11px] font-bold">✓</span>}
               </div>
             </button>
           </FilterSection>
         </div>
-        <div className="w-4"></div>
       </div>
     </aside>
   );

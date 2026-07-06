@@ -193,17 +193,18 @@ function ProductDetails() {
   }
 
   return (
-    <div className="mx-auto w-full px-6 py-10 lg:px-16">
-      <div className="h-5"></div>
-      <div className="grid items-start gap-12 lg:grid-cols-[10px_auto_auto_10px]">
-        <div className="col-start-2">
+    <div className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_500px] lg:gap-16">
+        {/* Left */}
+        <div className="space-y-4 lg:space-y-6">
           <ProductGallery
             product={product}
             selectedImage={selectedImage}
             setSelectedImage={setSelectedImage}
           />
-          <div className="h-10"></div>
-          <div className="mt-12">
+
+          {/* Desktop Only */}
+          <div className="hidden lg:block">
             <ReviewsList
               reviews={product.reviews}
               currentUserId={currentUser?._id}
@@ -212,14 +213,13 @@ function ProductDetails() {
           </div>
         </div>
 
-        <div className="w-full max-w-[500px]">
+        {/* Right */}
+        <div className="w-full space-y-4 lg:ml-auto lg:max-w-[500px] lg:space-y-4">
           <ProductInfo
             product={product}
             selectedSize={selectedSize}
             setSelectedSize={setSelectedSize}
           />
-
-          <div className="h-10" />
 
           <ProductActions
             product={product}
@@ -228,11 +228,7 @@ function ProductDetails() {
             addToWishlist={addToWishlist}
           />
 
-          <div className="h-8" />
-
           <ProductShare />
-
-          <div className="h-12" />
 
           <ReviewForm
             rating={rating}
@@ -242,19 +238,22 @@ function ProductDetails() {
             reviewLoading={reviewLoading}
             submitReview={submitReview}
           />
+
+          {/* Mobile & Tablet Only */}
+          <div className="lg:hidden">
+            <ReviewsList
+              reviews={product.reviews}
+              currentUserId={currentUser?._id}
+              deleteReview={deleteReview}
+            />
+          </div>
         </div>
       </div>
-      <div className="flex">
-        <div className="w-5"></div>
-        <div>
-          <div className="mt-20">
-            <Suspense fallback={null}>
-              <RelatedProducts productId={product._id} />
-            </Suspense>
-          </div>
-          <div className="h-4"></div>
-        </div>
-        <div className="w-5"></div>
+
+      <div>
+        <Suspense fallback={null}>
+          <RelatedProducts productId={product._id} />
+        </Suspense>
       </div>
     </div>
   );

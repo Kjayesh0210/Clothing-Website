@@ -9,60 +9,37 @@ function CheckoutSummary({
   handlePayment,
 }) {
   return (
-    <div
-      className="
-        bg-white
-        rounded-3xl
-        border
-        border-neutral-200
-        shadow-md
-        p-8
-      "
-    >
-      <div className="h-3"></div>
+    <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-md sm:p-8">
+      <div className="space-y-8">
+        <h2 className="text-2xl font-bold tracking-tight">Order Summary</h2>
 
-      <div className="grid lg:grid-cols-[10px_auto_10px] mt-10 space-y-6 px-4">
-        <div></div>
+        {/* Free Shipping */}
+        <div className="flex gap-4 rounded-2xl border border-green-200 bg-green-50 p-5">
+          <Truck size={24} className="mt-1 shrink-0 text-green-600" />
 
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Order Summary</h2>
+          <div>
+            <p className="font-semibold text-green-700">Free Delivery</p>
 
-          <div
-            className="
-              mt-8
-              rounded-2xl
-              border
-              border-green-200
-              bg-green-50
-              p-5
-              flex
-              gap-4
-            "
-          >
-            <Truck size={24} className="text-green-600 shrink-0 self-center" />
-
-            <div>
-              <p className="font-semibold text-green-700">Free Delivery</p>
-
-              <p className="text-sm text-green-600 mt-1 leading-6">
-                {shipping === 0
-                  ? "You've unlocked free shipping!"
-                  : "Free delivery on orders above ₹999."}
-              </p>
-            </div>
+            <p className="mt-1 text-sm leading-6 text-green-600">
+              {shipping === 0
+                ? "You've unlocked free shipping!"
+                : "Free delivery on orders above ₹999."}
+            </p>
           </div>
+        </div>
 
-          <div className="flex justify-between items-center">
+        {/* Price Details */}
+        <div className="space-y-5">
+          <div className="flex items-center justify-between">
             <span className="text-neutral-500">Subtotal</span>
-
-            <span className="font-semibold text-lg">₹{subtotal}</span>
+            <span className="text-lg font-semibold">₹{subtotal}</span>
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <span className="text-neutral-500">Shipping</span>
 
             <span
-              className={`font-semibold text-lg ${
+              className={`text-lg font-semibold ${
                 shipping === 0 ? "text-green-600" : "text-neutral-900"
               }`}
             >
@@ -70,125 +47,81 @@ function CheckoutSummary({
             </span>
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-neutral-500">
               <Tag size={18} />
               <span>Discount</span>
             </div>
 
-            <span className="font-semibold text-lg text-green-600">
+            <span className="text-lg font-semibold text-green-600">
               -₹{discount}
             </span>
           </div>
+        </div>
 
-          <div className="h-5"></div>
-
-          <div className="border-t border-neutral-200 pt-6">
-            <div className="flex justify-between items-center">
-              <span className="text-xl font-bold">Total</span>
-
-              <span className="text-2xl font-bold">₹{total}</span>
-            </div>
-          </div>
-
-          <div className="h-3"></div>
-
-          <button
-            onClick={handlePayment}
-            disabled={paymentLoading}
-            className="
-              mt-10
-              h-16
-              w-full
-              rounded-2xl
-              bg-black
-              text-white
-              font-semibold
-              text-lg
-              flex
-              items-center
-              justify-center
-              gap-3
-              transition-all
-              duration-300
-              hover:bg-neutral-800
-              hover:-translate-y-1
-              active:scale-[0.98]
-              disabled:opacity-70
-              disabled:cursor-not-allowed
-            "
-          >
-            {paymentLoading ? (
-              <>
-                <Loader2 size={22} className="animate-spin" />
-                Processing Payment...
-              </>
-            ) : (
-              <>
-                Continue to Payment
-                <ArrowRight size={22} />
-              </>
-            )}
-          </button>
-
-          <div className="h-3"></div>
-
-          <div
-            className="
-              mt-8
-              rounded-2xl
-              bg-neutral-50
-              border
-              border-neutral-200
-              p-5
-              flex
-              gap-4
-            "
-          >
-            <ShieldCheck size={24} className="text-neutral-700 shrink-0 mt-1" />
-
-            <div>
-              <p className="font-semibold">Secure Checkout</p>
-
-              <p className="text-sm text-neutral-500 mt-1 leading-6">
-                All transactions are encrypted and securely processed through
-                Razorpay. Your payment information is never stored on our
-                servers.
-              </p>
-            </div>
-          </div>
-
-          <div className="h-3"></div>
-
-          <div className="mt-8 pt-6 border-t border-neutral-200 space-y-4 text-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-neutral-500">Estimated Delivery</span>
-
-              <span className="font-medium text-neutral-900">
-                3–5 Business Days
-              </span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-neutral-500">Return Policy</span>
-
-              <span className="font-medium text-neutral-900">
-                7 Days Easy Returns
-              </span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-neutral-500">Payment Method</span>
-
-              <span className="font-medium text-neutral-900">Razorpay</span>
-            </div>
+        {/* Total */}
+        <div className="border-t border-neutral-200 pt-6">
+          <div className="flex items-center justify-between">
+            <span className="text-xl font-bold">Total</span>
+            <span className="text-2xl font-bold">₹{total}</span>
           </div>
         </div>
 
-        <div></div>
-      </div>
+        {/* Payment Button */}
+        <button
+          onClick={handlePayment}
+          disabled={paymentLoading}
+          className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-black text-base font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-neutral-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 sm:h-16 sm:text-lg"
+        >
+          {paymentLoading ? (
+            <>
+              <Loader2 size={22} className="animate-spin" />
+              Processing Payment...
+            </>
+          ) : (
+            <>
+              Continue to Payment
+              <ArrowRight size={22} />
+            </>
+          )}
+        </button>
 
-      <div className="h-3"></div>
+        {/* Security */}
+        <div className="flex gap-4 rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
+          <ShieldCheck size={24} className="mt-1 shrink-0 text-neutral-700" />
+
+          <div>
+            <p className="font-semibold">Secure Checkout</p>
+
+            <p className="mt-1 text-sm leading-6 text-neutral-500">
+              All transactions are encrypted and securely processed through
+              Razorpay. Your payment information is never stored on our servers.
+            </p>
+          </div>
+        </div>
+
+        {/* Extra Information */}
+        <div className="space-y-4 border-t border-neutral-200 pt-6 text-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-neutral-500">Estimated Delivery</span>
+            <span className="font-medium text-neutral-900">
+              3–5 Business Days
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-neutral-500">Return Policy</span>
+            <span className="font-medium text-neutral-900">
+              7 Days Easy Returns
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-neutral-500">Payment Method</span>
+            <span className="font-medium text-neutral-900">Razorpay</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

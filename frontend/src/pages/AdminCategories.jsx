@@ -108,17 +108,15 @@ function AdminCategories() {
     );
   }
   return (
-    <div className="min-h-screen bg-neutral-50 py-12">
-      <div className="flex">
-        <div className="w-26"></div>
-        <div className="mx-auto w-full px-6 xl:px-10">
-          <div className="h-10"></div>
-          <div className="mb-14">
-            <div className="flex items-center gap-5">
-              <div
-                className="
-              w-14
-              h-14
+    <div className="min-h-screen bg-neutral-50">
+      <div className="mx-auto w-full px-2 xl:px-10">
+        <div className="mx-auto flex items-center gap-4 w-full max-w-[1440px] px-4 mb-6 sm:px-6 lg:px-8 ">
+          <div
+            className="
+              w-22
+              h-20
+              lg:w-16
+              lg:h-16 
               rounded-2xl
               bg-black
               text-white
@@ -126,45 +124,41 @@ function AdminCategories() {
               items-center
               justify-center
             "
-              >
-                <FolderOpen size={30} />
-              </div>
-
-              <div>
-                <h1 className="text-4xl font-bold tracking-tight">
-                  Category Management
-                </h1>
-
-                <p className="text-lg text-neutral-500 mt-2">
-                  Organize your store products into categories.
-                </p>
-              </div>
-            </div>
+          >
+            <FolderOpen size={30} />
           </div>
-          <div className="h-5"></div>
 
-          <div
-            className="
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight">
+              Category Management
+            </h1>
+          </div>
+        </div>
+
+        <div
+          className="
           bg-white
-          rounded
+          rounded-xl
           border
           border-neutral-200
           shadow-sm
-          p-10
-          mb-12
+          p-5 sm:p-8 lg:p-8
+          mb-6
         "
-          >
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-bold">Add New Category</h2>
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 mb-8">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold">
+                Add New Category
+              </h2>
 
-                <p className="text-neutral-500 mt-2">
-                  Create categories to better organize your inventory.
-                </p>
-              </div>
+              <p className="text-neutral-500 mt-2">
+                Create categories to better organize your inventory.
+              </p>
+            </div>
 
-              <div
-                className="
+            <div
+              className="
               hidden
               md:flex
               w-16
@@ -174,24 +168,23 @@ function AdminCategories() {
               items-center
               justify-center
             "
-              >
-                <Tag size={28} />
-              </div>
+            >
+              <Tag size={28} />
             </div>
-          <div className="h-5"></div>
+          </div>
 
-            <div className="flex flex-col md:flex-row gap-5">
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter category name"
-                className="
+          <div className="flex flex-col md:flex-row gap-4">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter category name"
+              className="
               flex-1
               h-14
               rounded-2xl
               border
               border-neutral-300
-              px-5
+              p-5
               outline-none
               transition-all
               duration-300
@@ -199,14 +192,14 @@ function AdminCategories() {
               focus:ring-4
               focus:ring-neutral-100
             "
-              />
+            />
 
-              <button
-                onClick={addCategory}
-                disabled={adding}
-                className="
+            <button
+              onClick={addCategory}
+              disabled={adding}
+              className="
               h-14
-              md:px-8
+              w-full md:w-auto px-8
               rounded-2xl
               bg-black
               text-white
@@ -222,42 +215,43 @@ function AdminCategories() {
               active:scale-[0.98]
               disabled:opacity-60
             "
-              >
-                <Plus size={20} />
+            >
+              <Plus size={20} />
 
-                {adding ? "Adding..." : "Add Category"}
-              </button>
+              {adding ? "Adding..." : "Add Category"}
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold">
+                Available Categories
+              </h2>
+
+              <p className="text-neutral-500 mt-2">
+                {categories.length} Categories Available
+              </p>
             </div>
           </div>
-          <div className="h-5"></div>
 
-          <div>
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-bold">Available Categories</h2>
-
-                <p className="text-neutral-500 mt-2">
-                  {categories.length} Categories Available
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-5">
-              {" "}
-              {categories.length === 0 ? (
-                <div
-                  className="
+          <div className="space-y-5">
+            {" "}
+            {categories.length === 0 ? (
+              <div
+                className="
                 bg-white
                 rounded-[32px]
                 border
                 border-dashed
                 border-neutral-300
-                p-16
+                p-8 sm:p-12 lg:p-12
                 text-center
               "
-                >
-                  <div
-                    className="
+              >
+                <div
+                  className="
                   w-20
                   h-20
                   mx-auto
@@ -267,82 +261,80 @@ function AdminCategories() {
                   items-center
                   justify-center
                 "
-                  >
-                    <FolderOpen size={36} className="text-neutral-500" />
-                  </div>
-
-                  <h3 className="text-2xl font-bold mt-6">No Categories Yet</h3>
-
-                  <p className="text-neutral-500 mt-3 max-w-md mx-auto leading-7">
-                    Create your first category to organize your products and
-                    improve inventory management.
-                  </p>
-                </div>
-              ) : (
-                <div
-                  className="
-                grid
-                grid-cols-1
-                sm:grid-cols-2
-                lg:grid-cols-3
-                xl:grid-cols-4
-                gap-6
-                justify-items-center
-                "
                 >
-                  {categories.map((category) => (
-                    <div
-                      key={category._id}
-                      className="
+                  <FolderOpen size={36} className="text-neutral-500" />
+                </div>
+
+                <h3 className="text-xl sm:text-2xl font-bold">
+                  No Categories Yet
+                </h3>
+
+                <p className="text-neutral-500 mt-3 max-w-md mx-auto leading-7">
+                  Create your first category to organize your products and
+                  improve inventory management.
+                </p>
+              </div>
+            ) : (
+              <div
+                className="
+                grid
+                grid-cols-2
+                lg:grid-cols-3
+                2xl:grid-cols-4
+                gap-4 sm:gap-5
+                "
+              >
+                {categories.map((category) => (
+                  <div
+                    key={category._id}
+                    className="
                     w-full
-                    max-w-[320px]
+                    max-w-full
                     bg-white
                     rounded-2xl
                     border
                     border-neutral-200
                     shadow-sm
-                    p-6
+                    p-3 sm:p-5 lg:p-6
                     flex
                     flex-col
                     justify-between
-                    hover:-translate-y-1
-                    hover:shadow-xl
+                    transition-all duration-300 hover:-translate-y-1 hover:shadow-lg
                     transition-all
                     duration-300
                     "
-                    >
-                      <div className="flex justify-between items-start gap-5">
-                        <div className="flex items-start gap-4">
-                          <div
-                            className="
-                          h-14
-                          w-14
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3 flex-1 min-w-0">
+                        <div
+                          className="
+                          h-10
+                          w-10
+                          sm:h-12
+                          sm:w-12
+                          flex-shrink-0
                           rounded-xl
                           bg-neutral-100
                           flex
                           items-center
                           justify-center
                         "
-                          >
-                            <Tag size={22} />
-                          </div>
-
-                          <div>
-                            <h3 className="text-xl font-bold break-words">
-                              {category.name}
-                            </h3>
-
-                            <p className="text-neutral-500 mt-2">
-                              Product Category
-                            </p>
-                          </div>
+                        >
+                          <Tag size={22} />
                         </div>
 
-                        <button
-                          onClick={() => deleteCategory(category._id)}
-                          className="
-                        w-11
-                        h-11
+                        <div>
+                          <h3 className="text-sm sm:text-lg font-bold break-words leading-tight">
+                            {category.name}
+                          </h3>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => deleteCategory(category._id)}
+                        className="
+                        w-8 h-8 sm:w-10 sm:h-10
+                        flex-shrink-0 
                         rounded-xl
                         border
                         border-red-200
@@ -355,26 +347,26 @@ function AdminCategories() {
                         hover:bg-red-500
                         hover:text-white
                       "
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
 
-                      <div
-                        className="
-                      mt-8
-                      pt-6
+                    <div
+                      className="
+                      mt-2
+                      pt-2
                       border-t
                       border-neutral-200
                       flex
                       items-center
                       justify-between
                     "
-                      >
-                        <span className="text-sm text-neutral-500">Status</span>
+                    >
+                      <span className="text-sm text-neutral-500">Status</span>
 
-                        <span
-                          className="
+                      <span
+                        className="
                         px-4
                         py-2
                         rounded-full
@@ -383,18 +375,16 @@ function AdminCategories() {
                         text-sm
                         font-semibold
                       "
-                        >
-                          Active
-                        </span>
-                      </div>
+                      >
+                        Active
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-        <div className="w-26"></div>
       </div>
     </div>
   );

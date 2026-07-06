@@ -5,82 +5,31 @@ import { FaXTwitter } from "react-icons/fa6";
 
 function ProductShare() {
   return (
-    <div
-      className="
-        mt-8
-        rounded-2xl
-        border
-        border-neutral-200
-        bg-white
-        p-6
-      "
-    >
-      {/* Header */}
-
-      <div className="mb-6 flex items-center gap-2">
+    <div className="rounded-2xl border border-neutral-200 bg-white p-4 sm:p-6">
+      <div className="mb-5 flex items-center gap-2">
         <Share2 size={18} className="text-neutral-700" />
-
         <h3 className="text-lg font-semibold text-neutral-900">
           Share Product
         </h3>
       </div>
 
-      {/* Share Buttons */}
-
-      <div className="flex items-center justify-center gap-8">
-        {/* Copy */}
-
+      <div className="grid grid-cols-3 gap-4 sm:flex sm:items-center sm:justify-center sm:gap-8">
         <button
           title="Copy Link"
           onClick={() => {
             navigator.clipboard.writeText(window.location.href);
             toast.success("Link copied");
           }}
-          className="
-            group
-            flex
-            flex-col
-            items-center
-            gap-2
-            transition-all
-            duration-300
-          "
+          className="group flex flex-col items-center gap-2"
         >
-          <div
-            className="
-              flex
-              h-12
-              w-12
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-neutral-300
-              bg-white
-              transition-all
-              duration-300
-              group-hover:border-black
-              group-hover:shadow-sm
-            "
-          >
+          <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-neutral-300 transition-all duration-300 group-hover:border-black group-hover:shadow-sm">
             <Copy size={20} />
           </div>
 
-          <span
-            className="
-              text-xs
-              text-neutral-500
-              opacity-0
-              transition-all
-              duration-300
-              group-hover:opacity-100
-            "
-          >
+          <span className="text-xs text-neutral-500 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100">
             Copy
           </span>
         </button>
-
-        {/* WhatsApp */}
 
         <button
           title="WhatsApp"
@@ -90,51 +39,16 @@ function ProductShare() {
               "_blank",
             )
           }
-          className="
-            group
-            flex
-            flex-col
-            items-center
-            gap-2
-            transition-all
-            duration-300
-          "
+          className="group flex flex-col items-center gap-2"
         >
-          <div
-            className="
-              flex
-              h-12
-              w-12
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-green-200
-              text-green-600
-              transition-all
-              duration-300
-              group-hover:bg-green-50
-              group-hover:shadow-sm
-            "
-          >
+          <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-green-200 text-green-600 transition-all duration-300 group-hover:bg-green-50 group-hover:shadow-sm">
             <MessageCircle size={20} />
           </div>
 
-          <span
-            className="
-              text-xs
-              text-neutral-500
-              opacity-0
-              transition-all
-              duration-300
-              group-hover:opacity-100
-            "
-          >
+          <span className="text-xs text-neutral-500 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100">
             WhatsApp
           </span>
         </button>
-
-        {/* X */}
 
         <button
           title="Share on X"
@@ -146,44 +60,13 @@ function ProductShare() {
               "_blank",
             )
           }
-          className="
-            group
-            flex
-            flex-col
-            items-center
-            gap-2
-            transition-all
-            duration-300
-          "
+          className="group flex flex-col items-center gap-2"
         >
-          <div
-            className="
-              flex
-              h-12
-              w-12
-              items-center
-              justify-center
-              rounded-full
-              bg-black
-              text-white
-              transition-all
-              duration-300
-              group-hover:scale-105
-            "
-          >
+          <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-black text-white transition-transform duration-300 group-hover:scale-105">
             <FaXTwitter size={18} />
           </div>
 
-          <span
-            className="
-              text-xs
-              text-neutral-500
-              opacity-0
-              transition-all
-              duration-300
-              group-hover:opacity-100
-            "
-          >
+          <span className="text-xs text-neutral-500 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100">
             X
           </span>
         </button>

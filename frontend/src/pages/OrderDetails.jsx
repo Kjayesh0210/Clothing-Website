@@ -95,19 +95,20 @@ function OrderDetails() {
         responseType: "blob",
       });
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const url = window.URL.createObjectURL(response.data);
 
       const link = document.createElement("a");
 
       link.href = url;
-
-      link.setAttribute("download", `invoice-${order._id}.pdf`);
+      link.download = `THREADDOT-Invoice-${order._id}.pdf`;
 
       document.body.appendChild(link);
 
       link.click();
 
-      link.remove();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.log(error);
     }
@@ -174,52 +175,34 @@ function OrderDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 py-12">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section className="min-h-screen bg-neutral-50 py-8 md:py-12">
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-16">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-5xl font-bold tracking-tight text-neutral-900">
+        <div className="mb-10 md:mb-12">
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl lg:text-5xl">
             Order Details
           </h1>
 
-          <p className="mt-3 text-lg text-neutral-500">
+          <p className="mt-3 text-sm text-neutral-500 sm:text-base lg:text-lg">
             View your order summary, delivery progress and purchased items.
           </p>
         </div>
 
         {/* Summary + Timeline */}
-        <div className="grid lg:grid-cols-[2fr_1fr] gap-8 mb-12">
+        <div className="mb-10 grid gap-8 lg:grid-cols-[2fr_1fr]">
           {/* Summary */}
-          <div
-            className="
-            bg-white
-            rounded-3xl
-            border
-            border-neutral-200
-            shadow-sm
-            p-8
-          "
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+          <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-8">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-2xl font-bold">Order Summary</h2>
 
-                <p className="text-neutral-500 mt-2">
+                <p className="mt-2 break-all text-sm text-neutral-500">
                   Order ID #{order._id.slice(-8).toUpperCase()}
                 </p>
               </div>
 
               <span
-                className={`
-                inline-flex
-                items-center
-                justify-center
-                px-5
-                py-2
-                rounded-full
-                text-sm
-                font-semibold
-                ${
+                className={`inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold ${
                   order.status === "Delivered"
                     ? "bg-green-100 text-green-700"
                     : order.status === "Cancelled"
@@ -227,23 +210,24 @@ function OrderDetails() {
                       : order.status === "Shipped"
                         ? "bg-blue-100 text-blue-700"
                         : "bg-yellow-100 text-yellow-700"
-                }
-              `}
+                }`}
               >
                 {order.status}
               </span>
             </div>
 
-            <div className="border-t border-neutral-200 my-8"></div>
+            <div className="my-8 border-t border-neutral-200" />
 
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between">
                 <span className="text-neutral-500">Total Amount</span>
 
-                <span className="text-3xl font-bold">₹{order.totalAmount}</span>
+                <span className="text-2xl font-bold sm:text-3xl">
+                  ₹{order.totalAmount}
+                </span>
               </div>
 
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <span className="text-neutral-500">Payment</span>
 
                 <span
@@ -255,20 +239,20 @@ function OrderDetails() {
                 </span>
               </div>
 
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
                 <span className="text-neutral-500">Payment ID</span>
 
-                <span className="font-medium text-neutral-800">
+                <span className="break-all font-medium text-neutral-800">
                   {order.paymentId || "-"}
                 </span>
               </div>
 
-              <div className="flex justify-between items-start gap-6">
-                <span className="text-neutral-500 shrink-0">
+              <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
+                <span className="shrink-0 text-neutral-500">
                   Delivery Address
                 </span>
 
-                <span className="text-right font-medium leading-7">
+                <span className="font-medium leading-7 sm:text-right">
                   {order.address}
                 </span>
               </div>
@@ -276,7 +260,7 @@ function OrderDetails() {
               {order.status !== "Delivered" &&
                 order.status !== "Cancelled" &&
                 order.estimatedDelivery && (
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
                     <span className="text-neutral-500">Estimated Delivery</span>
 
                     <span className="font-semibold">
@@ -293,22 +277,11 @@ function OrderDetails() {
                 )}
             </div>
 
-            <div className="flex flex-wrap gap-4 mt-10">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               {(order.status === "Pending" || order.status === "Confirmed") && (
                 <button
                   onClick={cancelOrder}
-                  className="
-                  h-14
-                  px-8
-                  rounded-2xl
-                  border-2
-                  border-red-200
-                  text-red-600
-                  font-semibold
-                  transition-all
-                  duration-300
-                  hover:bg-red-50
-                "
+                  className="h-14 rounded-2xl border-2 border-red-200 px-8 font-semibold text-red-600 transition hover:bg-red-50"
                 >
                   Cancel Order
                 </button>
@@ -316,18 +289,7 @@ function OrderDetails() {
 
               <button
                 onClick={downloadInvoice}
-                className="
-                h-14
-                px-8
-                rounded-2xl
-                bg-black
-                text-white
-                font-semibold
-                transition-all
-                duration-300
-                hover:bg-neutral-800
-                hover:-translate-y-0.5
-              "
+                className="h-14 rounded-2xl bg-black px-8 font-semibold text-white transition hover:bg-neutral-800"
               >
                 Download Invoice
               </button>
@@ -335,42 +297,26 @@ function OrderDetails() {
           </div>
 
           {/* Timeline */}
-          <div
-            className="
-            bg-white
-            rounded-3xl
-            border
-            border-neutral-200
-            shadow-sm
-            p-8
-          "
-          >
+          <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-8 lg:sticky lg:top-24">
             <h2 className="text-2xl font-bold">Order Tracking</h2>
 
-            <p className="text-neutral-500 mt-2 mb-8">
+            <p className="mb-8 mt-2 text-neutral-500">
               Track your order status in real time.
             </p>
 
             <OrderTimeline status={order.status} />
           </div>
         </div>
+
         {/* Return Request */}
         {order.status === "Delivered" && !order.returnRequest?.requested && (
-          <div
-            className="
-            bg-white
-            rounded-3xl
-            border
-            border-neutral-200
-            shadow-sm
-            p-8
-            mb-12
-          "
-          >
+          <div className="mb-10 rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-8">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-bold">Request a Return</h2>
+              <h2 className="text-2xl font-bold sm:text-3xl">
+                Request a Return
+              </h2>
 
-              <p className="mt-3 text-neutral-500 leading-7">
+              <p className="mt-3 leading-7 text-neutral-500">
                 If you're not completely satisfied with your purchase, let us
                 know the reason for your return request.
               </p>
@@ -379,38 +325,12 @@ function OrderDetails() {
                 placeholder="Tell us why you want to return this order..."
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                className="
-                mt-8
-                w-full
-                h-40
-                rounded-2xl
-                border
-                border-neutral-300
-                p-5
-                resize-none
-                outline-none
-                transition
-                focus:border-black
-                focus:ring-4
-                focus:ring-neutral-100
-              "
+                className="mt-6 h-40 w-full resize-none rounded-2xl border border-neutral-300 p-5 outline-none transition focus:border-black focus:ring-4 focus:ring-neutral-100"
               />
 
               <button
                 onClick={requestReturn}
-                className="
-                mt-8
-                h-14
-                px-8
-                rounded-2xl
-                bg-black
-                text-white
-                font-semibold
-                transition-all
-                duration-300
-                hover:bg-neutral-800
-                hover:-translate-y-0.5
-              "
+                className="mt-6 h-14 rounded-2xl bg-black px-8 font-semibold text-white transition hover:bg-neutral-800"
               >
                 Submit Return Request
               </button>
@@ -420,57 +340,37 @@ function OrderDetails() {
 
         {/* Return Status */}
         {order.returnRequest?.requested && (
-          <div
-            className="
-            bg-white
-            rounded-3xl
-            border
-            border-neutral-200
-            shadow-sm
-            p-8
-            mb-12
-          "
-          >
-            <div className="flex items-center justify-between flex-wrap gap-6">
+          <div className="mb-10 rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-3xl font-bold">Return Request</h2>
+                <h2 className="text-2xl font-bold sm:text-3xl">
+                  Return Request
+                </h2>
 
-                <p className="text-neutral-500 mt-2">
+                <p className="mt-2 text-neutral-500">
                   Your request has been submitted successfully.
                 </p>
               </div>
 
-              <span
-                className="
-                inline-flex
-                items-center
-                rounded-full
-                bg-yellow-100
-                text-yellow-700
-                px-5
-                py-2
-                font-semibold
-              "
-              >
+              <span className="inline-flex w-fit items-center rounded-full bg-yellow-100 px-5 py-2 font-semibold text-yellow-700">
                 {order.returnRequest.status}
               </span>
             </div>
 
-            <div className="border-t border-neutral-200 my-8"></div>
+            <div className="my-8 border-t border-neutral-200" />
 
             <div>
-              <p className="text-neutral-500 mb-2">Reason</p>
-
-              <p className="leading-8">{order.returnRequest.reason}</p>
+              <p className="mb-2 text-neutral-500">Reason</p>
+              <p className="leading-7">{order.returnRequest.reason}</p>
             </div>
           </div>
         )}
 
         {/* Products */}
         <div className="mb-8">
-          <h2 className="text-4xl font-bold">Ordered Products</h2>
+          <h2 className="text-3xl font-bold sm:text-4xl">Ordered Products</h2>
 
-          <p className="mt-3 text-neutral-500">
+          <p className="mt-2 text-neutral-500">
             Products included in this order.
           </p>
         </div>
@@ -479,78 +379,35 @@ function OrderDetails() {
           {order.products.map((item) => (
             <div
               key={`${item.product._id}-${item.size}`}
-              className="
-              bg-white
-              rounded-3xl
-              border
-              border-neutral-200
-              shadow-sm
-              hover:shadow-lg
-              hover:-translate-y-1
-              transition-all
-              duration-300
-              p-6
-            "
+              className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-6"
             >
-              <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex flex-row-reverse gap-4 sm:flex-row sm:gap-6">
                 <img
                   src={item.product.images?.[0]}
                   alt={item.product.title}
                   loading="lazy"
-                  className="
-                  w-32
-                  h-32
-                  rounded-2xl
-                  object-cover
-                  bg-neutral-100
-                  shrink-0
-                "
+                  className="h-28 w-24 shrink-0 rounded-2xl bg-neutral-100 object-cover sm:h-32 sm:w-32"
                 />
 
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold">{item.product.title}</h3>
+                  <h3 className="text-lg font-bold sm:text-2xl">
+                    {item.product.title}
+                  </h3>
 
-                  <p className="mt-2 text-neutral-500">
+                  <p className="mt-2 text-sm text-neutral-500">
                     {item.product.category}
                   </p>
 
-                  <div className="flex flex-wrap gap-3 mt-6">
-                    <span
-                      className="
-                      bg-neutral-100
-                      rounded-full
-                      px-4
-                      py-2
-                      text-sm
-                      font-medium
-                    "
-                    >
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-neutral-100 px-4 py-2 text-sm font-medium">
                       ₹{item.product.price}
                     </span>
 
-                    <span
-                      className="
-                      bg-neutral-100
-                      rounded-full
-                      px-4
-                      py-2
-                      text-sm
-                      font-medium
-                    "
-                    >
+                    <span className="rounded-full bg-neutral-100 px-4 py-2 text-sm font-medium">
                       Size {item.size || "N/A"}
                     </span>
 
-                    <span
-                      className="
-                      bg-neutral-100
-                      rounded-full
-                      px-4
-                      py-2
-                      text-sm
-                      font-medium
-                    "
-                    >
+                    <span className="rounded-full bg-neutral-100 px-4 py-2 text-sm font-medium">
                       Qty {item.quantity}
                     </span>
                   </div>
@@ -560,7 +417,7 @@ function OrderDetails() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

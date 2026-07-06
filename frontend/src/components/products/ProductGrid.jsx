@@ -5,7 +5,7 @@ import ProductSkeleton from "./ProductSkeleton";
 function ProductGrid({ loading, products }) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
         {[...Array(8)].map((_, index) => (
           <ProductSkeleton key={index} />
         ))}
@@ -20,7 +20,7 @@ function ProductGrid({ loading, products }) {
           No products found
         </h3>
 
-        <p className="text-gray-500 mt-2">
+        <p className="mt-2 text-gray-500">
           Try changing your filters or search keyword.
         </p>
       </div>
@@ -28,7 +28,7 @@ function ProductGrid({ loading, products }) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
       {products.map((product) => (
         <ProductCard key={product._id} product={product} />
       ))}

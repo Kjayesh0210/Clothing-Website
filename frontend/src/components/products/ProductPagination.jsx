@@ -4,103 +4,68 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 function ProductPagination({ loading, page, totalPages, setPage }) {
   if (loading || totalPages <= 1) return null;
 
-  return (
-    <div
-      className="
-        mt-20
-        flex
-        flex-col
-        items-center
-        gap-6
-      "
-    >
-      {/* Page Info */}
+  const pages = [];
 
-      <p
-        className="
-          text-sm
-          uppercase
-          tracking-[0.25em]
-          text-neutral-500
-        "
-      >
+  if (page > 1) pages.push(page - 1);
+  pages.push(page);
+  if (page < totalPages) pages.push(page + 1);
+
+  return (
+    <div className="mt-16 flex flex-col items-center gap-5">
+      <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
         Page {page} of {totalPages}
       </p>
 
-      {/* Pagination */}
-
-      <div
-        className="
-          inline-flex
-          items-center
-          gap-3
-          rounded-full
-          border
-          border-neutral-200
-          bg-white
-          p-3
-          shadow-[0_12px_40px_rgba(0,0,0,0.06)]
-        "
-      >
-        {/* Previous */}
-
+      <div className="flex w-full max-w-xl items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3 shadow-sm">
         <button
           disabled={page === 1}
-          
           onClick={() => setPage(page - 1)}
           className="
             flex
             items-center
             gap-2
-            rounded-full
-            px-5
-            py-3
+            rounded-lg
+            px-3
+            py-2
             text-sm
             font-medium
             text-neutral-700
-            transition-all
-            duration-300
+            transition
             hover:bg-neutral-100
-            hover:-translate-y-0.5
-            disabled:opacity-40
             disabled:cursor-not-allowed
-            disabled:hover:bg-transparent
-            disabled:hover:translate-y-0
+            disabled:opacity-40
           "
         >
           <ChevronLeft size={18} />
-
-          {/* <span>Previous</span> */}
+          <span className="hidden sm:inline">Previous</span>
         </button>
 
-        {/* Page Numbers */}
-
-        <div className="flex items-center gap-2">
-          {[...Array(totalPages)].map((_, index) => (
+        <div className="mx-2 flex items-center gap-2">
+          {pages.map((number) => (
             <button
-              key={index}
-              onClick={() => setPage(index + 1)}
+              key={number}
+              onClick={() => setPage(number)}
               className={`
-                h-11
-                w-11
-                rounded-full
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
+                rounded-lg
                 text-sm
                 font-semibold
-                transition-all
-                duration-300
+                transition
                 ${
-                  page === index + 1
-                    ? "bg-black text-white shadow-lg scale-105"
-                    : "text-neutral-700 hover:bg-neutral-100 hover:-translate-y-0.5"
+                  number === page
+                    ? "bg-black text-white"
+                    : "text-neutral-700 hover:bg-neutral-100"
                 }
               `}
             >
-              {index + 1}
+              {number}
             </button>
           ))}
         </div>
-
-        {/* Next */}
 
         <button
           disabled={page === totalPages}
@@ -109,24 +74,19 @@ function ProductPagination({ loading, page, totalPages, setPage }) {
             flex
             items-center
             gap-2
-            rounded-full
-            px-5
-            py-3
+            rounded-lg
+            px-3
+            py-2
             text-sm
             font-medium
             text-neutral-700
-            transition-all
-            duration-300
+            transition
             hover:bg-neutral-100
-            hover:-translate-y-0.5
-            disabled:opacity-40
             disabled:cursor-not-allowed
-            disabled:hover:bg-transparent
-            disabled:hover:translate-y-0
+            disabled:opacity-40
           "
         >
-          {/* <span>Next</span> */}
-
+          <span className="hidden sm:inline">Next</span>
           <ChevronRight size={18} />
         </button>
       </div>

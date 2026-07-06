@@ -7,14 +7,22 @@ import Newsletter from "../components/home/Newsletter";
 function Home() {
   return (
     <main className="overflow-x-hidden">
-      <Hero />
-      <div className="h-16"></div>
-      <Categories />
-      <div className="h-16"></div>
-      <FeaturedProducts />
-      <div className="h-16"></div>
-      <WhyChooseUs />
-      <div className="bg-[#F8F8F8] h-16"></div>
+      <section className="pb-10 md:pb-14 lg:pb-16">
+        <Hero />
+      </section>
+
+      <section className="pb-10 md:pb-14 lg:pb-16">
+        <Categories />
+      </section>
+
+      <section className="pb-10 md:pb-14 lg:pb-16">
+        <FeaturedProducts />
+      </section>
+
+      <section className="bg-[#F8F8F8] pb-10 md:pb-14 lg:pb-16">
+        <WhyChooseUs />
+      </section>
+
       <Newsletter />
     </main>
   );

@@ -159,147 +159,93 @@ function MyOrders() {
 
   const canCancel = (status) => status === "Pending" || status === "Confirmed";
   return (
-    <div className="min-h-screen w-full bg-neutral-50 flex justify-center">
-      <div className="max-w-6xl w-full px-4">
-        <div className="h-10"></div>
-        <div className="mb-16">
-          <div className="flex items-center gap-6">
-            <div className="w-14 h-14 rounded-2xl bg-black text-white flex items-center justify-center">
-              <ShoppingBag size={28} />
+    <section className="min-h-screen bg-neutral-50 py-8 md:py-10">
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-16">
+        {/* Header */}
+        <div className="mb-10 md:mb-14">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black text-white sm:h-14 sm:w-14">
+              <ShoppingBag size={26} />
             </div>
 
             <div>
-              <h1 className="text-4xl font-bold tracking-tight">My Orders</h1>
+              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                My Orders
+              </h1>
 
-              <p className="text-neutral-500 mt-2">
+              <p className="mt-2 text-sm text-neutral-500 sm:text-base">
                 Track your purchases and manage your recent orders.
               </p>
             </div>
           </div>
-          <div className="h-5"></div>
         </div>
 
         {orders.length === 0 ? (
-          <div
-            className="
-            bg-white
-            rounded-3xl
-            border
-            border-neutral-200
-            shadow-sm
-            p-16
-            text-center
-          "
-          >
-            <div className="w-24 h-24 mx-auto rounded-full bg-neutral-100 flex items-center justify-center">
+          <div className="rounded-3xl border border-neutral-200 bg-white px-6 py-10 text-center shadow-sm sm:px-10 sm:py-16">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-neutral-100 sm:h-24 sm:w-24">
               <ShoppingBag size={42} className="text-neutral-500" />
             </div>
 
-            <h2 className="mt-8 text-3xl font-bold">No Orders Yet</h2>
+            <h2 className="mt-8 text-2xl font-bold sm:text-3xl">
+              No Orders Yet
+            </h2>
 
-            <p className="mt-4 text-neutral-500 max-w-md mx-auto leading-7">
+            <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-neutral-500 sm:text-base">
               Looks like you haven't placed your first order yet. Discover our
               latest collection and start shopping.
             </p>
 
             <Link
               to="/products"
-              className="
-              mt-10
-              inline-flex
-              items-center
-              gap-2
-              bg-black
-              text-white
-              px-8
-              h-14
-              rounded-2xl
-              font-semibold
-              hover:bg-neutral-800
-              transition
-            "
+              className="mx-auto mt-8 inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-black px-8 font-semibold text-white transition hover:bg-neutral-800"
             >
               Continue Shopping
               <ArrowRight size={20} />
             </Link>
           </div>
         ) : (
-          <div className="gap-4 flex flex-col">
+          <div className="space-y-6">
             {orders.map((order) => {
               const status = getStatus(order.status);
-
               const StatusIcon = status.icon;
 
               return (
                 <div
                   key={order._id}
-                  className="
-                  bg-white
-                  rounded-3xl
-                  border
-                  border-neutral-200
-                  shadow-sm
-                  hover:shadow-lg
-                  transition-all
-                  duration-300
-                  p-8
-                "
+                  className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-lg sm:p-8"
                 >
-                  <div className="flex flex-col lg:flex-row lg:justify-between gap-8">
-                    <div></div>
+                  <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
+                    {/* Left */}
                     <div className="flex-1">
-                      <div className="flex flex-wrap items-center gap-4">
-                        <h2 className="text-3xl font-bold">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h2 className="text-2xl font-bold sm:text-3xl">
                           ₹{order.totalAmount}
                         </h2>
 
                         <div
-                          className={`
-                          inline-flex
-                          items-center
-                          gap-2
-                          px-4
-                          py-2
-                          rounded-full
-                          border
-                          text-sm
-                          font-semibold
-                          ${status.color}
-                        `}
+                          className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold ${status.color}`}
                         >
                           <StatusIcon size={18} />
-
                           {order.status}
                         </div>
 
                         <div
-                          className={`
-                          inline-flex
-                          items-center
-                          gap-2
-                          px-4
-                          py-2
-                          rounded-full
-                          text-sm
-                          font-semibold
-                          ${
+                          className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${
                             order.isPaid
                               ? "bg-green-100 text-green-700"
                               : "bg-yellow-100 text-yellow-700"
-                          }
-                        `}
+                          }`}
                         >
                           <CreditCard size={16} />
-
                           {order.isPaid ? "Paid" : "Pending"}
                         </div>
                       </div>
 
-                      <div className="mt-8 grid sm:grid-cols-2 gap-6">
+                      <div className="mt-6 grid gap-6 sm:grid-cols-2">
                         <div>
                           <p className="text-sm text-neutral-500">Order ID</p>
 
-                          <p className="font-semibold mt-2 break-all">
+                          <p className="mt-2 break-all font-semibold">
                             {order._id}
                           </p>
                         </div>
@@ -307,7 +253,7 @@ function MyOrders() {
                         <div>
                           <p className="text-sm text-neutral-500">Ordered On</p>
 
-                          <p className="font-semibold mt-2">
+                          <p className="mt-2 font-semibold">
                             {new Date(order.createdAt).toLocaleDateString(
                               "en-IN",
                               {
@@ -321,23 +267,11 @@ function MyOrders() {
                       </div>
                     </div>
 
-                    <div className="lg:w-64 flex flex-col gap-4">
-                      <div> </div>
+                    {/* Actions */}
+                    <div className="flex flex-col gap-4 lg:w-64">
                       <Link
                         to={`/orders/${order._id}`}
-                        className="
-                        h-14
-                        rounded-2xl
-                        bg-black
-                        text-white
-                        font-semibold
-                        flex
-                        items-center
-                        justify-center
-                        gap-2
-                        hover:bg-neutral-800
-                        transition
-                      "
+                        className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-black font-semibold text-white transition hover:bg-neutral-800"
                       >
                         View Details
                         <ArrowRight size={18} />
@@ -346,21 +280,11 @@ function MyOrders() {
                       {canCancel(order.status) && (
                         <button
                           onClick={() => cancelOrder(order._id)}
-                          className="
-                          h-14
-                          rounded-2xl
-                          border-2
-                          border-red-200
-                          text-red-600
-                          font-semibold
-                          hover:bg-red-50
-                          transition
-                        "
+                          className="h-14 rounded-2xl border-2 border-red-200 font-semibold text-red-600 transition hover:bg-red-50"
                         >
                           Cancel Order
                         </button>
                       )}
-                      <div> </div>
                     </div>
                   </div>
                 </div>
@@ -369,7 +293,7 @@ function MyOrders() {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 

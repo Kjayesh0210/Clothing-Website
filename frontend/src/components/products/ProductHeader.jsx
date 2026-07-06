@@ -2,10 +2,10 @@ import React from "react";
 
 function ProductHeader({ loading, products }) {
   return (
-    <div className="mt-6 mb-8">
-      <div className="flex items-end justify-between py-4">
+    <div>
+      <div className="flex items-end justify-between px-2">
         <div>
-          <h1 className="my-5 text-4xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
             Products
           </h1>
 
