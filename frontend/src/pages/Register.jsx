@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../services/api";
 import toast from "react-hot-toast";
@@ -13,23 +14,43 @@ function Register() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return;
+
+    if (!form.name.trim()) {
+      return toast.error("Please enter your name");
+    }
+
+    if (!form.email.trim()) {
+      return toast.error("Please enter your email");
+    }
+
+    if (!form.password.trim()) {
+      return toast.error("Please enter your password");
+    }
+
+    if (form.password.length < 6) {
+      return toast.error("Password must be at least 6 characters");
+    }
+    
+    setLoading(true);
 
     try {
       const res = await api.post("/auth/register", form);
 
       toast.success("Registered Successfully");
 
-      console.log(res.data);
-
       const redirectTo = location.state?.redirectTo || "/";
 
       navigate(redirectTo);
     } catch (err) {
-      console.log(err);
-      toast.error("Failed to register");
+      toast.error(err.response?.data?.message || "Failed to register");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -151,6 +172,7 @@ function Register() {
 
               <button
                 type="submit"
+                disabled={loading}
                 className="
                 mt-6
                 h-14
@@ -162,9 +184,22 @@ function Register() {
                 text-white
                 transition
                 hover:bg-neutral-800
+                disabled:cursor-not-allowed
+                disabled:opacity-70
+                flex
+                items-center
+                justify-center
+                gap-2
               "
               >
-                Create Account
+                {loading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Creating Account...
+                  </>
+                ) : (
+                  "Create Account"
+                )}
               </button>
 
               <div className="mt-5 text-center text-sm text-neutral-500 sm:mt-6">
