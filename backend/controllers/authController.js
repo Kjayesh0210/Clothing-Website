@@ -28,9 +28,11 @@ const register = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      user,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
     });
-    
+
     try {
       await sendEmail(
         user.email,

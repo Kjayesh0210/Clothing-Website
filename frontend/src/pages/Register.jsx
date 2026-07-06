@@ -17,7 +17,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    console.count("handleSubmit");
+
     e.preventDefault();
 
     if (loading) return;
@@ -44,7 +44,7 @@ function Register() {
 
       toast.success("Registered Successfully");
 
-      const redirectTo = location.state?.redirectTo || "/login";
+      const redirectTo = "/login";
 
       navigate(redirectTo);
     } catch (err) {
