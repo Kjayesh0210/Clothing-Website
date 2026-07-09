@@ -1,7 +1,14 @@
 import React from "react";
 import { Heart, ShoppingBag } from "lucide-react";
 
-function ProductActions({ product, cartLoading, addToCart, addToWishlist }) {
+function ProductActions({
+  product,
+  cartLoading,
+  addToCart,
+  addToWishlist,
+  removeFromWishlist,
+  isInWishlist,
+}) {
   const inStock = product.sizes?.some((s) => s.stock > 0);
 
   return (
@@ -58,7 +65,7 @@ function ProductActions({ product, cartLoading, addToCart, addToWishlist }) {
       )}
 
       <button
-        onClick={addToWishlist}
+        onClick={isInWishlist ? removeFromWishlist : addToWishlist}
         className="
         flex
         h-12
@@ -83,8 +90,12 @@ function ProductActions({ product, cartLoading, addToCart, addToWishlist }) {
         sm:text-base
       "
       >
-        <Heart className="h-5 w-5" />
-        Add To Wishlist
+        <Heart
+          className={`h-5 w-5 ${
+            isInWishlist ? "fill-red-500 text-red-500" : ""
+          }`}
+        />
+        {isInWishlist ? "Remove From Wishlist" : "Add To Wishlist"}
       </button>
     </div>
   );

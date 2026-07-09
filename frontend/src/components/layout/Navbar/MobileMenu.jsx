@@ -145,7 +145,7 @@ function MobileMenu({
           </NavLink>
 
           <NavLink
-            to="/products?gender=Men"
+            to="/products?gender=Male"
             onClick={() => setMenuOpen(false)}
             className="
             block
@@ -162,7 +162,7 @@ function MobileMenu({
           </NavLink>
 
           <NavLink
-            to="/products?gender=Women"
+            to="/products?gender=Female"
             onClick={() => setMenuOpen(false)}
             className="
             block

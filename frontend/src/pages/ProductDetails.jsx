@@ -28,8 +28,13 @@ function ProductDetails() {
   const [reviewLoading, setReviewLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
   const currentUser = JSON.parse(localStorage.getItem("user"));
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [canReview, setCanReview] = useState(false);
+
   useEffect(() => {
     fetchProduct();
+    checkWishlist();
+    checkCanReview();
   }, [id]);
 
   const fetchProduct = async () => {
@@ -38,6 +43,8 @@ function ProductDetails() {
 
       setProduct(res.data);
       setSelectedImage(res.data.images?.[0]);
+
+      checkWishlist(res.data._id);
     } catch (error) {
       console.log(error);
     }
@@ -114,7 +121,7 @@ function ProductDetails() {
           },
         },
       );
-
+      setIsInWishlist(true);
       toast.success("Added To Wishlist");
     } catch (error) {
       console.log(error);
@@ -188,6 +195,60 @@ function ProductDetails() {
     }
   };
 
+  const checkWishlist = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const res = await api.get("/wishlist", {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      const exists = res.data.products.some((item) => item._id === product._id);
+
+      setIsInWishlist(exists);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeFromWishlist = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await api.delete(`/wishlist/${product._id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      setIsInWishlist(false);
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to remove product");
+    }
+  };
+
+  const checkCanReview = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) return;
+
+      const res = await api.get(`/products/${id}/can-review`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      setCanReview(res.data.canReview);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (!product) {
     return <ProductDetailsSkeleton />;
   }
@@ -226,6 +287,8 @@ function ProductDetails() {
             cartLoading={cartLoading}
             addToCart={addToCart}
             addToWishlist={addToWishlist}
+            removeFromWishlist={removeFromWishlist}
+            isInWishlist={isInWishlist}
           />
 
           <ProductShare />
@@ -237,6 +300,7 @@ function ProductDetails() {
             setComment={setComment}
             reviewLoading={reviewLoading}
             submitReview={submitReview}
+            canReview={canReview}
           />
 
           {/* Mobile & Tablet Only */}

@@ -42,10 +42,11 @@ const orderSchema = new mongoose.Schema(
       default: false,
     },
 
-    paidAt: Date,
-
     paymentId: String,
     estimatedDelivery: Date,
+    paidAt: Date,
+    requestedAt: Date,
+
     returnRequest: {
       requested: {
         type: Boolean,
@@ -63,7 +64,6 @@ const orderSchema = new mongoose.Schema(
         default: "Pending",
       },
 
-      requestedAt: Date,
     },
   },
   {

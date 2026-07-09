@@ -115,6 +115,7 @@ function Login() {
                       email: e.target.value,
                     })
                   }
+                  placeholder="Email"
                   className="
                   h-14
                   w-full

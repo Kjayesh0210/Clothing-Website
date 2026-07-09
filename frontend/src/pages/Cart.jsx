@@ -1,5 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import api from "../services/api";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 
 import CartItem from "../components/cart/CartItem";
@@ -8,6 +10,7 @@ import EmptyCart from "../components/cart/EmptyCart";
 import CartSkeleton from "../components/cart/CartSkeleton";
 
 function Cart() {
+  const navigate = useNavigate();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -85,6 +88,42 @@ function Cart() {
     }
   };
 
+  const addToWishlist = async (productId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login", {
+          state: {
+            redirectTo: "/cart",
+          },
+        });
+
+        return false;
+      }
+
+      await api.post(
+        "/wishlist/add",
+        { productId },
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      );
+
+      toast.success("Moved to Wishlist");
+      return true;
+    } catch (error) {
+      if (error.response?.status !== 400) {
+        toast.error("Failed to add to Wishlist");
+      }
+
+      // Product already exists in wishlist
+      return true;
+    }
+  };
+
   if (loading) {
     return <CartSkeleton />;
   }
@@ -129,10 +168,10 @@ function Cart() {
           <div className="flex flex-col gap-6 md:gap-6">
             {cart.products.map((item) => (
               <CartItem
-                key={`${item.product._id}-${item.size}`}
                 item={item}
                 updateQuantity={updateQuantity}
                 removeItem={removeItem}
+                addToWishlist={addToWishlist}
               />
             ))}
           </div>

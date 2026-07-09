@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
-
+import THREADDOT from "./../../../assets/photos/THREADDOT.png";
+import THREADDOT2 from "./../../../assets/photos/THREADDOTLOGO.png";
+import THREADDOT3 from "./../../../assets/photos/3.png";
 function Logo() {
   return (
     <Link
@@ -7,14 +9,9 @@ function Logo() {
       className="
       shrink-0
       select-none
-      text-[26px]
-      font-black
-      uppercase
-      tracking-[0.12em]
-      text-neutral-900
       "
     >
-      THREADDOT
+      <img src={THREADDOT3} alt="" className="h-12 w-auto" />
     </Link>
   );
 }

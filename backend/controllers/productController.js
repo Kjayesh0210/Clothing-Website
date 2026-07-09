@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const Order = require("../models/Order");
 
 const createProduct = async (req, res) => {
   try {
@@ -244,8 +245,6 @@ const updateProduct = async (req, res) => {
 const addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
-    console.log("inside");
-    console.log(req.user);
     if (!rating || rating < 1 || rating > 5) {
       return res.status(400).json({
         message: "Rating must be between 1 and 5",
@@ -265,6 +264,17 @@ const addReview = async (req, res) => {
       });
     }
 
+    const hasPurchased = await Order.findOne({
+      user: req.user.id,
+      orderStatus: "Delivered",
+      "products.product": product._id,
+    });
+
+    if (!hasPurchased) {
+      return res.status(403).json({
+        message: "You can review only products you have purchased.",
+      });
+    }
     const alreadyReviewed = product.reviews.find(
       (review) => review.user.toString() === req.user.id,
     );
@@ -392,17 +402,35 @@ const getRelatedProducts = async (req, res) => {
 
 const searchProducts = async (req, res) => {
   try {
-    const keyword = req.query.keyword;
+    const keyword = req.query.keyword.trim().toLowerCase();
+    let query = {};
+    if (/^men('?s)?$/.test(keyword)) {
+      query = {
+        gender: {
+          $regex: "^male$",
+          $options: "i",
+        },
+      };
+    } else if (/^women('?s)?$/.test(keyword)) {
+      query = {
+        gender: {
+          $regex: "^female$",
+          $options: "i",
+        },
+      };
+    } else {
+      const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-    const products = await Product.find({
-      title: {
-        $regex: keyword,
-        $options: "i",
-      },
-    })
+      query = {
+        title: {
+          $regex: `\\b${escapedKeyword}`,
+          $options: "i",
+        },
+      };
+    }
+    const products = await Product.find(query)
       .select("title images price")
       .limit(5);
-
     res.json(products);
   } catch (error) {
     res.status(500).json({
@@ -431,6 +459,23 @@ const getLowStockProducts = async (req, res) => {
   }
 };
 
+const canReview = async (req, res) => {
+  try {
+    const hasPurchased = await Order.findOne({
+      user: req.user.id,
+      "products.product": req.params.id,
+    });
+
+    res.json({
+      canReview: !!hasPurchased,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createProduct,
   getProducts,
@@ -443,4 +488,5 @@ module.exports = {
   getRelatedProducts,
   searchProducts,
   getLowStockProducts,
+  canReview,
 };
