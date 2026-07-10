@@ -1,6 +1,4 @@
 import { Link } from "react-router-dom";
-import THREADDOT from "./../../../assets/photos/THREADDOT.png";
-import THREADDOT2 from "./../../../assets/photos/THREADDOTLOGO.png";
 import THREADDOT3 from "./../../../assets/photos/3.png";
 function Logo() {
   return (
