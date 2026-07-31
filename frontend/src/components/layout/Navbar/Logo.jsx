@@ -9,7 +9,8 @@ function Logo() {
       select-none
       "
     >
-      <img src={THREADDOT3} alt="" className="h-12 w-auto" />
+      {/* <img src={THREADDOT3} alt="" className="h-12 w-auto" /> */}
+      <h1 className="text-2xl font-bold">THREADDOT</h1>
     </Link>
   );
 }
